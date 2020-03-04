@@ -10,7 +10,8 @@ gatsby develop
 
 To build the static html output for the production site, run:
 ```
-gatsby build
+gatsby build --prefix-paths
 ```
 
 
+The `--prefix-paths` option will construct links using the path_prefix specified in the `gatsby-config.js`
