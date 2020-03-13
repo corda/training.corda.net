@@ -1,1 +1,0 @@
-For those students who prefer it. Much like the blog post, with more handholding.
