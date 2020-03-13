@@ -1,4 +1,0 @@
----
-title: Intro into Git
----
-

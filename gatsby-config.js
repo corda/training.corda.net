@@ -27,8 +27,8 @@ module.exports = {
             '01-blockchain/2_basics_b',
           ],
           'Key Concepts': [
-            '02-corda/2_corda_key_concepts',
             '02-corda/1_corda_intro',
+            '02-corda/2_corda_key_concepts'
           ],
           'Getting setup': [
             '03-run-example/02-install-intellij',
