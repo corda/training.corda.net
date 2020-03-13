@@ -55,7 +55,7 @@ module.exports = {
   youtubeUrl: 'https://www.youtube.com/channel/UCoOuUZatvIC1U65OisCrIKg',
   logoLink: 'https://docs.corda.net/',
   baseDir: 'docs',
-  contentDir: 'source',
+  contentDir: 'content',
   navConfig,
   footerNavConfig
 };

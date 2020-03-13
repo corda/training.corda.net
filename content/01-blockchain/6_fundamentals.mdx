@@ -1,14 +1,13 @@
 ---
-title: fundamentals
-description: 
+title: Fundamentals
+description: Cryptography, keys and exercise
 ---
-## Fundamentals
 
-### Public key cryptosystems
+## Public key cryptosystems
 
 Modern cryptographic systems leverage computer capabilities to make accessible the power of certain mathematical functions.
 
-#### Public / private key
+### Public / private key
 
 Such keys always come in pairs and offer various capabilities. Those capabilities are based on cryptographic mathematics. As their name suggest, the public key is meant to be distributed to whoever is relevant, while the private key is to be jealously guarded, akin to having your house address public, but keeping the key to your house private.
 
@@ -45,7 +44,7 @@ This is like a password that is used to encrypt your private key on disk. If the
 
 Note that you may need openssl version 1.0 or newer.
 
-#### Encrypt and decrypt
+### Encrypt and decrypt
 
 Alice wants to send a message to Bob, and for Bob's eyes only:
 
@@ -54,7 +53,7 @@ Alice wants to send a message to Bob, and for Bob's eyes only:
 * Alice sends Bob the encrypted message
 * Bob decrypts the message with his private key
 
-![](images/keys-001.png)
+![Encrypt And Decrypt](images/keys-001.png)
 
 Example:
 
@@ -67,7 +66,7 @@ $ openssl pkeyutl -decrypt -inkey rsa-key.pem -in helloworld.enc -out helloworld
 
 If you receive an error, try with `openssl rsautl` instead.
 
-#### Sign and verify
+### Sign and verify
 
 Alice wants to make sure that Bob's public announcement is indeed from Bob:
 
@@ -76,7 +75,7 @@ Alice wants to make sure that Bob's public announcement is indeed from Bob:
 * Bob sends Alice his announcement and its signature
 * Alice verifies the signature with Bob's public key
 
-![](images/keys-002.png)
+![Sign And Verify](images/keys-002.png)
 
 Example:
 
@@ -93,20 +92,20 @@ $ openssl dgst -sha256 -verify secp256k1-key-pub.pem -signature helloworld-bin-d
 Verified OK
 ```
 
-#### Mix and match
+### Mix and match
 
 It is possible to mix both ideas, whereby Alice encrypts her message with Bob's public key, then signs the encrypt file with her private key. Upon reception, Bob verifies the signature with Alice's public key, then decrypts the file with his private key.
 
-![](images/keys-003.png)
+![Encrypt, Sign, Verify And Decrypt](images/keys-003.png)
 
-### Key management, PKI
+## Key management, PKI
 
 If you look again at the Alice and Bob examples, you will notice that there is a vulnerability in "Bob gives Alice his public key". A malicious Charlie could intercept Bob's public key and pass on his own public key to Alice.
 Key management and public key infrastructure (PKI) is an important aspect of cryptography that helps mitigate this risk.
 
-### Theory
+## Theory
 
-#### RSA
+### RSA
 
 RSA(Rives, Shamir, Adleman) is a public-key cryptosystem that was first published in 1977.
 
@@ -124,7 +123,7 @@ Or that in fact there exist `$(priKey,pubKey,n)$` such that `$(message ^{pubKey}
 
 Let's work this in detail.
 
-#### How
+### How
 
 How to calculate a `$(pubKey,n)$` and a `$priKey$` ?
 
@@ -141,7 +140,7 @@ Calculating `$priKey$` means calculating `$b$` in following equation:
 
 Where we can use the extended euclidean algorithm. Now we can delete `$p,q$` and `$\phi(n)$`.
 
-#### Example
+### Example
 
 Let's have a look on an example.
 
@@ -157,7 +156,7 @@ Now we delete `$p,q$` and `$\phi(n)$`. If we want to encrypt the `$message=98745
 If you have the `$priKey$`, then you can calculate the message:
 `$$36898107^{6589577} \equiv 9874587 \mod 63264029$$`
 
-#### Why it works
+### Why it works
 
 There is a proof with Fermat's little theorem, that `$$(message ^ {pubKey}) ^ {priKey} \equiv message \mod n$$` is true.
 
@@ -187,7 +186,7 @@ Otherwise:
 
 If we do the same steps for `$q$`, we show, `$$(message ^ {pubKey}) ^ {priKey} \equiv message \mod {p \cdot q}$$` This is, why RSA works.
 
-#### Trivial zero knowledge Proof
+### Trivial zero knowledge Proof
 
 RSA fits  `$E(x) \cdot E(y)=x^e \cdot y^e=e^{xy}=E(xy)$`
 That means we can prove, if `$x \cdot y$` calculated well, without knowing x or y.
@@ -196,8 +195,7 @@ In our example, if we use `$x=12$` and `$y=24$`, then we get `$12 \cdot 24=288$`
 
 Another trivial example are digital Signatures with RSA. They are zero-knowledge proofs, because, you are proving, that you have a private key, which is the pair to the public key, without giving any information about your private key.
 
-
-#### Cryptographic hash functions
+### Cryptographic hash functions
 
 Such a hash function:
 
@@ -235,7 +233,7 @@ Notice how the 2 hashes have nothing in common.
 
 It is possible to index content by its hash, in essence creating a hashtable. If you have used IPFS or BitTorrent's magnet links, among others, then you have used a hashtable.
 
-### Digital Certificates
+## Digital Certificates
 
 Digital certificates are used (among other things) to prove an identity. They are given by a recognised Certification Authority(CA). A widespread procedure is the public key certificate. It proves the ownership of a public key. Below, we describe the X.509 standard.
 
@@ -243,15 +241,14 @@ The X.509 standard is defined by the Telecommunication Standardization Sector (I
 
 A X.509 certificate contains information such as version number, serial number, signature algorithm, validity period, subject name, public key algorithm, subject public key, certificate signature algorithm, certificate signature and extensions. An extension has a type, a corresponding value and a critical flag. Non-critical extensions are only informational.
 
-
-#### Signature
+### Signature
 
 The concept of digital signatures is simple. If a given message is first hashed and then encrypted by a private key, one can verify the signature by decryption with corresponding public key. We need to hash the message to avoid the creation of signatures by mixing the messages and corresponding signatures. (See RSA chapter) This way, we know, that the sender has the private key to the given public key. However, this is not truly an identification. Here comes the CA. The CA signs a certificate to prove the identity of the owner of a public key. The certificate includes, as described above, the subject name. This must be verified by the CA. So, the identity is given, if one can verify the CA’s signature and trust the CA.
 
 Here is a Hyperledger Fabric example certificate:
 ![HLF Certificate](images/cert.png)
 
-### Learn More
+## Learn More
 
 - [Zero-knowledge proof](https://en.wikipedia.org/wiki/Zero-knowledge_proof)
 - [EC Operations](https://wiki.openssl.org/index.php/Command_Line_Elliptic_Curve_Operations)

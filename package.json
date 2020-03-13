@@ -1,8 +1,8 @@
 {
   "scripts": {
     "prestart": "gatsby clean",
-    "start": "gatsby develop",
-    "build": "gatsby build",
+    "start": "gatsby develop --port 4000",
+    "build": "gatsby build --prefix-path",
     "serve": "gatsby serve"
   },
   "dependencies": {

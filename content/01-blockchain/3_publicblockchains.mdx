@@ -1,18 +1,17 @@
 ---
-title: publicblockchains a
-description: 
+title: A Brief History of Blockchain
+description: How it came about
 ---
-## A Brief History of Blockchain
 
 In order to understand whether blockchain technology is a good fit for your project it is important to understand where it comes from and who is driving it.
 
 ![Protocols timeline](images/timeline.png)
 
-### 1990s
+## 1990s
 
 The first work on the foundations of what becomes blockchain technology much later was undertaken in 1991 by Stuart Haber and W. Scott Stornetta. They first worked on the concept of append-only, cryptographically secured logs. This work was followed by publications in 1996 by Ross J. Anderson and 1998 by [Bruce Schneier](https://www.schneier.com/crypto-gram/) and [John Kelsey](https://www.nist.gov/people/john-m-kelsey). In 1994 computer scientist Nick Szabo first described the concept of [smart contracts](http://www.fon.hum.uva.nl/rob/Courses/InformationInSpeech/CDROM/Literature/LOTwinterschool2006/szabo.best.vwh.net/smart.contracts.html) and in 1998 described BitGold, a conceptual predecessor to Bitcoin.
 
-### 2000s
+## 2000s
 
 The first large scale, successful public blockchain network was Bitcoin. The first Bitcoin whitepaper was released on October 31, 2008. It proposed a data structure for the Bitcoin blockchain and laid out the decentralised consensus mechanism.
 
@@ -23,7 +22,7 @@ All this may not seem important but it is. It means that blockchain as it was bu
 
 Given its censorship-resistance, blockchain technology has been seized upon by other groups interested in circumventing government, law enforcement or regulatory control, both on the radical right and left fringes as well as among activists persecuted by their governments.
 
-### 2010s
+## 2010s
 
 As soon as it became clear that the technology presents a very attractive base infrastructure for payments, other groups and organisations adapted the technology for their purposes or developed new approaches using the same basic principles but adapting them to more traditional use cases.
 
@@ -39,7 +38,7 @@ In 2017 the [Ethereum Enterprise Alliance] (https://entethalliance.org/) was for
 
 Today we can see two broader trends in the development and adoption of blockchain technology.
 
-## Public Blockchains
+# Public Blockchains
 
 The most obvious way of operating blockchain protocols comes in the form of a public network. This is what blockchain technology was originally invented for and remains, arguably, its most powerful use.
 
@@ -52,7 +51,7 @@ A proof-of-work based public blockchain network, such as Bitcoin or Ethereum, ha
 
 The two most popular examples of functioning public networks are Bitcoin and Ethereum.
 
-### Introduction to Bitcoin
+## Introduction to Bitcoin
 
 Since 2009 the most successful and popular public blockchain network has been Bitcoin. Bitcoin was first introduced with the publication of the original paper [Bitcoin: A peer-to-peer electronic cash system (2008)](https://bitcoin.org/bitcoin.pdf) by Satoshi Nakamoto. In this paper, Nakamoto describes Bitcoin as a peer-to-peer version of electronic cash. He suggests that proof-of-work can be used to find the truth in a partially synchronous system without involving trusted parties. Using this method, the set of participants controlling the majority of the computing power determines the truth.
 
@@ -70,7 +69,7 @@ There remains a residual probability that a slower attacker can catch up since f
 
 The protocol includes a reward for mining, which is the first special transaction in each block. New coins are minted into existence and awarded to the miner that discovered the block. Incentives are aligned to encourage nodes to use their CPU power honestly, to get the reward. Transactions are signed and announced publicly and signing keys are meant to be closely guarded by all participants.
 
-### Introduction to Ethereum
+## Introduction to Ethereum
 
 Ethereum emerged from a range of proposals rejected by the Bitcoin community. The most important difference, as compared to Bitcoin, is the implementation of distributed code execution through the Ethereum Virtual Machine. This code execution platform is [Turing-complete](https://en.wikipedia.org/wiki/Turing_completeness). The EVM enables the deployment of so-called smart contracts via transactions.
 
@@ -82,7 +81,7 @@ Let us have a look at the Ethereum protocol to understand how it differs from Bi
 
 The Ethereum network is a virtual state machine, the Ethereum Virtual Machine (EVM). The implementation of such a state machine with blockchain is revolutionary in itself. To achieve Turing-completeness frameworks must overcome the "halting problem" which is difficult, especially in a distributed, hierarchy-free computing platform. In case this is not clear, the halting problem is about what to do in the case that a process runs amok. Well-known solutions such as a hardware reset do not apply to a worldwide state machine that cannot be restarted.
 
-Ethereum’s solution is to introduce “gas” as a fee for each computational step. Every block has a maximum gas limit. This limits the number of computational steps that can be executed per block. When paid for, gas is given a price. Individual users control this price at the transaction level, and are free to specify any gas price. That is, users bid for network computation. When the accounting is done, the EVM converts this transaction gas price and gas consumed into Ether spent. Ether is the native Ethereum currency, which is issued via the mining process. The Ethereum protocol defines the gas cost for each operation in the EVM. In this context, "operations" are low-level assembler-like steps, so the cost-accounting is quite granular.  
+Ethereum’s solution is to introduce “gas” as a fee for each computational step. Every block has a maximum gas limit. This limits the number of computational steps that can be executed per block. When paid for, gas is given a price. Individual users control this price at the transaction level, and are free to specify any gas price. That is, users bid for network computation. When the accounting is done, the EVM converts this transaction gas price and gas consumed into Ether spent. Ether is the native Ethereum currency, which is issued via the mining process. The Ethereum protocol defines the gas cost for each operation in the EVM. In this context, "operations" are low-level assembler-like steps, so the cost-accounting is quite granular.
 
 A smart contract in the EVM is practically an autonomous agent with an internal account. While external actors, e.g. humans and servers, sign transactions, smart contracts execute deterministic code. *Smart contracts have no alternative.* Correct execution of smart contract code is part of the transaction validation process.
 
@@ -92,7 +91,7 @@ How did the contract get on the blockchain? Someone, a.k.a. the deployer, sent a
 
 The most popular high-level language for writing smart contracts for Ethereum is Solidity. A compiler generates machine code (OPCODES) the EVM understands. The EVM language, the OPCODES, are assembler-like but they are decoupled from hardware. OPCODES are defined entirely in software - the Ethereum protocol.
 
-### Faster Blocks
+## Faster Blocks
 
 ![Blockchain and uncle diagram](images/ethereum-ghost.png)
 
@@ -100,4 +99,15 @@ The most popular high-level language for writing smart contracts for Ethereum is
 
 The precise mechanism employed by Ethereum is called GHOST - Greedy Heaviest Observed Subtree. GHOST includes so-called uncles that are propagated into the network, too late to rise to the level of network consensus (see Figure 2). This increases the total difficulty of the chain, makes smaller block times (about 14-18 seconds) possible and rewards miners of uncles for contributing to the overall strength of the network.
 
-<!-- How Does Blockchain Actually Work? https://www.youtube.com/embed/Za5lPKNV_Mk -->
+<!-- TODO How Does Blockchain Actually Work? https://www.youtube.com/embed/Za5lPKNV_Mk -->
+
+## Learn More
+
+- [R3CEV Corda Announcement](https://www.coindesk.com/r3cev-blockchain-regulated-businesses/)
+- [Vitalik on 12 second block time](https://blog.ethereum.org/2014/07/11/toward-a-12-second-block-time/)
+- [Merkling in Ethereum](https://blog.ethereum.org/2015/11/15/merkling-in-ethereum/)
+
+## Books
+
+- [Blockchain: Blueprint for a New Economy by Melanie Swan.](https://www.amazon.co.uk/Blockchain-Blueprint-Economy-Melanie-Swan/dp/1491920491)
+- [Mastering Bitcoin by Andreas Antonopolous](https://www.bitcoinbook.info/)

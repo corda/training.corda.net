@@ -1,8 +1,7 @@
 ---
-title: corda key concepts
-description: 
+title: Key Concepts
+description: What Corda introduces and you need to know
 ---
-# Key Concepts
 
 ## Corda Network
 
@@ -51,7 +50,7 @@ Let’s return to the cash example. Suppose Alice will send all $10 to Bob. A tr
 
 ## Contracts
 
-Contracts in Corda do not describe how states are created but they do define certain properties. These properties constrain the state transitions that will be allowed, like a checklist. In this way, they can validate proposed state transitions.  
+Contracts in Corda do not describe how states are created but they do define certain properties. These properties constrain the state transitions that will be allowed, like a checklist. In this way, they can validate proposed state transitions.
 
 In effect, one or more parties of a transaction propose a new state of the world, and the contract agrees with this new state, or not. Contracts also mention Legal Prose that, in case of a dispute, would presumably be accepted in a court of law. States reference contracts. In effect, states mention the code that will allow or prevent their consumption.
 
@@ -115,7 +114,7 @@ When thinking about flows, it might be helpful to consider more complex and well
 
 Such transactions involve the buyer and seller, obviously, but completion also involves participating lenders, escrow agents, insurance companies and registries. Much of what happens involves gathering the necessary assurances at each step before proceeding to the next step. Finalising, or executing the transaction involves the actual transfer of ownership, the exchange of funds, notifying the registry and so on. Both the buyer and seller should want the transaction to complete entirely or not at all because cases where the asset and the funds are not exchanged simultaneously invariably lead to disputes.
 
-Flows are light-weight processes that coordinate multi-step business processes that help peers reach consensus about shared states&nbsp;- their mutual understanding of what happened. 
+Flows are light-weight processes that coordinate multi-step business processes that help peers reach consensus about shared states&nbsp;- their mutual understanding of what happened.
 
 ![Example of simple flow](images/simple-flow.png)
 

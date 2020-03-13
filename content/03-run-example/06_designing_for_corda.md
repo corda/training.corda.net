@@ -1,7 +1,3 @@
----
-title: designing for corda
-description: 
----
 # Designing for Corda
 
 ## Introduction

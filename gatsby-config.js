@@ -1,5 +1,18 @@
 const themeOptions = require('./theme-options');
 
+const sidebarContent = require('./content/structure.js') || {};
+
+const sidebarDefaults = {
+  null: [
+    'index',
+  ]
+};
+
+const sidebarCategories = {...sidebarDefaults, ...sidebarContent};
+
+console.log("sidebar config:");
+console.log(sidebarCategories);
+
 module.exports = {
   pathPrefix: '/training/',
   plugins: [
@@ -11,7 +24,14 @@ module.exports = {
         subtitle: 'Corda Training and Turorials',
         description: 'Learn how to use the Corda platform',
         githubRepo: 'corda/corda',
-        sidebarCategories: {
+        sidebarCategories: sidebarCategories,
+      },
+    },
+  ],
+};
+
+/*
+{
           null: [
             'index',
           ],
@@ -45,8 +65,5 @@ module.exports = {
           'Libraries': [
             '05-libraries/01-token-library',
           ]
-        },
-      },
-    },
-  ],
-};
+        }
+*/
