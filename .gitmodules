@@ -1,0 +1,3 @@
+[submodule "content"]
+	path = content
+	url = git@git.b9lab.com:client-projects/r3-corda-education-services/r3-corda-course.git
