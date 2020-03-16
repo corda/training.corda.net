@@ -27,7 +27,7 @@ Starts a server on [127.0.0.1:4000](http://127.0.0.1:4000)
 
 To build the static html output for the production site, run:
 ```
-npm build
+npm run build
 ```
 
 The `--prefix-paths` option will construct links using the path_prefix specified in the `gatsby-config.js`
