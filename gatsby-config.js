@@ -24,7 +24,7 @@ module.exports = {
         subtitle: 'Corda Training and Turorials',
         description: 'Learn how to use the Corda platform',
         githubRepo: 'corda/corda',
-        sidebarCategories: sidebarCategories,
+        sidebarCategories: sidebarCategories
       },
     },
   ],
