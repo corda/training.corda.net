@@ -31,3 +31,6 @@ npm run build
 ```
 
 The `--prefix-paths` option will construct links using the path_prefix specified in the `gatsby-config.js`
+
+# Sidebar content
+The sidebar content (left main navigation) is dynamically loaded in `gatsby-config.js` by importing `content/structure.js`. This file can include further subfiles to build a content tree.

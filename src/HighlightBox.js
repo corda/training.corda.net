@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import {breakpoints} from 'gatsby-theme-apollo-core';
 import IconInfo from "./assets/hi-info.svg"
 import IconTip from "./assets/hi-tip.svg"
+import IconWarn from "./assets/hi-warn.svg"
 
 const HighlightBoxWrapper = styled.div`
   background: #EDEDED;
@@ -24,13 +25,15 @@ const HighlightBoxIcon = styled.div`
     width: 80px;
   }
 
-  color: ${props => props.primary ? "white" : "palevioletred"};
-
   ${({ type }) => type==="info" && `
-    background: #389c66;
+    background: #2F3B59;
   `}
 
   ${({ type }) => type==="tip" && `
+    background: #040D28;
+  `}
+
+  ${({ type }) => type==="warn" && `
     background: #ec1d24;
   `}
 `;
@@ -48,13 +51,20 @@ const HighlightBoxContent = styled.div`
   ${({ type }) => type==="info" && `
     &::before {
       content: "Info!";
-      color: #389c66;
+      color: #2F3B59;
     }
   `}
 
   ${({ type }) => type==="tip" && `
     &::before {
       content: "Tip!";
+      color: #040D28;
+    }
+  `}
+
+  ${({ type }) => type==="warn" && `
+    &::before {
+      content: "Warning!";
       color: #ec1d24;
     }
   `}
@@ -65,6 +75,7 @@ const IconImage = ({type}) => {
 
   if (type==="info") icon=IconInfo
   if (type==="tip") icon=IconTip
+  if (type==="warn") icon=IconWarn
 
   return (
     <img src={icon} alt={`${type} icon`} />
