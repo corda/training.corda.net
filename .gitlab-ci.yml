@@ -19,7 +19,6 @@ build-code:
     - main-runner
 
   script:
-  - git submodule init
   - git submodule update
   - npm install
   - npm run build
@@ -46,6 +45,8 @@ deploy-staging-server:
     - build-code
 
   before_script:
+    - ssh-keyscan git.b9lab.com >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
     ## Import SSH Key from variable
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
