@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import {breakpoints} from 'gatsby-theme-apollo-core';
-import IconInfo from "../assets/hi-info.svg"
+import IconInfo from "./assets/hi-info.svg"
+import IconTip from "./assets/hi-tip.svg"
 
 const HighlightBoxWrapper = styled.div`
   background: #EDEDED;
@@ -59,14 +60,16 @@ const HighlightBoxContent = styled.div`
   `}
 `;
 
-const IconImage = ({type}) => (
-  icon = "";
-  
-  if (type=="info") icon=IconInfo
-  if (type=="tip") icon=IconInfo
+const IconImage = ({type}) => {
+  let icon=IconInfo; // default
 
-  <img src={icon} alt={`${type} icon`} />
-);
+  if (type==="info") icon=IconInfo
+  if (type==="tip") icon=IconTip
+
+  return (
+    <img src={icon} alt={`${type} icon`} />
+  );
+}
 
 
 
