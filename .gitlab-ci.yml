@@ -19,6 +19,8 @@ build-code:
     - main-runner
 
   script:
+  - git submodule init
+  - git submodule update
   - npm install
   - npm run build
 
