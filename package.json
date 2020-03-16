@@ -2,7 +2,7 @@
   "scripts": {
     "prestart": "gatsby clean",
     "start": "gatsby develop --port 4000",
-    "build": "gatsby build --prefix-path",
+    "build": "gatsby build --prefix-paths",
     "serve": "gatsby serve"
   },
   "dependencies": {
