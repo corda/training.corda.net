@@ -1,0 +1,55 @@
+image: node:8
+
+stages:
+  - build
+  - deploy
+
+variables:
+  SERVER_ADDRESS: b9labs@23.97.239.116
+  TARGET_FOLDER: /var/www/html/training/
+
+build-code:
+  stage: build
+  only:
+    refs:
+      - master
+      - development
+      - schedules
+  tags:
+    - main-runner
+
+  script:
+  - npm install
+  - npm run build
+
+  artifacts:
+    paths:
+      - public/
+ 
+
+deploy-staging-server:
+  stage: deploy
+  environment:
+    name: staging
+    url: https://cdocs.westeurope.cloudapp.azure.com/training/
+  only:
+    refs:
+      - master
+      - development
+      - schedules
+  tags:
+    - main-runner
+    
+  dependencies:
+    - build-code
+
+  before_script:
+    ## Import SSH Key from variable
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_RUNNER_DEPLOY_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+
+  script:
+    - rsync -a ./* ${SERVER_ADDRESS}:${TARGET_FOLDER}
