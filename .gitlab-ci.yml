@@ -20,6 +20,7 @@ build-code:
 
   before_script:
     ## Load git.b9lab.com pubkey
+    - ldd chrome | grep not
     - mkdir -p ~/.ssh/
     - touch ~/.ssh/known_hosts
     - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
@@ -52,9 +53,12 @@ deploy-staging-server:
       - master
       - development
       - schedules
+
   tags:
     - main-runner
-    
+
+  when: manual
+
   dependencies:
     - build-code
 
