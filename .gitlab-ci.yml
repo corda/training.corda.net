@@ -25,6 +25,7 @@ build-code:
     - echo "$SSH_RUNNER_DEPLOY_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
+    - apt-get install git
 
   script:
   - git submodule init
