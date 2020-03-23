@@ -77,4 +77,5 @@ deploy-staging-server:
     - chmod 700 ~/.ssh
 
   script:
+    - cat ~/.ssh/known_hosts
     - rsync -a ./* ${SERVER_ADDRESS}:${TARGET_FOLDER}
