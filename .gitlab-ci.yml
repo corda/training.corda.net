@@ -69,13 +69,14 @@ deploy-staging-server:
     - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
 
-    - 'which ssh-agent || ( apt-get install openssh-client -y )'
-    - eval $(ssh-agent -s)
-    - echo "$SSH_RUNNER_DEPLOY_KEY" | tr -d '\r' | ssh-add -
-
     ## Install missing packages
     - apt-get update -y
     - apt-get install rsync -y
+
+    ## Add deploy key (privkey)
+    - 'which ssh-agent || ( apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_RUNNER_DEPLOY_KEY" | tr -d '\r' | ssh-add -
 
   script:
     - rsync -a ./* ${SERVER_ADDRESS}:${TARGET_FOLDER}
