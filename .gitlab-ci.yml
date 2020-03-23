@@ -19,7 +19,12 @@ build-code:
     - main-runner
 
   before_script:
-    ## Import SSH Key from variable
+    ## Load git.b9lab.com pubkey
+    - touch ~/.ssh/known_hosts
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_host
+
+    ## Import deploy privkey from variable
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
     - echo "$SSH_RUNNER_DEPLOY_KEY" | tr -d '\r' | ssh-add -
