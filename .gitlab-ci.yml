@@ -39,7 +39,7 @@ build-code:
 #  - useradd -m builder
 #  - su builder -s /bin/bash
   - npm install
-  - npm run build
+  - npm run build || true
   - npm run build
 
   artifacts:
