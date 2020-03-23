@@ -26,6 +26,7 @@ build-code:
     - chmod 644 ~/.ssh/known_hosts
     
     ## Install missing packages
+    - apt-get update -y
     - apt-get -y install git
 
   script:
