@@ -37,8 +37,6 @@ build-code:
   script:
   - git submodule init
   - git submodule update
-#  - useradd -m builder
-#  - su builder -s /bin/bash
   - npm install
   - npm run build || true # workaround, first build fails
   - npm run build
@@ -62,7 +60,7 @@ deploy-staging-server:
   tags:
     - main-runner
 
-  when: manual
+  #when: manual
 
   dependencies:
     - build-code
@@ -84,4 +82,4 @@ deploy-staging-server:
     - echo "$SSH_RUNNER_DEPLOY_KEY" | tr -d '\r' | ssh-add -
 
   script:
-    - rsync -avh --stats --delete ./public/ ${SERVER_ADDRESS}:${TARGET_FOLDER} 
+    - rsync -avh --stats --delete ./public/* ${SERVER_ADDRESS}:${TARGET_FOLDER} 
