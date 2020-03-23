@@ -30,9 +30,10 @@ build-code:
   script:
   - git submodule init
   - git submodule update
-  - useradd -m builder
-  - su builder
+#  - useradd -m builder
+#  - su builder
   - npm install
+  - npm run build
   - npm run build
 
   artifacts:
