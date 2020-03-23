@@ -35,7 +35,7 @@ build-code:
 #  - useradd -m builder
 #  - su builder -s /bin/bash
   - npm install
-  - npm run build || true
+  - npm run build || true # workaround, first build fails
   - npm run build
 
   artifacts:
@@ -79,4 +79,4 @@ deploy-staging-server:
     - echo "$SSH_RUNNER_DEPLOY_KEY" | tr -d '\r' | ssh-add -
 
   script:
-    - rsync -a ./* ${SERVER_ADDRESS}:${TARGET_FOLDER}
+    - rsync -a --stats ./* ${SERVER_ADDRESS}:${TARGET_FOLDER}
