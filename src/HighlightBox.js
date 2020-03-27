@@ -30,11 +30,11 @@ const HighlightBoxIcon = styled.div`
   `}
 
   ${({ type }) => type==="tip" && `
-    background: #040D28;
+    background: #EC1D24;
   `}
 
   ${({ type }) => type==="warn" && `
-    background: #ec1d24;
+    background: #EDC434;
   `}
 `;
 
@@ -58,14 +58,14 @@ const HighlightBoxContent = styled.div`
   ${({ type }) => type==="tip" && `
     &::before {
       content: "Tip!";
-      color: #040D28;
+      color: #EC1D24;
     }
   `}
 
   ${({ type }) => type==="warn" && `
     &::before {
       content: "Warning!";
-      color: #ec1d24;
+      color: #2F353F;
     }
   `}
 `;
