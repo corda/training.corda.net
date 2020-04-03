@@ -13,12 +13,12 @@ export default class ExternalContent extends React.Component {
     constructor(props) {
         super(props)
         const prettyGithubRegex = /github\.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+\//gm;
-        const prettyUrl = (props.prettyUrl || props.url
+        const prettyUrl = props.prettyUrl || (props.url
             .replace("raw.githubusercontent.com", "github.com")
             .replace(prettyGithubRegex, (match, p1, p2, offset) => {
                 return match + "blob/";
-            }))
-            + "#L" + props.lineStart + "-L" + props.lineEnd;
+            })
+            + "#L" + props.lineStart + "-L" + props.lineEnd);
         this.state = {
             url: props.url,
             prettyUrl: prettyUrl,
