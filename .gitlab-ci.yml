@@ -46,10 +46,9 @@ build-code:
     - git -C content/ checkout $(echo $CONTENT_CHECKOUT_PARAM)
 
   script:
-  
-  - npm install
-  - npm run build || true # workaround, first build fails
-  - npm run build
+    - npm install
+    - npm run build || true # workaround, first build fails
+    - npm run build
 
   artifacts:
     paths:

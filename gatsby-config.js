@@ -28,6 +28,7 @@ console.log("> Sidebar");
 console.log(sidebarCategories);
 console.log(">Path prefix:");
 console.log(pathPrefix);
+console.log(process.env.CONTENT_CHECKOUT_PARAM);
 
 const getPathPrefix = () => {
   const envTargetFolder = process.env.CONTENT_BUILD_TARGET_SUBFOLDER
