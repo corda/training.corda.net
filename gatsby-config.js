@@ -17,11 +17,26 @@ const sidebarDefaults = {
 
 const sidebarCategories = {...sidebarDefaults, ...sidebarContent};
 
-console.log("sidebar config:");
+let env_target = process.env.CONTENT_BUILD_TARGET_SUBFOLDER;
+if (typeof(env_target)==="undefined") env_target = "";
+
+const pathPrefix = '/training/' + env_target;
+
+
+console.log("Dynamic gatsby configuration:")
+console.log("> Sidebar");
 console.log(sidebarCategories);
+console.log(">Path prefix:");
+console.log(pathPrefix);
+
+const getPathPrefix = () => {
+  const envTargetFolder = process.env.CONTENT_BUILD_TARGET_SUBFOLDER
+
+  return '/training/' + envTargetFolder;
+}
 
 module.exports = {
-  pathPrefix: '/training/',
+  pathPrefix: getPathPrefix(),
   plugins: [
     {
       resolve: 'gatsby-theme-apollo-docs',

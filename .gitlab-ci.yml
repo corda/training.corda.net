@@ -35,12 +35,7 @@ build-code:
     - echo "$SSH_RUNNER_DEPLOY_KEY" | tr -d '\r' | ssh-add -
 
     # check and setup variables
-    - eval export CONTENT_CHECKOUT_PARAM=$(echo "$CI_CONTENT_COMMIT_HASH" || echo "master")
-    - export T1=test
-    - 'echo $T1'
-    - echo "$T1"
-    - echo $T1
-    - if [ -z ${CI_CONTENT_COMMIT_HASH} ]; then export CONTENT_CHECKOUT_PARAM=$CI_CONTENT_COMMIT_HASH else export CONTENT_CHECKOUT_PARAM=master; fi
+    - if [ -z ${CI_CONTENT_COMMIT_HASH} ]; then export CONTENT_CHECKOUT_PARAM=$CI_CONTENT_COMMIT_HASH && export CONTENT_BUILD_TARGET_SUBFOLDER=$CI_CONTENT_COMMIT_HASH else export CONTENT_CHECKOUT_PARAM=master; fi
 
     # checkout content
     - 'echo content checkout: $(echo $CONTENT_CHECKOUT_PARAM)'
@@ -95,6 +90,7 @@ deploy-staging-server:
     - 'which ssh-agent || ( apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
     - echo "$SSH_RUNNER_DEPLOY_KEY" | tr -d '\r' | ssh-add -
+    - if [ -z ${CI_CONTENT_COMMIT_HASH} ]; then export TARGET_SUB_FOLDER=$CI_CONTENT_COMMIT_HASH else export TARGET_SUB_FOLDER=; fi
 
   script:
-    - rsync -avh --stats --delete ./public/* ${SERVER_ADDRESS}:${TARGET_FOLDER} 
+    - rsync -avh --stats --delete ./public/* ${SERVER_ADDRESS}:${TARGET_FOLDER}/$(echo $TARGET_SUB_FOLDER)
