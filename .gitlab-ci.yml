@@ -36,6 +36,10 @@ build-code:
 
     # check and setup variables
     - eval export CONTENT_CHECKOUT_PARAM=$(echo "$CI_CONTENT_COMMIT_HASH" || echo "master")
+    - export T1=test
+    - 'echo $T1'
+    - echo "$T1"
+    - echo $T1
 
     # checkout content
     - 'echo content checkout: $(echo $CONTENT_CHECKOUT_PARAM)'
