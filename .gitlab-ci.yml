@@ -7,7 +7,6 @@ stages:
 variables:
   SERVER_ADDRESS: b9labs@23.97.239.116
   TARGET_FOLDER: /var/www/html/training/
-  CONTENT_CHECKOUT_PARAM: $(["$CI_CONTENT_COMMIT_HASH"==""] && echo "$CI_CONTENT_COMMIT_HASH" || echo "master")
 
 build-code:
   stage: build
@@ -34,6 +33,9 @@ build-code:
     - 'which ssh-agent || ( apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
     - echo "$SSH_RUNNER_DEPLOY_KEY" | tr -d '\r' | ssh-add -
+
+    # check and setup variables
+    - CONTENT_CHECKOUT_PARAM=$(echo $CI_CONTENT_COMMIT_HASH || echo "master")
 
     # checkout content
     - 'echo content checkout: ${CONTENT_CHECKOUT_PARAM}'
