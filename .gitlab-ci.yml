@@ -7,7 +7,7 @@ stages:
 variables:
   SERVER_ADDRESS: b9labs@23.97.239.116
   TARGET_FOLDER: /var/www/html/training/
-  CONTENT_CHECKOUT_PARAM: '$($CI_CONTENT_COMMIT_HASH=="" ? $CI_CONTENT_COMMIT_HASH : master)'
+  CONTENT_CHECKOUT_PARAM: '$([$CI_CONTENT_COMMIT_HASH==""] && echo "$CI_CONTENT_COMMIT_HASH" || echo "master")'
 
 build-code:
   stage: build
