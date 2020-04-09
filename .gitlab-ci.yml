@@ -38,10 +38,10 @@ build-code:
     - export CONTENT_CHECKOUT_PARAM=$(echo $CI_CONTENT_COMMIT_HASH || echo "master")
 
     # checkout content
-    - 'echo content checkout: $CONTENT_CHECKOUT_PARAM'
+    - 'echo content checkout: $(echo $CI_CONTENT_COMMIT_HASH || echo "master")'
     - git submodule init
     - git submodule update
-    - git -C content/ checkout $CONTENT_CHECKOUT_PARAM
+    - git -C content/ checkout $(echo $CI_CONTENT_COMMIT_HASH || echo "master")
 
   script:
   
