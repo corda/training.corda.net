@@ -35,11 +35,12 @@ build-code:
     - echo "$SSH_RUNNER_DEPLOY_KEY" | tr -d '\r' | ssh-add -
 
     # check and setup variables
-    #- if [ -z ${CI_CONTENT_COMMIT_HASH} ]; then export CONTENT_CHECKOUT_PARAM=$CI_CONTENT_COMMIT_HASH && export CONTENT_BUILD_TARGET_SUBFOLDER=$CI_CONTENT_COMMIT_HASH else export CONTENT_CHECKOUT_PARAM=master; fi
-    - eval export CONTENT_CHECKOUT_PARAM=$(echo "$CI_CONTENT_COMMIT_HASH" || echo "master")
+    - if [ -z ${CI_CONTENT_COMMIT_HASH} ]; |
+      then eval export CONTENT_CHECKOUT_PARAM=$CI_CONTENT_COMMIT_HASH && eval export CONTENT_BUILD_TARGET_SUBFOLDER=$CI_CONTENT_COMMIT_HASH 
+      else eval export CONTENT_CHECKOUT_PARAM=master; 
+      fi
 
     # checkout content
-    - 'echo content checkout: $(echo $CONTENT_CHECKOUT_PARAM)'
     - 'echo content checkout: $CONTENT_CHECKOUT_PARAM'
     
     - git submodule init
