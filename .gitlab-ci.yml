@@ -36,7 +36,7 @@ build-code:
 
     # check and setup variables
     - |
-      if [ -z ${CI_CONTENT_COMMIT_HASH} ]; 
+      if [ -z $CI_CONTENT_COMMIT_HASH ]; 
       then eval export CONTENT_CHECKOUT_PARAM=$CI_CONTENT_COMMIT_HASH && eval export CONTENT_BUILD_TARGET_SUBFOLDER=$CI_CONTENT_COMMIT_HASH 
       else eval export CONTENT_CHECKOUT_PARAM=master; 
       fi
