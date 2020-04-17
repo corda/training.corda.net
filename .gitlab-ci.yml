@@ -47,7 +47,7 @@ build-code:
       fi
 
     # checkout content
-    - 'echo content checkout: $CONTENT_CHECKOUT_PARAM'
+    - 'echo content checkout: $(echo $CONTENT_CHECKOUT_PARAM)'
     - 'echo subfolder: $CONTENT_BUILD_TARGET_SUBFOLDER'
     
     - git submodule init
