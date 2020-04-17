@@ -46,7 +46,7 @@ build-code:
     - git submodule update
     # checkout content commit
     - |
-      if [ ! -z CI_CONTENT_COMMIT_HASH ]; 
+      if [ ! -z $CI_CONTENT_COMMIT_HASH ]; 
       then echo checkout commit $CI_CONTENT_COMMIT_HASH && git -C content/ checkout $(echo $CI_CONTENT_COMMIT_HASH); 
       fi
     
