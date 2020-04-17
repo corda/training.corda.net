@@ -24,10 +24,7 @@ build-code:
     - 'echo TARGET_FOLDER: ${TARGET_FOLDER}'
     - 'echo CI_CONTENT_COMMIT_HASH: ${CI_CONTENT_COMMIT_HASH}'
 
-    - CONTENT_CHECKOUT_PARAM=${CI_CONTENT_COMMIT_HASH:=master}
     - CONTENT_BUILD_TARGET_SUBFOLDER=${CI_CONTENT_COMMIT_HASH:=}
-
-    - 'echo CONTENT_CHECKOUT_PARAM: $CONTENT_CHECKOUT_PARAM'
     - 'echo CONTENT_BUILD_TARGET_SUBFOLDER: $CONTENT_BUILD_TARGET_SUBFOLDER'
 
     # Load git.b9lab.com pubkey
@@ -51,7 +48,7 @@ build-code:
     # checkout content commit
     - |
       if [ -v ${CI_CONTENT_COMMIT_HASH} ]; 
-      then echo checkout commit ${CI_CONTENT_COMMIT_HASH} && git -C content/ checkout $(echo $CONTENT_CHECKOUT_PARAM); 
+      then echo checkout commit ${CI_CONTENT_COMMIT_HASH} && git -C content/ checkout $(echo $CI_CONTENT_COMMIT_HASH); 
       fi
     
     
@@ -86,6 +83,14 @@ deploy-staging-server:
     - build-code
 
   before_script:
+    # Setup/output vars
+    - 'echo SERVER_ADDRESS: ${SERVER_ADDRESS}'
+    - 'echo TARGET_FOLDER: ${TARGET_FOLDER}'
+    - 'echo CI_CONTENT_COMMIT_HASH: ${CI_CONTENT_COMMIT_HASH}'
+
+    - CONTENT_BUILD_TARGET_SUBFOLDER=${CI_CONTENT_COMMIT_HASH:=}
+    - 'echo CONTENT_BUILD_TARGET_SUBFOLDER: $CONTENT_BUILD_TARGET_SUBFOLDER'
+
     ## Import SSH Key from variable
     - mkdir -p -m 0700 ~/.ssh/
     - touch ~/.ssh/known_hosts
@@ -100,8 +105,7 @@ deploy-staging-server:
     - 'which ssh-agent || ( apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
     - echo "$SSH_RUNNER_DEPLOY_KEY" | tr -d '\r' | ssh-add -
-    - if [ -z ${CI_CONTENT_COMMIT_HASH} ]; then export TARGET_SUB_FOLDER=$CI_CONTENT_COMMIT_HASH else export TARGET_SUB_FOLDER=; fi
 
   script:
-    - 'echo Target: ${SERVER_ADDRESS}:${TARGET_FOLDER}/$TARGET_SUB_FOLDER'
-    - rsync -avh --stats ./public/* ${SERVER_ADDRESS}:${TARGET_FOLDER}/$(echo $TARGET_SUB_FOLDER)
+    - 'echo Target: ${SERVER_ADDRESS}:${TARGET_FOLDER}/$CONTENT_BUILD_TARGET_SUBFOLDER'
+    - rsync -avh --stats ./public/* ${SERVER_ADDRESS}:${TARGET_FOLDER}/$(echo $CONTENT_BUILD_TARGET_SUBFOLDER)
