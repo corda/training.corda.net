@@ -10,7 +10,8 @@ variables:
   SERVER_ADDRESS: b9labs@23.97.239.116
   TARGET_FOLDER: /var/www/html/training/
   CI_BUILDBOT_TOKEN: $CI_BUILDBOT_TOKEN
-  CI_MERGE_REQUEST_ID: 101
+  #CI_MERGE_REQUEST_IID: $CI_MERGE_REQUEST_IID
+  #CI_MERGE_REQUEST_IID: 101
 
 build-code:
   stage: build
@@ -117,7 +118,7 @@ deploy-staging-server:
     - echo add build notification to MR
     #notify on mr
     - BUILD_URL=https://cdocs.westeurope.cloudapp.azure.com/training/$CONTENT_BUILD_TARGET_SUBFOLDER
-    - MESSAGE=$(echo "Build deployed:<a href="$BUILD_URL">Corda Staging Server</a>")
+    - MESSAGE=$(echo "Build deployed:&nbsp;<a href="$BUILD_URL">Corda Staging Server</a>")
     #- "CURL_CMD=$(echo '-X POST -H '\"'PRIVATE-TOKEN: $CI_BUILDBOT_TOKEN'\"' -F '\"'body=$MESSAGE'\"' https://git.b9lab.com/api/v4/projects/$CONTENT_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_ID/notes')"
-    - 'curl -X POST -H "PRIVATE-TOKEN: $CI_BUILDBOT_TOKEN" -F "body=$MESSAGE" https://git.b9lab.com/api/v4/projects/$CONTENT_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_ID/notes'
-    - 'echo curl cmd: $CURL_CMD'
+    - 'curl -X POST -H "PRIVATE-TOKEN: $CI_BUILDBOT_TOKEN" -F "body=$MESSAGE" https://git.b9lab.com/api/v4/projects/$CONTENT_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/notes'
+    #- 'echo curl cmd: $CURL_CMD'
