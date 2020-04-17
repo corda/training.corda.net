@@ -47,7 +47,7 @@ build-code:
     # checkout content commit
     - |
       if [ ! -z $CI_CONTENT_COMMIT_HASH ]; 
-      then echo checkout commit $CI_CONTENT_COMMIT_HASH && git -C content/ checkout $(echo $CI_CONTENT_COMMIT_HASH); 
+      then echo checkout commit $CI_CONTENT_COMMIT_HASH && git -C content/ checkout $(echo $CI_CONTENT_COMMIT_HASH) && export CONTENT_BUILD_TARGET_SUBFOLDER=$CI_CONTENT_COMMIT_HASH;; 
       fi
     
     
@@ -90,10 +90,6 @@ deploy-staging-server:
     - CONTENT_BUILD_TARGET_SUBFOLDER=${CI_CONTENT_COMMIT_HASH:=}
     - 'echo CONTENT_BUILD_TARGET_SUBFOLDER: $CONTENT_BUILD_TARGET_SUBFOLDER'
 
-    - |
-      if [ ! -z $CI_CONTENT_COMMIT_HASH ]; 
-      then export CONTENT_BUILD_TARGET_SUBFOLDER=$CI_CONTENT_COMMIT_HASH; 
-      fi
 
     ## Import SSH Key from variable
     - mkdir -p -m 0700 ~/.ssh/
