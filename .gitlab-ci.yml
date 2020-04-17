@@ -114,6 +114,7 @@ deploy-staging-server:
     - 'echo Target: ${SERVER_ADDRESS}:${TARGET_FOLDER}/$CONTENT_BUILD_TARGET_SUBFOLDER'
     - rsync -avh --stats ./public/* ${SERVER_ADDRESS}:${TARGET_FOLDER}/$(echo $CONTENT_BUILD_TARGET_SUBFOLDER)
 
+    - echo add build notification to MR
     #notify on mr
     - BUILD_URL=https://cdocs.westeurope.cloudapp.azure.com/training/$CONTENT_BUILD_TARGET_SUBFOLDER
     - MESSAGE=$(echo "Build deployed:<a href="$BUILD_URL">Corda Staging Server</a>")
