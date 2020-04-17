@@ -30,14 +30,8 @@ console.log(">Path prefix:");
 console.log(pathPrefix);
 
 
-const getPathPrefix = () => {
-  const envTargetFolder = process.env.CONTENT_BUILD_TARGET_SUBFOLDER
-
-  return '/training/' + envTargetFolder;
-}
-
 module.exports = {
-  pathPrefix: getPathPrefix(),
+  pathPrefix: pathPrefix,
   plugins: [
     {
       resolve: 'gatsby-theme-apollo-docs',
