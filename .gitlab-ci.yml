@@ -42,12 +42,13 @@ build-code:
     # check and setup variables
     - |
       if [ -v ${CI_CONTENT_COMMIT_HASH} ]; 
-      then eval $(export CONTENT_CHECKOUT_PARAM=$CI_CONTENT_COMMIT_HASH) && eval $(export CONTENT_BUILD_TARGET_SUBFOLDER=$CI_CONTENT_COMMIT_HASH); 
+      then eval $(export CONTENT_CHECKOUT_PARAM=$CI_CONTENT_COMMIT_HASH) && eval $(export CONTENT_BUILD_TARGET_SUBFOLDER=${CI_CONTENT_COMMIT_HASH}); 
       else eval $(export CONTENT_CHECKOUT_PARAM=master); 
       fi
 
     # checkout content
     - 'echo content checkout: $CONTENT_CHECKOUT_PARAM'
+    - 'echo subfolder: $CONTENT_BUILD_TARGET_SUBFOLDER'
     
     - git submodule init
     - git submodule update
@@ -101,4 +102,5 @@ deploy-staging-server:
     - if [ -z ${CI_CONTENT_COMMIT_HASH} ]; then export TARGET_SUB_FOLDER=$CI_CONTENT_COMMIT_HASH else export TARGET_SUB_FOLDER=; fi
 
   script:
+    - 'echo Target: ${SERVER_ADDRESS}:${TARGET_FOLDER}/$TARGET_SUB_FOLDER'
     - rsync -avh --stats ./public/* ${SERVER_ADDRESS}:${TARGET_FOLDER}/$(echo $TARGET_SUB_FOLDER)
