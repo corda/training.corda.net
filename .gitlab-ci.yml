@@ -120,5 +120,8 @@ deploy-staging-server:
     - BUILD_URL=https://cdocs.westeurope.cloudapp.azure.com/training/$CONTENT_BUILD_TARGET_SUBFOLDER
     - MESSAGE=$(echo "Build deployed:&nbsp;<a href="$BUILD_URL">Corda Staging Server</a>")
     #- "CURL_CMD=$(echo '-X POST -H '\"'PRIVATE-TOKEN: $CI_BUILDBOT_TOKEN'\"' -F '\"'body=$MESSAGE'\"' https://git.b9lab.com/api/v4/projects/$CONTENT_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_ID/notes')"
-    - 'curl -X POST -H "PRIVATE-TOKEN: $CI_BUILDBOT_TOKEN" -F "body=$MESSAGE" https://git.b9lab.com/api/v4/projects/$CONTENT_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/notes'
+    - |
+      if [ ! -z $CI_MERGE_REQUEST_IID ]; 
+      then curl -X POST -H "PRIVATE-TOKEN: $CI_BUILDBOT_TOKEN" -F "body=$MESSAGE" https://git.b9lab.com/api/v4/projects/$CONTENT_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/notes;
+      fi
     #- 'echo curl cmd: $CURL_CMD'
