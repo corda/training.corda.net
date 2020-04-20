@@ -35,32 +35,38 @@ const getSidebarConfig = () => {
 /* check existence for all linked config files */
 const validateSidebarConfig = (sidebarConfig) => {
   let valid = true;
+  let hasIndex = false;
+
   Object.entries(sidebarConfig).forEach(([key,elem]) => {
-    valid = valid && validateSidebarSubTree(key, elem);
-  });
-
-  return valid;
-}
-
-const validateSidebarSubTree = (key, tree) => {
-  let ret = true;
-  console.log("check: ")
-  console.log(tree);
-
-  if (key==="null") return;
-
-  Object.entries(tree).forEach(([key,elem]) => {
-    
-    if (typeof(elem==="Array")) {
-      ret = ret && validateSidebarSubTree(elem);
+    if (key==="null") {
+      hasIndex = true;
       return;
     }
 
-    if(!fs.existsSync(elem + ".mdx")) {
-      console.log("Sidebar Config ERROR: File " + elem + ".mdx not found!");
+    valid = validateSidebarSubTree(key, elem) && valid;
+  });
+
+  if (!hasIndex) console.log("ERR: Sidebar Config: No index found!");
+  return valid && hasIndex;
+}
+
+const validateSidebarSubTree = (key, elem) => {
+  let ret = true;
+
+  
+
+  if (Array.isArray(elem)) {
+    Object.entries(elem).forEach(([sub_key,sub_elem]) => {
+      ret = validateSidebarSubTree(sub_key, sub_elem) && ret;
+    });
+  }
+
+  if (typeof(elem) === "string") {
+    if(!fs.existsSync("./content/" + elem + ".mdx")) {
+      console.log("WARN: Sidebar Config: File " + elem + ".mdx not found!");
       ret = false;
     }
-  });
+  }
 
   return ret;
 }
@@ -75,25 +81,33 @@ const getPathPrefix = () => {
 
 
 
-/* Prevalidation / checks */
+/* Main - load config, prevalidation / checks */
 const sidebarConfig = getSidebarConfig();
 const pathPrefix = getPathPrefix();
-const isValidSiderbarConfig = validateSidebarConfig(sidebarConfig);
-
-if (isProductionBuild()) {
-  if (!isValidSiderbarConfig) {
-    console.log("BUILD FAILED: Invalid sidebarConfig");
-    return false;
-  }
-}
 
 
 console.log("Dynamic gatsby configuration:")
 console.log("> Build type: " + (isProductionBuild() ? "production" : "develop"));
-console.log("> Sidebar");
+console.log("> Sidebar:");
 console.log(sidebarCategories);
 console.log("> Path prefix:");
 console.log(pathPrefix);
+console.log("> Validating Sidebar")
+
+const isValidSiderbarConfig = validateSidebarConfig(sidebarConfig);
+
+if (!isValidSiderbarConfig) {
+  if (isProductionBuild()) {
+      console.log("\nERR: Invalid sidebarConfig - failing (production build)\n");
+      return false;
+  } else {
+    console.log("\nWARN: Invalid sidebarConfig - ignored (development build)\n");
+  }
+} else {
+  console.log("Valid");
+}
+
+
 
 /* Gatsby config export */
 module.exports = {
