@@ -45,3 +45,10 @@ The `--prefix-paths` option will construct links using the path_prefix specified
 ## Sidebar content
 
 The sidebar content (left main navigation) is dynamically loaded in `gatsby-config.js` by importing `content/structure.js`. This file can include further subfiles to build a content tree.
+
+## Plugins
+
+### Prism Code highlighting
+Build-in module.
+
+For all available languages and their tags, see the [Prism list of supported languages](https://prismjs.com/#supported-languages)
