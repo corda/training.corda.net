@@ -1,0 +1,1 @@
+import "./src/css/prism-ghcolors.css"
