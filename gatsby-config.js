@@ -7,6 +7,7 @@
 
 const fs = require('fs');
 const themeOptions = require('./theme-options');
+const remarkTypescript = require('remark-typescript');
 
 /* Helper functions */
 
@@ -108,6 +109,99 @@ if (!isValidSiderbarConfig) {
 }
 
 
+console.log("loading");
+const apolloRemarkPluginConfig = require("gatsby-theme-apollo-docs/gatsby-config.js")({
+  ...themeOptions,
+  root: __dirname,
+  subtitle: 'Corda Training and Turorials',
+  description: 'Learn how to use the Corda platform',
+  githubRepo: 'corda/corda',
+  sidebarCategories: sidebarCategories,
+}); //.plugins.find(i => i.resolve == "gatsby-transformer-remark");
+
+/*(
+  {}
+).plugins.find(i => i.resolve == "gatsby-transformer-remark"); //.gatsbyRemarkPlugins;
+*/
+console.log("loaded config:");
+console.log(apolloRemarkPluginConfig);
+console.log("loaded config plugins:");
+console.log(apolloRemarkPluginConfig.plugins);
+console.log("remark plugins:");
+console.log(apolloRemarkPluginConfig.gatsbyRemarkPlugins);
+console.log("Plugins:");
+console.log(apolloRemarkPluginConfig.gatsbyRemarkPlugins);
+
+//const gatsbyRemarkPlugins = apolloRemarkPluginConfig.gatsbyRemarkPlugins;
+//const remarkTypescript = apolloRemarkPluginConfig.remarkTypescript;
+const gatsbyRemarkPlugins = [
+    {
+      resolve: 'gatsby-remark-autolink-headers',
+      options: {
+        offsetY: 5
+      }
+    },
+    {
+      resolve: 'gatsby-remark-copy-linked-files',
+      options: {
+        ignoreFileExtensions: []
+      }
+    },
+    {
+      resolve: 'gatsby-remark-mermaid',
+      options: {
+        mermaidOptions: {
+          themeCSS: `
+            .node rect,
+            .node circle,
+            .node polygon {
+              stroke-width: 2px;
+              stroke: none;
+              fill: none;
+            }
+            .node.secondary rect,
+            .node.secondary circle,
+            .node.secondary polygon,
+            .node.tertiary rect,
+            .node.tertiary circle,
+            .node.tertiary polygon {
+              fill: white;
+            }
+            .node.secondary rect,
+            .node.secondary circle,
+            .node.secondary polygon {
+              stroke: none;
+            }
+            .cluster rect,
+            .node.tertiary rect,
+            .node.tertiary circle,
+            .node.tertiary polygon {
+              stroke: none;
+            }
+            .cluster rect {
+              fill: none;
+              stroke-width: 2px;
+            }
+            .edgeLabel {
+              background-color: white;
+            }
+          `
+        }
+      }
+    },
+    'gatsby-remark-code-titles',
+    {
+      resolve: 'gatsby-remark-prismjs',
+      options: {
+        showLineNumbers: true
+      }
+    },
+    'gatsby-remark-rewrite-relative-links',
+    {
+      resolve: 'gatsby-remark-check-links',
+      options: "checkLinksOptions"
+    }
+  ];
 
 /* Gatsby config export */
 module.exports = {
@@ -121,8 +215,32 @@ module.exports = {
         subtitle: 'Corda Training and Turorials',
         description: 'Learn how to use the Corda platform',
         githubRepo: 'corda/corda',
-        sidebarCategories: sidebarCategories
+        sidebarCategories: sidebarCategories,
       },
     },
+
+    {
+      resolve: 'gatsby-plugin-mdx',
+      options: {
+        //gatsbyRemarkPlugins: apolloRemarkPluginConfig.gatsbyRemarkPlugins,
+        //remarkPlugins: apolloRemarkPluginConfig.options.remarkPlugins,
+        gatsbyRemarkPlugins: [
+          //gatsbyRemarkPlugins,
+          {
+            resolve: "gatsby-remark-embed-video",
+            options: {
+              width: "100%",
+              //ratio: 1.77, // Optional: Defaults to 16/9 = 1.77
+              height: 400, // Optional: Overrides optional.ratio
+              related: false, //Optional: Will remove related videos from the end of an embedded YouTube video.
+              noIframeBorder: true, //Optional: Disable insertion of <style> border: 0
+            }
+          }
+        ].concat(gatsbyRemarkPlugins),
+        remarkPlugins: [
+          [remarkTypescript, {wrapperComponent: 'MultiCodeBlock'}]
+        ]
+      }
+    }
   ],
 };
