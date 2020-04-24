@@ -104,7 +104,7 @@ deploy-staging-server:
 
     ## Install missing packages
     - apt-get update -y
-    - apt-get install rsync -y
+    - apt-get install rsync curl -y
 
     ## Add deploy key (privkey)
     - 'which ssh-agent || ( apt-get install openssh-client -y )'
