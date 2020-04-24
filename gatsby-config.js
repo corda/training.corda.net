@@ -9,6 +9,13 @@ const fs = require('fs');
 const themeOptions = require('./theme-options');
 const remarkTypescript = require('remark-typescript');
 
+
+/* Configuration */
+
+const defaultExportPath = "/training/";
+const contentFolder = "./content/";
+
+
 /* Helper functions */
 
 const isProductionBuild = () => {
@@ -63,7 +70,7 @@ const validateSidebarSubTree = (key, elem) => {
   }
 
   if (typeof(elem) === "string") {
-    if(!fs.existsSync("./content/" + elem + ".mdx")) {
+    if(!fs.existsSync(contentFolder + elem + ".mdx")) {
       console.log("WARN: Sidebar Config: File " + elem + ".mdx not found!");
       ret = false;
     }
@@ -77,20 +84,56 @@ const getPathPrefix = () => {
   let env_target = process.env.CONTENT_BUILD_TARGET_SUBFOLDER;
   if (typeof(env_target)==="undefined") env_target = "";
 
-  return '/training/' + env_target;
+  return defaultExportPath + env_target;
 }
 
 
 
-/* Main - load config, prevalidation / checks */
+/* load / setup config objects */
 const sidebarConfig = getSidebarConfig();
 const pathPrefix = getPathPrefix();
 
+const apolloDocsOptions = {
+  ...themeOptions,
+  root: __dirname,
+  subtitle: 'Corda Training and Turorials',
+  description: 'Learn how to use the Corda platform',
+  githubRepo: 'corda/corda',
+  sidebarCategories: sidebarConfig,
+}
+
+/*  WORKAROUND: To configure the remark plugin configuration, we need to touch the gatsby-plugin-mdx config which is inside the theme
+    and can not be configured directly. This should be possible in the future with a onPluginOptions hook (https://github.com/gatsbyjs/gatsby/issues/16697).
+    Until this is implemented, we can write our own configuration, merging it with the theme's config (credit to https://github.com/gatsbyjs/gatsby/issues/16593#issuecomment-580037645)
+*/
+const apolloRemarkPluginConfig = require("gatsby-theme-apollo-docs/gatsby-config.js")({
+  ...apolloDocsOptions,
+  sidebarCategories: sidebarConfig
+});
+
+const apolloGatsbyRemarkPlugins = apolloRemarkPluginConfig.plugins.find(i => i.resolve == "gatsby-transformer-remark").options.plugins;
+
+const remarkPluginConfig = [
+  {
+    resolve: "gatsby-remark-embed-video",
+    options: {
+      width: "100%",
+      //ratio: 1.77, // Optional: Defaults to 16/9 = 1.77
+      height: 400, // Optional: Overrides optional.ratio
+      related: false, //Optional: Will remove related videos from the end of an embedded YouTube video.
+      noIframeBorder: true, //Optional: Disable insertion of <style> border: 0
+    }
+  }
+]
+
+
+
+/* Prevalidation / checks */
 
 console.log("Dynamic gatsby configuration:")
 console.log("> Build type: " + (isProductionBuild() ? "production" : "develop"));
 console.log("> Sidebar:");
-console.log(sidebarCategories);
+console.log(sidebarConfig);
 console.log("> Path prefix:");
 console.log(pathPrefix);
 console.log("> Validating Sidebar")
@@ -109,99 +152,6 @@ if (!isValidSiderbarConfig) {
 }
 
 
-console.log("loading");
-const apolloRemarkPluginConfig = require("gatsby-theme-apollo-docs/gatsby-config.js")({
-  ...themeOptions,
-  root: __dirname,
-  subtitle: 'Corda Training and Turorials',
-  description: 'Learn how to use the Corda platform',
-  githubRepo: 'corda/corda',
-  sidebarCategories: sidebarCategories,
-}); //.plugins.find(i => i.resolve == "gatsby-transformer-remark");
-
-/*(
-  {}
-).plugins.find(i => i.resolve == "gatsby-transformer-remark"); //.gatsbyRemarkPlugins;
-*/
-console.log("loaded config:");
-console.log(apolloRemarkPluginConfig);
-console.log("loaded config plugins:");
-console.log(apolloRemarkPluginConfig.plugins);
-console.log("remark plugins:");
-console.log(apolloRemarkPluginConfig.gatsbyRemarkPlugins);
-console.log("Plugins:");
-console.log(apolloRemarkPluginConfig.gatsbyRemarkPlugins);
-
-//const gatsbyRemarkPlugins = apolloRemarkPluginConfig.gatsbyRemarkPlugins;
-//const remarkTypescript = apolloRemarkPluginConfig.remarkTypescript;
-const gatsbyRemarkPlugins = [
-    {
-      resolve: 'gatsby-remark-autolink-headers',
-      options: {
-        offsetY: 5
-      }
-    },
-    {
-      resolve: 'gatsby-remark-copy-linked-files',
-      options: {
-        ignoreFileExtensions: []
-      }
-    },
-    {
-      resolve: 'gatsby-remark-mermaid',
-      options: {
-        mermaidOptions: {
-          themeCSS: `
-            .node rect,
-            .node circle,
-            .node polygon {
-              stroke-width: 2px;
-              stroke: none;
-              fill: none;
-            }
-            .node.secondary rect,
-            .node.secondary circle,
-            .node.secondary polygon,
-            .node.tertiary rect,
-            .node.tertiary circle,
-            .node.tertiary polygon {
-              fill: white;
-            }
-            .node.secondary rect,
-            .node.secondary circle,
-            .node.secondary polygon {
-              stroke: none;
-            }
-            .cluster rect,
-            .node.tertiary rect,
-            .node.tertiary circle,
-            .node.tertiary polygon {
-              stroke: none;
-            }
-            .cluster rect {
-              fill: none;
-              stroke-width: 2px;
-            }
-            .edgeLabel {
-              background-color: white;
-            }
-          `
-        }
-      }
-    },
-    'gatsby-remark-code-titles',
-    {
-      resolve: 'gatsby-remark-prismjs',
-      options: {
-        showLineNumbers: true
-      }
-    },
-    'gatsby-remark-rewrite-relative-links',
-    {
-      resolve: 'gatsby-remark-check-links',
-      options: "checkLinksOptions"
-    }
-  ];
 
 /* Gatsby config export */
 module.exports = {
@@ -209,34 +159,12 @@ module.exports = {
   plugins: [
     {
       resolve: 'gatsby-theme-apollo-docs',
-      options: {
-        ...themeOptions,
-        root: __dirname,
-        subtitle: 'Corda Training and Turorials',
-        description: 'Learn how to use the Corda platform',
-        githubRepo: 'corda/corda',
-        sidebarCategories: sidebarCategories,
-      },
+      options: apolloDocsOptions,
     },
-
     {
       resolve: 'gatsby-plugin-mdx',
       options: {
-        //gatsbyRemarkPlugins: apolloRemarkPluginConfig.gatsbyRemarkPlugins,
-        //remarkPlugins: apolloRemarkPluginConfig.options.remarkPlugins,
-        gatsbyRemarkPlugins: [
-          //gatsbyRemarkPlugins,
-          {
-            resolve: "gatsby-remark-embed-video",
-            options: {
-              width: "100%",
-              //ratio: 1.77, // Optional: Defaults to 16/9 = 1.77
-              height: 400, // Optional: Overrides optional.ratio
-              related: false, //Optional: Will remove related videos from the end of an embedded YouTube video.
-              noIframeBorder: true, //Optional: Disable insertion of <style> border: 0
-            }
-          }
-        ].concat(gatsbyRemarkPlugins),
+        gatsbyRemarkPlugins: remarkPluginConfig.concat(apolloGatsbyRemarkPlugins),
         remarkPlugins: [
           [remarkTypescript, {wrapperComponent: 'MultiCodeBlock'}]
         ]
