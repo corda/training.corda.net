@@ -4,6 +4,10 @@ import {IconProceed} from '@apollo/space-kit/icons/IconProceed';
 import {breakpoints} from 'gatsby-theme-apollo-core';
 import {colors} from '@apollo/space-kit/colors';
 
+
+colors.indigo.dark = "566788";
+colors.indigo.darker = "2f3b59";
+
 const Container = styled.div({
   display: 'flex',
   flexShrink: 0,
