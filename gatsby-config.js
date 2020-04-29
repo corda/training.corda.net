@@ -104,7 +104,15 @@ const apolloDocsOptions = {
 
 /*  WORKAROUND: To configure the remark plugin configuration, we need to touch the gatsby-plugin-mdx config which is inside the theme
     and can not be configured directly. This should be possible in the future with a onPluginOptions hook (https://github.com/gatsbyjs/gatsby/issues/16697).
-    Until this is implemented, we can write our own configuration, merging it with the theme's config (credit to https://github.com/gatsbyjs/gatsby/issues/16593#issuecomment-580037645)
+    Until this is implemented, we can write our own configuration, merging it with the theme's config (credit to https://github.com/gatsbyjs/gatsby/issues/16593#issuecomment-580037645).
+    
+    Config structure:
+    gatsby-theme-apollo-docs/gatsby-config.js
+    ├─gatsby-plugin-mdx
+    │ ├─gatsbyRemarkPlugins: gatsbyRemarkPlugins
+    │ └─remarkPlugins
+    └─gatsby-transformer-remark
+      └─plugins: gatsbyRemarkPlugins
 */
 const apolloRemarkPluginConfig = require("gatsby-theme-apollo-docs/gatsby-config.js")({
   ...apolloDocsOptions,
@@ -113,6 +121,7 @@ const apolloRemarkPluginConfig = require("gatsby-theme-apollo-docs/gatsby-config
 
 const apolloGatsbyRemarkPlugins = apolloRemarkPluginConfig.plugins.find(i => i.resolve == "gatsby-transformer-remark").options.plugins;
 
+// This is the gatsby-transformer-remark config -> remark pipeline
 const remarkPluginConfig = [
   {
     resolve: "gatsby-remark-embed-video",
@@ -123,7 +132,21 @@ const remarkPluginConfig = [
       related: false, //Optional: Will remove related videos from the end of an embedded YouTube video.
       noIframeBorder: true, //Optional: Disable insertion of <style> border: 0
     }
-  }
+  },
+  {
+    resolve: "gatsby-remark-images",
+    options: {
+      maxWidth: 736,
+      linkImagesToOriginal: false,
+      showCaptions: true,
+      quality: 0
+    }
+  },
+  {
+    resolve: "gatsby-remark-images-zoom",
+    options: {
+    }
+  },
 ]
 
 
@@ -162,6 +185,12 @@ module.exports = {
       options: apolloDocsOptions,
     },
     {
+      resolve: 'gatsby-transformer-remark',
+      options: {
+        plugins: remarkPluginConfig.concat(apolloGatsbyRemarkPlugins)
+      }
+    },
+    {
       resolve: 'gatsby-plugin-mdx',
       options: {
         gatsbyRemarkPlugins: remarkPluginConfig.concat(apolloGatsbyRemarkPlugins),
@@ -169,6 +198,16 @@ module.exports = {
           [remarkTypescript, {wrapperComponent: 'MultiCodeBlock'}]
         ]
       }
-    }
+    },
+    {
+      resolve: `gatsby-plugin-sharp`,
+      options: {
+        useMozJpeg: false,
+        stripMetadata: true,
+        defaultQuality: 1,
+        pngCompressionSpeed: 10
+      },
+    },
+    //"gatsby-plugin-slug"
   ],
 };
