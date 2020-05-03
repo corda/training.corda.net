@@ -1,3 +1,13 @@
 h1, h2, h3, h4, h5, h6, h7, h8 {
     font-family: 'Poppins', sans-serif;
 }
+
+/* enable scroll bars for inline code blocks on small res */
+p {
+	overflow: auto;
+}
+
+/* enable wrapping for inline code blocks */
+:not(pre) > code[class*="language-"] {
+	white-space: pre-wrap;
+}
