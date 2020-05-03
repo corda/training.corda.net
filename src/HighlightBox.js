@@ -1,13 +1,15 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import {breakpoints} from 'gatsby-theme-apollo-core';
+//import {breakpoints} from 'gatsby-theme-apollo-core';
 import IconInfo from "./assets/hi-info.svg"
 import IconTip from "./assets/hi-tip.svg"
 import IconWarn from "./assets/hi-warn.svg"
+import IconSupport from "./assets/hi-support.svg"
 
 const HighlightBoxWrapper = styled.div`
   background: #EDEDED;
   display: grid;
+  width: 100%;
   grid-template-columns: 120px auto;
   align-items: center;
   margin: 1.5em 0px;
@@ -36,11 +38,16 @@ const HighlightBoxIcon = styled.div`
   ${({ type }) => type==="warn" && `
     background: #EDC434;
   `}
+
+  ${({ type }) => type==="support" && `
+    background: #2F353F;
+  `}
 `;
 
 const HighlightBoxContent = styled.div`
   padding: 20px;
-
+  overflow: auto;
+  
   &::before {
     font-size: 20px;
     font-weight: bold;
@@ -48,6 +55,38 @@ const HighlightBoxContent = styled.div`
     display: block;
   }
 
+
+  p {
+    margin-bottom: 1.0rem;
+  }
+
+  .cta-wrapper {
+    width: 100%;
+    text-align: center;
+  }
+
+  .cta-button {
+    align-items: center;
+    border: none;
+    border-radius: 40px;
+    color: #fff;
+    display: inline-flex;
+    font-size: 14px;
+    font-weight: 600;
+    justify-content: center;
+    height: 50px;
+    line-height: 1.1;
+    text-decoration: none;
+    width: 150px;
+    background-color: #ec1d24;
+    text-align: center;  }
+
+  .cta-button:hover {
+    background-color: #fff;
+    border: 2px solid #ec1d24;
+    color: #ec1d24;
+  }
+  
   ${({ type }) => type==="info" && `
     &::before {
       content: "Info!";
@@ -68,6 +107,14 @@ const HighlightBoxContent = styled.div`
       color: #2F353F;
     }
   `}
+
+  ${({ type }) => type==="support" && `
+    &::before {
+      content: "Expert Track - Get your code reviewed!";
+      color: #2F353F;
+    }
+  `}
+
 `;
 
 const IconImage = ({type}) => {
@@ -76,6 +123,7 @@ const IconImage = ({type}) => {
   if (type==="info") icon=IconInfo
   if (type==="tip") icon=IconTip
   if (type==="warn") icon=IconWarn
+  if (type==="support") icon=IconSupport
 
   return (
     <img src={icon} alt={`${type} icon`} />
@@ -101,7 +149,7 @@ const Container = styled.div({
 
 export default function HighlightBox(props) {
   return (
-    <HighlightBoxWrapper type={props.type}>
+    <HighlightBoxWrapper type={props.type} className="HighlightBoxWrapper">
       <HighlightBoxIcon type={props.type}>
         <IconImage type={props.type}/>
       </HighlightBoxIcon>
