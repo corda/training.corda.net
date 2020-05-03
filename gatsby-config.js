@@ -96,7 +96,7 @@ const pathPrefix = getPathPrefix();
 const apolloDocsOptions = {
   ...themeOptions,
   root: __dirname,
-  subtitle: 'Corda Training and Turorials',
+  subtitle: 'Corda Training and Tutorials',
   description: 'Learn how to use the Corda platform',
   githubRepo: 'corda/corda',
   sidebarCategories: sidebarConfig,
