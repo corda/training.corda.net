@@ -1,7 +1,7 @@
 {
   "scripts": {
     "prestart": "gatsby clean",
-    "start": "gatsby develop --port 4000",
+    "start": "gatsby develop --port 4001",
     "build": "gatsby build --prefix-paths",
     "serve": "gatsby serve"
   },
@@ -12,8 +12,10 @@
     "gatsby-remark-embed-video": "^2.0.1",
     "gatsby-remark-images": "^3.3.0",
     "gatsby-remark-images-zoom": "^1.1.0",
+    "gatsby-source-graphql": "^2.5.1",
     "gatsby-theme-apollo-docs": "4.1.5",
     "gatsby-transformer-remark": "^2.7.4",
+    "prism-react-renderer": "^1.1.0",
     "react": "16.13.0",
     "react-dom": "16.13.0"
   }
