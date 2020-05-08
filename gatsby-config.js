@@ -14,6 +14,7 @@ const remarkTypescript = require('remark-typescript');
 
 const defaultExportPath = "/training/";
 const contentFolder = "./content/";
+const disableImageProcessing = true;
 
 
 /* Helper functions */
@@ -122,7 +123,7 @@ const apolloRemarkPluginConfig = require("gatsby-theme-apollo-docs/gatsby-config
 const apolloGatsbyRemarkPlugins = apolloRemarkPluginConfig.plugins.find(i => i.resolve == "gatsby-transformer-remark").options.plugins;
 
 // This is the gatsby-transformer-remark config -> remark pipeline
-const remarkPluginConfig = [
+let remarkPluginConfig = [
   {
     resolve: "gatsby-remark-embed-video",
     options: {
@@ -133,21 +134,26 @@ const remarkPluginConfig = [
       noIframeBorder: true, //Optional: Disable insertion of <style> border: 0
     }
   },
-  {
-    resolve: "gatsby-remark-images",
-    options: {
-      maxWidth: 736,
-      linkImagesToOriginal: false,
-      showCaptions: true,
-      quality: 0
-    }
-  },
-  {
-    resolve: "gatsby-remark-images-zoom",
-    options: {
-    }
-  }
 ]
+
+if (!disableImageProcessing) {
+  remarkPluginConfig.concat([
+    {
+      resolve: "gatsby-remark-images",
+      options: {
+        maxWidth: 736,
+        linkImagesToOriginal: false,
+        showCaptions: true,
+        quality: 0
+      }
+    },
+    {
+      resolve: "gatsby-remark-images-zoom",
+      options: {
+      }
+    }
+  ]);
+}
 
 
 
@@ -205,7 +211,8 @@ module.exports = {
         useMozJpeg: false,
         stripMetadata: true,
         defaultQuality: 1,
-        pngCompressionSpeed: 10
+        pngCompressionSpeed: 10,
+        srcSetBreakpoints: [736]
       },
     },
     //"gatsby-plugin-slug"
