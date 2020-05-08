@@ -3,9 +3,12 @@ import React, {useRef, useState} from 'react';
 import SectionNav from './section-nav';
 import styled from '@emotion/styled';
 import useMount from 'react-use/lib/useMount';
+import {HEADER_HEIGHT} from 'gatsby-theme-apollo-docs/src/utils';
 import {IconGithub} from '@apollo/space-kit/icons/IconGithub';
+import {IconSchema} from '@apollo/space-kit/icons/IconSchema';
+import IconSupportSVG from "../../assets/ic-support.svg";
 import {PageNav, breakpoints, colors} from 'gatsby-theme-apollo-core';
-import {ReactComponent as SlackLogo} from '../assets/slack.svg';
+import {ReactComponent as SpectrumLogo} from 'gatsby-theme-apollo-docs/src/assets/spectrum.svg';
 import {withPrefix} from 'gatsby';
 
 const Wrapper = styled.div({
@@ -59,6 +62,9 @@ const BodyContent = styled.div({
     display: 'block',
     maxWidth: '100%',
     margin: '0 auto'
+  },
+  '.mermaid svg': {
+    maxWidth: '100%'
   }
 });
 
@@ -67,12 +73,12 @@ const Aside = styled.aside({
   flexDirection: 'column',
   flexShrink: 0,
   width: 240,
-  maxHeight: `calc(100vh - 64px)`,
+  maxHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
   marginTop: -36,
   padding: '40px 0',
   marginLeft: 40,
   position: 'sticky',
-  top: 64,
+  top: HEADER_HEIGHT,
   [breakpoints.lg]: {
     display: 'none'
   },
@@ -112,7 +118,6 @@ const AsideLinkInner = styled.a({
   }
 });
 
-
 function AsideLink(props) {
   return (
     <AsideLinkWrapper>
@@ -136,6 +141,12 @@ const EditLink = styled.div({
     marginTop: 24
   }
 });
+
+const IconSupport = () => {
+  return ( 
+    <img src={IconSupportSVG} alt={`support icon`} width="20px" style={{marginRight: "6px"}}/>
+  )
+}
 
 export default function PageContent(props) {
   const contentRef = useRef(null);
@@ -187,6 +198,12 @@ export default function PageContent(props) {
     </AsideLink>
   );
 
+  const supportLink = (
+    <AsideLink href="google.com">
+      <IconSupport />Get paid Support
+    </AsideLink>
+  );
+
   return (
     <Wrapper>
       <InnerWrapper>
@@ -194,6 +211,8 @@ export default function PageContent(props) {
           {props.children}
         </BodyContent>
         <EditLink>{editLink}</EditLink>
+        <EditLink>{supportLink}</EditLink>
+
         <PageNav
           prevPage={props.pages[pageIndex - 1]}
           nextPage={props.pages[pageIndex + 1]}
@@ -209,9 +228,17 @@ export default function PageContent(props) {
           />
         )}
         {editLink}
-        <AsideLink href="https://corda.slack.com/">
-          <SlackLogo /> Discuss on Slack
-        </AsideLink>
+        {supportLink}
+        {props.spectrumUrl && (
+          <AsideLink href={props.spectrumUrl}>
+            <SpectrumLogo /> Discuss on Spectrum
+          </AsideLink>
+        )}
+        {props.graphManagerUrl && (
+          <AsideLink href={props.graphManagerUrl}>
+            <IconSchema /> Demo Graph Manager
+          </AsideLink>
+        )}
       </Aside>
     </Wrapper>
   );
@@ -226,5 +253,5 @@ PageContent.propTypes = {
   title: PropTypes.string.isRequired,
   graphManagerUrl: PropTypes.string.isRequired,
   headings: PropTypes.array.isRequired,
-  slackUrl: PropTypes.string
+  spectrumUrl: PropTypes.string
 };
