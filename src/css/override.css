@@ -7,11 +7,17 @@ h1, h2, h3, h4, h5, h6, h7, h8 {
 }
 
 /* enable scroll bars for inline code blocks on small res */
-p {
-	overflow: auto;
+.gatsby-highlight div[class*="InnerContainer"] {
+		overflow: auto;
+		padding-bottom: 30px;
 }
 
 /* enable wrapping for inline code blocks */
 :not(pre) > code[class*="language-"] {
 	white-space: pre-wrap;
+}
+
+/* fix scrollbar issue */
+.gatsby-highlight-code-line {
+	margin-right: 0;
 }

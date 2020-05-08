@@ -146,7 +146,7 @@ const remarkPluginConfig = [
     resolve: "gatsby-remark-images-zoom",
     options: {
     }
-  },
+  }
 ]
 
 

@@ -17,7 +17,8 @@ import theme from "prism-react-renderer/themes/github";
 const ExternalContent = (props) => {
   /*  Taken from the gatsby react hydration sample, we could query github during static build to allow for data/code
       inclusion in the static build. However, as we are only looking for the code at the moment, we are skipping this and
-      just put a link to the source as static content (previewSource).
+      just put a link to the source as static content (previewSource). TODO: We should at least utilize the static build process
+      to check the link and throw if the url is not found.
   */
 
   /*
