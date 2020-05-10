@@ -7,6 +7,10 @@ import IconFrown from "./assets/fa-frown-light.svg"
 
 const formActionEndpoint = "https://formspree.io/xzbjbwla";
 
+ /* FeedbackBox Component
+  * Collects page feedback (rate this page) in a form and sends the data to an endpoint.
+  * We currently use formspree.io as receiver.
+  */
 export default class FeedbackBox extends React.Component {
 
   constructor(props) {

@@ -1,0 +1,27 @@
+.cta-wrapper {
+  width: 100%;
+  text-align: center;
+}
+
+.cta-button {
+  align-items: center;
+  border: none;
+  border-radius: 40px;
+  color: #fff;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 600;
+  justify-content: center;
+  height: 50px;
+  line-height: 1.1;
+  text-decoration: none;
+  width: 150px;
+  background-color: #ec1d24;
+  text-align: center;
+}
+
+.cta-button:hover {
+  background-color: #fff;
+  border: 2px solid #ec1d24;
+  color: #ec1d24;
+}
