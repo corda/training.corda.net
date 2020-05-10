@@ -45,6 +45,13 @@ export default class FeedbackBox extends React.Component {
       &.visible {
         display: flex;
       }
+
+      button {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+      }
     `;
 
     const SmileyBox = styled.div`
@@ -146,21 +153,21 @@ export default class FeedbackBox extends React.Component {
       <FeedbackBoxWrapper>
         Rate this Page
         <FeedbackBoxContainer className={this.state.showFeedbackContainer ? 'visible' : ''}>
-          <a href="#" onClick={() => showFeedbackForm("bad")}>
+          <button onClick={() => showFeedbackForm("bad")}>
             <SmileyBox>
               <SmileyIcon src={IconFrown} alt="icon frown" />
             </SmileyBox>
-          </a>
-          <a href="#" onClick={() => showFeedbackForm("medium")}>
+          </button>
+          <button onClick={() => showFeedbackForm("medium")}>
             <SmileyBox>
               <SmileyIcon src={IconMeh} alt="icon meh" />
             </SmileyBox>
-          </a>
-          <a href="#" onClick={() => showFeedbackForm("good")}>
+          </button>
+          <button onClick={() => showFeedbackForm("good")}>
             <SmileyBox>
               <SmileyIcon src={IconSmile} alt="icon smile" />
             </SmileyBox>
-          </a>
+          </button>
         </FeedbackBoxContainer>
         
         <FeedbackForm id="feedback_form" className={this.state.showForm ? 'visible' : ''}>
