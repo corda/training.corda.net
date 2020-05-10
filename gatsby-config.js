@@ -1,8 +1,11 @@
 /*  Gatsby config for the Corda Training app
-    Added some dynamic loading, env/ci build handling and prevalidations.
-    Does throw an "ERROR #85923  GRAPHQL" error sometimes on recompilation - just try again fresh.
-
-    Author: Ibo Sy - B9lab
+    
+    Changing this file in dev mode will require a server restart
+    
+    - Theme options are retrieved from theme-options.js
+    - Sidebar content is loaded from structure.js in the contentFolder
+    
+    You can set disableImageProcessing to true to speed up dev builds.
 */
 
 const fs = require('fs');
@@ -12,9 +15,9 @@ const remarkTypescript = require('remark-typescript');
 
 /* Configuration */
 
-const defaultExportPath = "/training/";
-const contentFolder = "./content/";
-const disableImageProcessing = true;
+const defaultExportPath = "/";        // Export path option passed to gatsby (deployment path prefix)
+const contentFolder = "./content/";   // Mdx source folder
+const disableImageProcessing = false; // Disable image processing for dev build
 
 
 /* Helper functions */
@@ -41,7 +44,7 @@ const getSidebarConfig = () => {
   return sidebarCategories = {...sidebarDefaults, ...sidebarContent};
 }
 
-/* check existence for all linked config files */
+/* checks existence for all linked config files */
 const validateSidebarConfig = (sidebarConfig) => {
   let valid = true;
   let hasIndex = false;
@@ -61,8 +64,6 @@ const validateSidebarConfig = (sidebarConfig) => {
 
 const validateSidebarSubTree = (key, elem) => {
   let ret = true;
-
-  
 
   if (Array.isArray(elem)) {
     Object.entries(elem).forEach(([sub_key,sub_elem]) => {
@@ -128,23 +129,23 @@ let remarkPluginConfig = [
     resolve: "gatsby-remark-embed-video",
     options: {
       width: "100%",
-      //ratio: 1.77, // Optional: Defaults to 16/9 = 1.77
-      height: 400, // Optional: Overrides optional.ratio
+      height: 400,
       related: false, //Optional: Will remove related videos from the end of an embedded YouTube video.
       noIframeBorder: true, //Optional: Disable insertion of <style> border: 0
     }
-  },
+  }
 ]
 
 if (!disableImageProcessing) {
-  remarkPluginConfig.concat([
+  console.log("process images");
+  remarkPluginConfig = remarkPluginConfig.concat([
     {
       resolve: "gatsby-remark-images",
       options: {
-        maxWidth: 736,
+        maxWidth: 736, // page max container width
         linkImagesToOriginal: false,
         showCaptions: true,
-        quality: 0
+        quality: (disableImageProcessing ? 0 : 7)
       }
     },
     {
@@ -158,7 +159,6 @@ if (!disableImageProcessing) {
 
 
 /* Prevalidation / checks */
-
 console.log("Dynamic gatsby configuration:")
 console.log("> Build type: " + (isProductionBuild() ? "production" : "develop"));
 console.log("> Sidebar:");
@@ -209,12 +209,8 @@ module.exports = {
       resolve: `gatsby-plugin-sharp`,
       options: {
         useMozJpeg: false,
-        stripMetadata: true,
-        defaultQuality: 1,
-        pngCompressionSpeed: 10,
-        srcSetBreakpoints: [736]
-      },
-    },
-    //"gatsby-plugin-slug"
-  ],
+        stripMetadata: true
+      }
+    }
+  ]
 };
