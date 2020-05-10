@@ -1,0 +1,10 @@
+{
+  "index_name": "corda_training",
+  "start_urls": ["https://training.corda.net/"],
+  "selectors": {
+	"lvl0": ".header-wrapper h1",
+	"lvl1": ".content-wrapper h2",
+	"text": ".content-wrapper h3, .content-wrapper p, .content-wrapper li, .header-wrapper div.subtitle-page, .header-wrapper h3"
+  }
+}
+
