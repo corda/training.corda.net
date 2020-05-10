@@ -5,7 +5,10 @@
     - Theme options are retrieved from theme-options.js
     - Sidebar content is loaded from structure.js in the contentFolder
     
-    You can set disableImageProcessing to true to speed up dev builds.
+    You can enable the disableImageProcessing flag to speed up dev builds.
+
+    This configuration modifies the Theme's remark pipeline (mdx renderer), based on gatsby-transformer-remark.
+    Further remark plugins can be added to the remarkPluginConfig list.
 */
 
 const fs = require('fs');
@@ -13,14 +16,14 @@ const themeOptions = require('./theme-options');
 const remarkTypescript = require('remark-typescript');
 
 
-/* Configuration */
+/*  Configuration  */
 
 const defaultExportPath = "/";        // Export path option passed to gatsby (deployment path prefix)
 const contentFolder = "./content/";   // Mdx source folder
 const disableImageProcessing = false; // Disable image processing for dev build
 
 
-/* Helper functions */
+/*  Helper functions */
 
 const isProductionBuild = () => {
   return process.env.gatsby_executing_command == "build" ? true : false;
@@ -81,7 +84,7 @@ const validateSidebarSubTree = (key, elem) => {
   return ret;
 }
 
-/* Returns the path prefix for gatsby. Note that this is being used for production build (gatsby build)*/
+/* Returns path prefix from env. Also adds optional env.CONTENT_BUILD_TARGET_SUBFOLDER (used for ci deployments into subfolders) */
 const getPathPrefix = () => {
   let env_target = process.env.CONTENT_BUILD_TARGET_SUBFOLDER;
   if (typeof(env_target)==="undefined") env_target = "";
@@ -91,7 +94,7 @@ const getPathPrefix = () => {
 
 
 
-/* load / setup config objects */
+/*  Load external config and setup config for gatsby */
 const sidebarConfig = getSidebarConfig();
 const pathPrefix = getPathPrefix();
 
@@ -123,7 +126,7 @@ const apolloRemarkPluginConfig = require("gatsby-theme-apollo-docs/gatsby-config
 
 const apolloGatsbyRemarkPlugins = apolloRemarkPluginConfig.plugins.find(i => i.resolve == "gatsby-transformer-remark").options.plugins;
 
-// This is the gatsby-transformer-remark config -> remark pipeline
+// This is the gatsby-transformer-remark config -> remark pipeline configuration
 let remarkPluginConfig = [
   {
     resolve: "gatsby-remark-embed-video",
@@ -137,7 +140,6 @@ let remarkPluginConfig = [
 ]
 
 if (!disableImageProcessing) {
-  console.log("process images");
   remarkPluginConfig = remarkPluginConfig.concat([
     {
       resolve: "gatsby-remark-images",
@@ -157,8 +159,7 @@ if (!disableImageProcessing) {
 }
 
 
-
-/* Prevalidation / checks */
+/* Prevalidation and Info */
 console.log("Dynamic gatsby configuration:")
 console.log("> Build type: " + (isProductionBuild() ? "production" : "develop"));
 console.log("> Sidebar:");
