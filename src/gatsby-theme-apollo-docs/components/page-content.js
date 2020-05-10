@@ -12,7 +12,7 @@ import {ReactComponent as SpectrumLogo} from 'gatsby-theme-apollo-docs/src/asset
 import {withPrefix} from 'gatsby';
 import FeedbackBox from '../../FeedbackBox'
 
-const supportLinkTarget = "http://www.google.com";
+const supportLinkTarget = "/in-closing/get-paid-support";
 
 const Wrapper = styled.div({
   display: 'flex',
@@ -212,9 +212,11 @@ export default function PageContent(props) {
   );
 
   const supportLink = (
-    <AsideLink href={supportLinkTarget}>
-      <IconSupport />Get paid Support
-    </AsideLink>
+    <AsideLinkWrapper >
+      <AsideLinkInner href={supportLinkTarget} >
+        <IconSupport />Get paid Support
+      </AsideLinkInner>
+    </AsideLinkWrapper>
   );
 
   return (
