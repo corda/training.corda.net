@@ -10,6 +10,9 @@ import IconSupportSVG from "../../assets/ic-support.svg";
 import {PageNav, breakpoints, colors} from 'gatsby-theme-apollo-core';
 import {ReactComponent as SpectrumLogo} from 'gatsby-theme-apollo-docs/src/assets/spectrum.svg';
 import {withPrefix} from 'gatsby';
+import FeedbackBox from '../../FeedbackBox'
+
+const supportLinkTarget = "http://www.google.com";
 
 const Wrapper = styled.div({
   display: 'flex',
@@ -199,7 +202,7 @@ export default function PageContent(props) {
   );
 
   const supportLink = (
-    <AsideLink href="google.com">
+    <AsideLink href={supportLinkTarget}>
       <IconSupport />Get paid Support
     </AsideLink>
   );
@@ -209,6 +212,7 @@ export default function PageContent(props) {
       <InnerWrapper>
         <BodyContent ref={contentRef} className="content-wrapper">
           {props.children}
+
         </BodyContent>
         <EditLink>{editLink}</EditLink>
         <EditLink>{supportLink}</EditLink>
@@ -217,6 +221,7 @@ export default function PageContent(props) {
           prevPage={props.pages[pageIndex - 1]}
           nextPage={props.pages[pageIndex + 1]}
         />
+        <FeedbackBox/>
       </InnerWrapper>
       <Aside>
         <AsideHeading>{props.title}</AsideHeading>
