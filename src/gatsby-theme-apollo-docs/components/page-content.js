@@ -6,7 +6,7 @@ import useMount from 'react-use/lib/useMount';
 import {HEADER_HEIGHT} from 'gatsby-theme-apollo-docs/src/utils';
 import {IconGithub} from '@apollo/space-kit/icons/IconGithub';
 import {IconSchema} from '@apollo/space-kit/icons/IconSchema';
-import IconSupportSVG from "../../assets/ic-support.svg";
+import { ReactComponent as IconSupportSVG } from "../../assets/ic-support.svg";
 import {PageNav, breakpoints, colors} from 'gatsby-theme-apollo-core';
 import {ReactComponent as SpectrumLogo} from 'gatsby-theme-apollo-docs/src/assets/spectrum.svg';
 import {withPrefix} from 'gatsby';
@@ -145,9 +145,19 @@ const EditLink = styled.div({
   }
 });
 
+const SVGIconWrapper = styled.div`
+  width: 20px;
+  margin-right: 6px;
+  padding-top: 2px;
+`
+
 const IconSupport = () => {
-  return ( 
-    <img src={IconSupportSVG} alt={`support icon`} width="20px" style={{marginRight: "6px"}}/>
+  return (
+
+    <SVGIconWrapper>
+      <IconSupportSVG/>
+    </SVGIconWrapper>
+
   )
 }
 
