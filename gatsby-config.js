@@ -147,7 +147,7 @@ if (!disableImageProcessing) {
         maxWidth: 736, // page max container width
         linkImagesToOriginal: false,
         showCaptions: true,
-        quality: (disableImageProcessing ? 0 : 7)
+        quality: 7
       }
     },
     {
