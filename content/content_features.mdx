@@ -1,0 +1,274 @@
+---
+title: Content Features
+description: Demonstrates Markdown and Component features
+slug: content-features
+---
+
+# Components
+
+## Highlight Box
+
+import HighlightBox from "../src/HighlightBox"
+
+### Info
+
+<HighlightBox type="info">
+
+Highlight Box content Text
+
+</HighlightBox>
+
+
+### Tip
+
+<HighlightBox type="tip">
+
+Tip Highlight box
+
+List:
+* item 1
+* item 2
+* item 3
+
+</HighlightBox>
+
+
+### Warning
+
+<HighlightBox type="warn">
+
+Highlight Box Warning
+
+
+</HighlightBox>
+
+
+### Support
+
+<HighlightBox type="support">
+
+Get 3 months access to the authors and experts who created this training.
+
+* Expert instructors will review your code and help you to refine it.
+* One-on-one support and mentoring from expert instructors.
+* Collaboration with fellow students in a dedicated Training Slack channel.
+
+<div class="cta-wrapper">
+<a href="/in-closing/get-paid-support/" class="cta-button">Learn More</a>
+</div>
+
+</HighlightBox>
+
+
+## Expansion Panel
+
+### Simple
+
+import {
+  ExpansionPanel,
+  ExpansionPanelList,
+  ExpansionPanelListItem
+} from 'gatsby-theme-apollo-docs';
+
+<ExpansionPanel title="Expansion Panel Component Title">
+
+### ExpansionPanel Content with inline markdown
+* list 1
+* list 2
+* list 3
+
+
+**must be wrapped in new lines to render markdown**
+
+</ExpansionPanel>
+
+### ExpansionPanel with ExpansionPanelList
+Allows to display a list of steps
+
+<ExpansionPanel title="How to use the ExpansionPanel component">
+
+<ExpansionPanelList>
+<ExpansionPanelListItem number="1">
+
+### List item 1
+
+Do something and run
+```
+print "hello world"
+```
+
+</ExpansionPanelListItem>
+<ExpansionPanelListItem number="2">
+
+### Verify install
+**Check the folder content** and ensure it looks like this:
+![A chain of blocks](01-blockchain/images/blockchainintro.png)
+
+</ExpansionPanelListItem>
+<ExpansionPanelListItem number="check">
+
+### Complete!
+You are done. Don't forget:
+> Mama said: Save often!
+
+</ExpansionPanelListItem>
+</ExpansionPanelList>
+
+</ExpansionPanel>
+
+## Code Blocks
+
+### Simple
+[Supported languages](https://prismjs.com/#supported-languages)
+
+```java
+public class HelloWorld {
+}
+```
+
+asd
+
+### Highlighting Code
+
+You can use the following syntax to highlight inside the code:
+* highlight-line
+* highlight-next-line
+* highlight-start
+* highlight-range{1, 4-6} (relative to the position in code)
+
+**as a comment in your code!** It looks like this:
+
+```js
+	this.value = value; // highlight-line
+	this.lender = lender;
+	// highlight-next-line // highlight-next-line
+	this.borrower = borrower;
+	this.linearId = linearId;
+	this.borrower = borrower;
+	this.linearId = linearId;
+	// highlight-range{2,4-6}
+	this.borrower = borrower;
+	this.linearId = linearId;
+	this.borrower = borrower;
+	this.linearId = linearId;
+	this.borrower = borrower;
+	this.linearId = linearId;
+	this.borrower = borrower;
+	this.linearId = linearId;
+```
+
+Where the first line in markdown actually contains this:
+
+`this.value = value; // highlight-line`
+
+See the [documentation](https://www.gatsbyjs.org/packages/gatsby-remark-prismjs/#line-highlighting) for further details.
+
+### Multi language Code Block
+
+import {MultiCodeBlock} from 'gatsby-theme-apollo-docs';
+
+<MultiCodeBlock>
+
+```js
+// a JavaScript code block
+let myVar = 42;
+```
+
+```ts
+// a TypeScript code block
+```
+
+```shell
+$ ls -al
+mkdir newfolder
+```
+
+</MultiCodeBlock>
+
+Notice how selecting a language propagates it.
+
+<MultiCodeBlock>
+
+```js
+// a JavaScript code block
+let myVar = 43;
+```
+
+```ts
+// another TypeScript code block
+```
+
+</MultiCodeBlock>
+
+## Video Component
+
+### Embed with id
+
+`youtube: 8BhzjcF79B8`
+
+### Embed with url
+
+`video: https://-www.youtube.com/watch?v=7S1IqaSLrq8`
+
+
+## ExternalContent
+
+import ExternalContent from "../src/ExternalContent"
+
+<ExternalContent
+    url="https://raw.githubusercontent.com/corda/samples/2f110c0085b8a9f59d3ceba779604ed2798d46af/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java"
+    lineStart="40"
+    lineEnd="43"
+    language="javascript" />
+
+The above should look like:
+
+```javascript
+this.value = value;
+this.lender = lender;
+this.borrower = borrower;
+this.linearId = linearId;
+```
+
+Bottom spacing check
+
+# Tests / Features
+
+## Wrapping / Scroll
+
+HighlightBox with long code / scroll
+
+<HighlightBox type="info">
+
+Highlight Box with long Code Block
+
+```shell
+// Make sure you are inside cordapp-example folder.
+$ ./gradlew --build-file workflows-java/build.gradle deployNodes
+```
+
+If your default version of Java is not 1.8, you may run into problems such as `NoClassDefFoundError`. In this case, you need to be specific and do:
+
+</HighlightBox>
+
+HighlightBox with Markdown content
+
+<HighlightBox type="tip">
+
+Highlight Box Tip content with inline markdown (**must** be enclosed in new lines)
+
+```javascript
+let x=5;
+console.log(x);
+```
+
+List:
+* item 1
+* item 2
+* item 3
+
+</HighlightBox>
+
+Long inline code Block. It should now break and also display a scroll bar on very small.
+
+Now in PartyA, run `>>> flow start ExampleFlowEvenLongerNameThanInitially$Initiator iouValue: 50, otherParty: "O=PartyB,L=New York,C=US"`. We get:

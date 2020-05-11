@@ -1,0 +1,252 @@
+---
+title: State example solution
+description: We give you an example
+slug: first-code/solution-state
+---
+
+import HighlightBox from "../../src/HighlightBox"
+
+Ok, you have done your exercise, you have your own `TokenState` and `TokenContract`. Now, compare what you did to what we think is a good example displaying some best practice, starting with `TokenState`. You will find a solution to `TokenContract` in the next chapter. As always, there is no single truth as to implementation, but we hope you will reflect on your first attempt given our remarks here. Let's go.
+
+This document will link to Java code, but you will also find the Kotlin implementation nearby and notice it is often more succinct.
+
+You will notice that, as much as possible, variables are marked `final` and `private`, and annotated as `@NotNull`, lists are made immutable, and so on. The goal here is to introduce strictness and let the compiler warn us as early as possible when we are doing something untoward.
+
+Find the `TokenState` code [here](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/contracts/src/main/java/com/template/states/TokenState.java)
+
+<!-- link for now https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/contracts/src/main/java/com/template/states/TokenState.java -->
+
+Let's review the work that was achieved here, and the rationales behind certain decisions. But first, a summary diagram of the `TokenState`:
+
+![CDL view of TokenState](images/cdl_tokenstate.png)
+
+## The class declaration
+
+<!-- TODO replace these pieces of code with the links and remote fetch components -->
+
+```java
+@BelongsToContract(TokenContract.class)
+public final class TokenState implements ContractState {
+```
+You want your `TokenState` to be used as state in Corda, so it has to implement `ContractState`.
+
+We make it `final` because we don't like surprises.
+
+<!-- TODO Further reasons? -->
+
+A state's lifecycle is _controlled_ by the contract that will allow its creation and consumption. So it is important for you, the developer, to identify which contract the state expects for protection. This is the role of `@BelongsToContract`. You will notice that:
+
+```java
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.CLASS)
+annotation class BelongsToContract(val value: KClass<out Contract>)
+```
+The `BelongsToContract` annotation carries over at runtime, which allows the Corda system to cross-check whether it is instructed to use the expected contract when verifying a transaction.
+
+Dig into to `ContractState` and see that this class is `@CordaSerializable`. Indeed, it is expected that a state needs to be serialised and transmitted over the wire to the relevant parties. It is thus important that all our fields are marked as serialisable as well.
+
+## The fields
+
+The state's fields are, hopefully, self-explanatory:
+
+```java
+@NotNull
+private final Party issuer;
+@NotNull
+private final Party holder;
+private final long quantity;
+```
+
+These 3 **keywords** will be found throughout the code so, let's talk about them a bit:
+
+* `final`: because once a state has been created or loaded in memory, we like to have assurance that it cannot be changed, even internally. We don't like variables that change after we have potentially checked them. Also, the `equals` and `hashCode` functions would be defeated. Also remember that when a state has been created by way of a transaction it is, in effect, immutable. So it is best to express this inevitability.
+* `private`: because we always protect our values. If a value needs to be accessible, then you create a getter like this:
+
+    ```java
+    @NotNull
+    public Party getIssuer() {
+        return issuer;
+    }
+    ```
+* `@NotNull`: so as to be warned by the compiler if we try to pass potentially `null` values.
+
+Why did we pick the **names** of `issuer`, `holder` and `quantity`? Because, later on, we will encounter these same names again, in a specific Corda SDK. This should assist your understanding. If you picked different names, that is fine, as long as they are generic. For interoperability purposes, you will want to err on the side of generalisation. For example, `airline`, `passenger` and `miles` would be a little too specific.
+
+What if:
+
+* you had omitted the `issuer` field? It would mean that all airline miles are equal&nbsp;- that air-miles issued by one company are the same as (fungible with) air-miles issued by another company. It would mean that one rogue airline could issue air-miles and burden competitors with the liabilities and redemption.
+* you had omitted the `holder` field? Did you plan on having this information stored elsewhere? What would a state without holder mean in our case?
+* you had omitted the `quantity` field? Did you plan on issuing 1 state instance for each air-mile? It would not be very database-friendly to issue 5,000 times 1 air-mile for a single long trip.
+* you had a 4th field? We are curious, let us know.
+
+Why did we choose these **types**:
+
+* `Party` as the identifiers of `issuer` and `holder`. Why not `AbstractParty`? A `Party` is clearly identified, on the other hand, if you choose `AbstractParty`, you make it possible in the future to use `AnonymousParty` and keep identities disclosed only to those that need to know. Eventually, we can imagine that the airlines consortium would most certainly accept to have anonymous `holder`. However, an anonymous `issuer` does not sound like an improvement. In the end, we chose `Party` because dealing with `AnonymousParty` is an advanced topic that is best left for later.
+* `long` for the `quantity`? It allows large enough numbers for even the most enthusiastic traveler. It is best to use the greatest precision we will ever need.
+
+## The constructor
+
+```java
+public TokenState(@NotNull final Party issuer, @NotNull final Party holder, final long quantity) {
+    //noinspection ConstantConditions
+    if (issuer == null) throw new NullPointerException("issuer cannot be null");
+    ...
+```
+Notice:
+
+* Even in the constructor, we aggressively mark the variables as `final`. You had no intention of modifying these variables within the constructor, right? Make this **explicit** by adding the `final` keyword.
+* With `@NotNull` we advertise that we expect non-null values, so that the expectation of non-null fields is carried forward to creators of the state.
+* Despite the annotation, it is still possible to pass `null` values at **runtime**, so we need to check for this possibility, which is the role of the `NullPointerException`. Yes, IntelliJ can automatically add the same at compilation time, but this is not the case when using Gradle, so let's not rely on a feature that is _only sometimes_ turned on.
+* Then, checking `issuer` for nullity, when it has been previously annotated with `NotNull`, triggers a compiler&nbsp;/ static analysis warning. The role of `//noinspection ConstantConditions` is to disable this warning as the non-null check is made intentionally. The fewer unwelcome warnings, the better.
+* We allow `0` and negative values for `quantity`. Of course, we have no intention of letting such negative-quantity states be created on the ledger. However, one of our design goals is to have all relevant constraints gathered in a single place, the contract, rather than scattering them across constructors and other places.
+
+## The participants
+
+The participants is the list of parties that **have to** be informed of every change to the state. When informed of a change, these parties will also, by default, save the relevant states to their vaults. Of course other parties not mentioned in the participants can also be kept informed, if needed. This is addressed in the flows, as we shall eventually see.
+
+```java
+@NotNull
+@Override
+public List<AbstractParty> getParticipants() {
+    return Collections.singletonList(holder);
+}
+```
+Why did we chose **only** the `holder`?
+
+1. The `holder` is key. It is the owner and the owner **needs to know** what they own because of an issuance or a move, and when they no longer own because of a move or a redemption.
+2. The `issuer` is not always relevant here. Does the issuer need to be informed of any change of ownership? No. The issuer is informed by default on issuance because they need to sign. And surely, the issuer needs to be informed when it is time to redeem. But in between, they **can let it go**, there is no necessity for them to be informed about every _move_.
+3. An issuer will issue a lot of tokens, and expecting their servers to be pinged on every _move_ transaction is potentially putting them under a lot of pressure.
+
+Notice the use of `Collections.singletonList`. It creates an immutable list. You cannot just `.add` elements to it. In effect, you lose some convenience. If you really mean to use this list of participants, and add to it in order to inform more parties than just the basic participants, then you will have to create a brand new list. There is a benefit hidden in this convolution: doing so makes your code **explicit** in its intent to inform more than the regular participants.
+
+## Other functions
+
+You already noted that all fields have getters. Also note that the `equals` and `hashCode` functions are here, for future convenience. These functions are another reason why we are well-advised to mark the fields `final`.
+
+## [Tests](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/contracts/src/test/java/com/template/states/TokenStateTests.java)
+
+<!-- link for now https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/contracts/src/test/java/com/template/states/TokenStateTests.java -->
+
+We perform some basic tests on `TokenState`:
+
+* confirm the constructor does not accept null values.
+* confirm the constructor accepts negative quantities.
+* confirm the getter functions work as expected.
+* confirm the `equals` and `hashCode` functions work as expected.
+
+Notice our use of `TestIdentity` which hides away the complexity of signing keys so we can focus on testing our code.
+
+## [`TokenStateUtilities`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/contracts/src/main/java/com/template/states/TokenStateUtilities.java)
+
+<!-- link for now https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/contracts/src/main/java/com/template/states/TokenStateUtilities.java -->
+
+At first it does not look like we will need such a utility but it will come in handy in the contract. So let's reduce the mental load by looking at this utility now.
+
+```java
+public interface TokenStateUtilities {
+```
+We chose to declare the functions in an `interface` as we have no need to instantiate this utility whose functions are meant to be `static`.
+
+### The rationale
+
+An air-mile issued by airline A is not fungible with an air-mile issued by airline B. They may share the underlying code and infrastructure but they are two different tokens. It is similar to what exists on foreign-exchange markets: although the USD and the EUR have similar properties, they are not the same.
+
+So, given a list of token instances (species), we will have to tally the tokens of **each type**. In other words, the token sum per issuing airline. This is the purpose of this utility's class-first function.
+
+### `mapSumByIssuer`
+
+```java
+static Map<Party, Long> mapSumByIssuer(@NotNull final Collection<TokenState> states) {
+```
+We recognise the return type `Map<Party, Long>` as the right structure to express a sum per issuing airline. Let's not forget that our list contains more than 1 token instance of tokens issued by any given airline. So we need to do a sum somewhere:
+
+```java
+    Math::addExact)));
+```
+With this function, we will be safe from `long` overflows originating from adding large numbers.
+
+### `Stream`
+
+Now, let's use streams, a feature of Java8 that you ought to get acquainted with. In short, a `Stream` is like a pipe where objects flow one after the other. If you took a `List` and _piped_ all its elements arrive one after the other, analogous to a stream. In fact, that's what this is doing:
+
+```java
+    states.stream()
+```
+
+In the middle of your stream you can do operations. The `Stream` interface declares convenience functions that allow you, for each _travelling_ object, to transform them, perform tests on them, act independently on each of them, and other actions.
+
+At the end (as in the end of a sausage, not the end of a movie) of a stream, you can **collect** back the items and put them into lists, sets, maps and the like; provided your stream ends. This is what happens here:
+
+```java
+    .collect(Collectors.[...]
+```
+One of the advantages of streams compared to working on lists with loops is that we do not have to work with mutable lists and maps, but instead arrive at a result in fewer steps that express intent.
+
+We will use streams extensively in the next chapters.
+
+### Collecting
+
+We already mentioned that our list will likely have more than 1 token instance per issuer. This means we cannot rely on a straightforward map collector, which upon finding a new token will assume the key, a.k.a. the issuer, has never been seen before and will file the quantity as if the issuer was unique. Now, we are fortunate enough that there is the perfect collector for us: to a so-called **concurrent map**. This collector will assist us in filing multiple quantities per issuer:
+
+```java
+    .collect(Collectors.toConcurrentMap(
+```
+In order to achieve that, it needs our guidance, in particular:
+
+1. to get the map key, given a token instance:
+
+    ```java
+    TokenState::getIssuer,
+    ```
+    This is a reference to the `getIssuer()` method of `TokenState`. We could of course instead write this lambda:
+
+    ```java
+    tokenState -> tokenState.getIssuer(),
+    ```
+    But, we prefer the method reference as this avoids creating a new object (the lambda) on the heap every time `mapSumByIssuer` is called, which would eventually need garbage collection.
+2. to get the map value, given a token instance:
+
+    ```java
+    TokenState::getQuantity,
+    ```
+    Same as for the key, we just pass the function reference.
+3. to handle values with the same key, a.k.a. how do we merge these values:
+
+    ```java
+    Math::addExact
+    ```
+    That's right, we want the sum, so the _merge_ is none other than the addition, protected from overflow.
+
+Quite straightforward in hindsight:
+
+```java
+states.stream()
+    .collect(Collectors.toConcurrentMap(
+        TokenState::getIssuer, // The filing key.
+        TokenState::getQuantity, // The value.
+        Math::addExact)); // 2 values? No problem.
+```
+Let's add to that the fact that we like to return immutable objects. We express this with:
+
+```java
+return ImmutableMap.copyOf([...]
+```
+And we are done here with `mapSumByIssuer`.
+
+### [Tests](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/contracts/src/test/java/com/template/states/TokenStateUtilitiesMapSumByIssuerTests.java)
+
+<!-- link for now https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/contracts/src/test/java/com/template/states/TokenStateUtilitiesMapSumByIssuerTests.java -->
+
+As you would expect, we test our `mapSumByIssuer` function for:
+
+* that it works on an empty or singleton list.
+* that it can sum when we have duplicate issuers.
+* that it can file for different issuers.
+* that it fails in case of overflow.
+* that the returned map is immutable.
+
+### In closing
+
+Did you get most of it right?
+
+And don't skip tests.

@@ -1,0 +1,44 @@
+---
+title: Reference States Exercise
+description: Finally making the atomic car sale intentional
+slug: details/reference-states-exercise
+---
+
+import HighlightBox from "../../src/HighlightBox"
+
+Your previous iteration of the car sales exercise improved it by making the swap of _car for money_ an atomic transaction that is usable even with accounts. As noted at the time, the following points were left unresolved on the buyer side:
+
+```java
+// TODO have an internal check that this is indeed the car we intend to buy.
+// TODO have an internal check that this is indeed the currency we decided to use in the sale.
+```
+The problem stems from the fact that the buyer flow is a **responding** flow. At no point is it demonstrated that the human buyer **intends** for the sale to take place. In this previous version, the buyer receives the price, fetches enough tokens to cover that amount, then sends them back to the seller. Basically, the buyer is accepting any car at any price. That's not how things work in the real world.
+
+In the world of Corda, a party's intention is naturally expressed by said party **initiating** a flow. But, here, if the buyer initiates a flow, then the same questions face the seller, who is merely responding.
+
+Ok, we need 2 initiating flows, 1 for the seller and 1 for the buyer. Each flow will encapsulate each respective party's intentions. Come to think of it, this is similar to how we imagine a sale taking place. An offer is made, this offer is received and scrutinised, and then in turn it is accepted or rejected. It can be a sale offer or a buy offer.
+
+In this version of the atomic sale, you will use the knowledge you acquired about reference states to implement the following solution:
+
+1. The seller will `Offer` a `SalesProposal` to the buyer, encapsulating their intent in this new state.
+2. The `SalesProposal` _expects_ a `NonFungibleToken`, the car in our case, as a **reference state** on `Offer`, which additionally proves ownership.
+3. Now that the buyer has the proposal in their vault, they can review it, and either `Reject` the `SalesProposal`,
+4. Or, `Accept` it as part of the atomic sale flow which will now be initiated by the buyer.
+
+This is a high-level introduction and it's left to you to place appropriate validations in suitable locations, in important contracts and flows, old and new. See if you can work this out on your own before peeking at the solution.
+
+Go!
+
+<HighlightBox type="support">
+
+Get 3 months access to the authors and experts who created this training.
+
+* Expert instructors will review your code and help you to refine it.
+* One-on-one support and mentoring from expert instructors.
+* Collaboration with fellow students in a dedicated Training Slack channel.
+
+<div class="cta-wrapper">
+<a href="/in-closing/get-paid-support/" class="cta-button">Learn More</a>
+</div>
+
+</HighlightBox>

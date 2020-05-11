@@ -1,0 +1,329 @@
+---
+title: Issue flow example solution
+description: We give you an example of Token flows - Issue
+slug: first-code/solution-flows-issue
+---
+
+import HighlightBox from "../../src/HighlightBox"
+import {
+  ExpansionPanel,
+  ExpansionPanelList,
+  ExpansionPanelListItem
+} from 'gatsby-theme-apollo-docs';
+
+In the same way we proceeded with state and contract, you have done your exercise, you have your own `IssueFlow`, `MoveFlow` and `RedeemFlow`, and perhaps more than that. Now, compare what you did to what we think is a good example observing some best practices. As always, there is no single truth as to implementation but we hope you will reflect on your first attempt given our remarks here. Let's go.
+
+Once again, we link only to Java code and let you discover the equivalent Kotlin code on your own. They both achieve the same result with the steps in the same order for better comprehension.
+
+## [`Constants`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/workflows/src/main/java/com/template/flows/Constants.java)
+
+<!-- link for now https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/workflows/src/main/java/com/template/flows/Constants.java -->
+
+Strange, we declare our:
+
+```java
+String desiredNotaryName = "O=Notary, L=London, C=GB";
+CordaX500Name desiredNotary = CordaX500Name.parse(desiredNotaryName);
+```
+Of course we need a notary to proceed, but why do we pick a preferred one? After all, many code examples just roll with the first in the list:
+
+```java
+final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
+```
+Choosing a notary is a decision in itself, so declaring a preference is R3's recommended practice. Consider:
+
+* What performance, availability, or even discretion do you expect from it?
+* Do you want a validating notary?
+* The notary you picked, is it a for-profit notary that wants to be paid per transaction batch or with a subscription?
+* Why would your consortium app use the notary of another consortium?
+
+The downside of having it hard-coded is that, should it change, you would have to redeploy your Jars. So, as part of a proper deployment, you would put this information into a configuration file, as we shall see later. Here and now, for simplicity's sake, we declared it as a hard-coded `static` member.
+
+## [`IssueFlows`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/workflows/src/main/java/com/template/flows/IssueFlows.java)
+
+<!-- link for now https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/workflows/src/main/java/com/template/flows/IssueFlows.java -->
+
+First, let's have a diagram that sums up this flow:
+
+![IssueFlows CDL](images/cdl_issue_tokens.png)
+
+What our issue **initiator** flow does in a nutshell is:
+
+1. collect the required information.
+2. generate the transaction.
+3. verify it.
+4. sign the transaction.
+5. send it over to the holders.
+
+And all our issue **responder** flow does is:
+
+1. accept the transaction.
+
+The following design decisions were taken:
+
+* initiating and responder flows are encapsulated inside an `interface`. This provides a way to clearly identify them, by `new IssueFlows.Initiator()`, considering that we do not need to instantiate the encapsulating `IssueFlows`.
+* we use the preferred notary, instead of letting the flow creator decide.
+* we can issue as many `TokenState` instances, with whichever `holder` and `quantity` as we want. Not necessarily 1 instance per holder which we found to be unreasonably restrictive.
+* it is the issuer that initiates the flow.
+* this flow handles a single issuer. Yes, yes, previously we asked you to try your hand at an issue flow that handles more than 1 issuer, but we think this is too risky to do before we have seen more advanced topics. Indeed, the initiating issuer would require signatures from other issuers automatically, so these other issuers would have no oversight on whether this is the right business decision. So we dropped the "atomically issue for multiple issuers" idea altogether.
+* the issuer keeps a record of the states. Why this has to be a design decision will become clearer later on. For now, we will say that we want the issuer to be able to know the current total supply with a simple local query.
+
+### `Initiator`
+
+#### The class declaration
+
+```java
+@InitiatingFlow
+@StartableByRPC
+class Initiator extends FlowLogic<SignedTransaction> {
+```
+* It has to extend `FlowLogic` to be considered as a flow.
+* It makes sense to call it `Initiator` as it is indeed an `@InitiatingFlow` one.
+* The primary purpose of this flow is to create an `Issue` transaction, so it is natural to expect it to return a `SignedTransaction`.
+
+<HighlightBox type="info">
+
+> Does a flow always return a `SignedTransaction`?
+
+No, a flow can return any type of data, [including `Void`](https://github.com/corda/samples-java/blob/a61e2cc9910d7d5de83122bf7d36fd071796a7c3/Basic/flow-database-access/workflows-java/src/main/java/net/corda/samples/flowdb/AddTokenValueFlow.java#L17). If you create a flow that piggybacks on the Corda network only to do instant messaging, then your flow would return a [message type](https://github.com/cordacademy/cordacademy-ping/blob/0d7dbf514def1ea7c35864abb3c32f9d80d70732/cordacademy-ping-workflow/src/main/kotlin/io/cordacademy/ping/workflow/PingFlow.kt#L27). Your flow could also encapsulate a complex [vault query](https://github.com/corda/samples/blob/e0052bfc491b9133110618a3f6046498a6f25cbb/flow-db/src/main/kotlin/com/flowdb/Flows.kt#L52-L60) or calls to [third-party APIs](https://github.com/corda/samples/blob/f6d9e6a5e8f9d38e597be9f661725610020dd666/flow-http/workflows-java/src/main/java/com/flowhttp/HttpCallFlow.java#L27-L28), and return the data type fetched.
+
+> Will my transaction be finalised if the flow does not return it?
+
+If you called `FinalityFlow` in your flow, then your transaction is finalised. The return type of your flow has no relevance to finality.
+
+</HighlightBox>
+
+#### The fields
+
+To be able to run its operations, the flow needs some parameters, the _required information_ we mentioned earlier. These are passed in the constructor. Since the party that runs the initiating flow is the issuer, the other pieces of information we need to create a `TokenState` is `Party holder` and `long quantity`. We can express this pair of information in the tuple named `Pair<Party, Long>`. A single `Pair` instance is enough information for use to instantiate a single `TokenState`. We decided to instantiate any number of `TokenState`, so we need a `List` of such `Pair`s. This explains our field:
+
+```java
+@NotNull
+private final List<Pair<Party, Long>> heldQuantities;
+```
+A held quantity, here, means the pair of a holder and the quantity.
+
+* Nothing in this list structure prevents us from having duplicates, or the same holder multiple times, which was the intention.
+* It would not have been appropriate to expect a list of fully-formed `TokenState`s as it would force us to either discard the mentioned `issuer`, or verify that they all have the expected party for issuer. Instead of having a data structure that forces you to make assumptions, or discard information, better choose one that makes requirements explicit.
+* The eager OOP developer would create a dedicated `HeldQuantity` tuple class to make explicit the fact that the `Party` is the `holder`, not the issuer.
+* If you chose a `Map<Party, Long>`, that is not a bad choice although a bit restrictive as you don't allow duplicates. Or, perhaps you decided you absolutely wanted no duplicate holder, in which case this was the right data structure. If you chose it without thinking about the implications, or you thought that allowing duplicate holders would break something, that would be less desirable.
+
+The other field we have is:
+
+```java
+@NotNull
+private final ProgressTracker progressTracker;
+```
+We have seen earlier that a `ProgressTracker` is handy when tracking progress in the node shell at the very least. Here, we want to define our own set of steps, and, to simplify this first flow, we did not make the assumption that another flow would care to pass in a different tracker at instantiation.
+
+#### The constructors
+
+This explains our main constructor:
+
+```java
+public Initiator(@NotNull final List<Pair<Party, Long>> heldQuantities) {
+    //noinspection ConstantConditions
+    if (heldQuantities == null) throw new NullPointerException("heldQuantities cannot be null");
+    if (heldQuantities.isEmpty()) throw new IllegalArgumentException("heldQuantities cannot be empty");
+    final boolean noneZero = heldQuantities.stream().noneMatch(heldQuantity -> heldQuantity.getValue() <= 0);
+    if (!noneZero) throw new IllegalArgumentException("heldQuantities must all be above 0");
+    this.heldQuantities = ImmutableList.copyOf(heldQuantities);
+    this.progressTracker = tracker();
+}
+```
+You should recognise that the same decisions were taken here as with the contract, with regards to `final`, `@NotNull`, `NPE`, and `ImmutableList`. It was also decided to fail early when it is known that the values passed will be rejected at the contract level.
+
+Why would we not create our list of `TokenState`s here right away, by collecting the identity of the node and saving it in the `issuer`? Well, the identity of the node is not known at construction. An instantiated flow is not much more than a plain Java object. Sure it can run on a node, but this is a separate step. Those 2 steps were run sequentially with the single shell command `flow start ExampleFlow$Initiator iouValue: 20, otherParty: "O=PartyC, L=Paris, C=FR"`, which might give the wrong impression. On the other hand, in the tests, `a.startFlow(flow)` makes clear that the flow is first instantiated, then the node is picked to run it.
+
+We also define our `progressTracker` as our static default `tracker()`:
+
+```java
+@NotNull
+public static ProgressTracker tracker() {
+    return new ProgressTracker(
+            GENERATING_TRANSACTION,
+            VERIFYING_TRANSACTION,
+            SIGNING_TRANSACTION,
+            FINALISING_TRANSACTION);
+}
+```
+... which neatly lists the steps that we mentioned above. Again, this time no choice is left to the caller of this constructor. In the rest of this chapter, we will set aside the places where each step is called as this is self-explanatory by looking at the code.
+
+To assist us in testing the flow from the command line, we added a simple constructor that takes only 2 parameters:
+
+```java
+public Initiator(@NotNull final Party holder, final long quantity) {
+    this(Collections.singletonList(new Pair<>(holder, quantity)));
+}
+```
+Here, as well, you should be familiar with the decision to use `Collections.singletonList`.
+
+With this preparation done, it is time to move on to the `call` function, which is called when the node has been selected and the flow starts.
+
+#### `call`
+
+```java
+@Suspendable
+@Override
+public SignedTransaction call() throws FlowException {
+```
+Not much to say about it, other than to draw your attention once more on the `@Suspendable` annotation picked up by Quasar's agent.
+
+From there, we make it clear that _we_ are the `issuer`:
+
+```java
+final Party issuer = getOurIdentity();
+```
+And with this, it is time to create our output tokens:
+
+```java
+final List<TokenState> outputTokens = heldQuantities
+    .stream()
+    .map(it -> new TokenState(issuer, it.getKey(), it.getValue()))
+    .collect(Collectors.toList());
+```
+In this stream, this pipe if you want, we transform, with `.map`, each pair into a token. That is a part of our future transaction. Let's continue. We need a notary, and as mentioned above, we will use the preferred one:
+
+```java
+final Party notary = getServiceHub().getNetworkMapCache().getNotary(Constants.desiredNotary);
+if (notary == null) {
+    throw new FlowException("The desired notary is not known: " + Constants.desiredNotary.toString());
+}
+```
+Here, we hope that our preferred notary in fact exists in the network map. We are nonetheless prepared to fail fast if that is not the case, instead of trying to repair the situation by picking a notary randomly. Again, for emphasis, selecting a notary is a decision in itself.
+
+#### Generating the transaction
+
+Our transaction is not very complex. We know what the contract will check, and that it expects a command, so here goes:
+
+```java
+final Command<Issue> txCommand = new Command<>(new Issue(), issuer.getOwningKey());
+```
+This is where we show our knowledge of the contract's expectation that the issuer needs to sign the transaction. With this, we create our builder:
+
+```java
+final TransactionBuilder txBuilder = new TransactionBuilder(notary)
+        .addCommand(txCommand);
+```
+This should look familiar already. All that is missing are our outputs:
+
+```java
+outputTokens.forEach(it -> txBuilder.addOutputState(it, TokenContract.TOKEN_CONTRACT_ID));
+```
+Again, we associate each `TokenState` with its contract.
+
+After the right data structures have been selected, and the auxiliary decisions made, generating the transaction is pure mechanics.
+
+#### Next steps
+
+With the transaction ready, we check it is valid:
+
+```java
+txBuilder.verify(getServiceHub());
+```
+You will notice that the verification is done on the transaction builder. This builder does not store any signature, by design. A signature signs finished transaction, so we would need our builder to first create the transaction before we sign it. That's why the verification passes even before we generated and signed the transaction. Which we do right after that:
+
+```java
+final SignedTransaction fullySignedTx = getServiceHub().signInitialTransaction(txBuilder);
+```
+It generates and signs the transaction in one go. We named it `fullySignedTx` because we know that we do not require any additional signature.
+
+#### Finalisation
+
+With this, we now need to inform all concerned parties: the **holders** of our tokens. Remember there may be many, plus they may appear multiple times, so we have to make sure we keep **distinct** ones. The issuer may also be a holder, there is nothing preventing it. No need to inform the issuer again, so we need to inform all holders **minus the issuer**:
+
+```java
+final List<FlowSession> holderFlows = outputTokens.stream()
+        .map(TokenState::getHolder)
+        .distinct()
+        .filter(it -> !it.equals(issuer))
+        .map(this::initiateFlow)
+        .collect(Collectors.toList());
+```
+You will recall that `FlowSession` is a one-to-one link between this node's flow **session** and one remote node's flow session. So, as you saw previously, the way to send the transaction over the wire is with:
+
+```java
+final SignedTransaction notarised = subFlow(new FinalityFlow(
+        fullySignedTx,
+        holderFlows,
+        FINALISING_TRANSACTION.childProgressTracker()));
+```
+This is the end of our initiating flow, it is time to move to our responder flow, which needs to dance to the initiator's tune. Notice how here too we instantiated our `FinalityFlow`, and then we asked it to run on our node. Two steps again.
+
+After having informed all holders, it is time to inform ourselves. Are we not already informed about this transaction? Yes, we are, yes, the transaction was saved as a blob in the vault. But we are also the issuer, and the issuer is not in the participants. From Corda's point of view, these new states are not _relevant_ to the issuer. Therefore, the `TokenState`s will not be recorded, by default, as unconsumed states in the issuer's vault. But we mentioned earlier that we want the issuer to be able to know the total supply of its own issued tokens. So we have to record the transaction explicitly:
+
+```java
+getServiceHub().recordTransactions(StatesToRecord.ALL_VISIBLE, ImmutableList.of(notarised));
+```
+With this, the issuer has a record of all states. Not to forget to return:
+
+```java
+return notarised;
+```
+
+### `Responder`
+
+This will be thankfully be short as it does not do much. Because of its brevity, it was decided to not include a `ProgressTracker`.
+
+#### The class declaration
+
+```java
+@InitiatedBy(Initiator.class)
+class Responder extends FlowLogic<SignedTransaction> {
+```
+Nothing that should surprise you by this stage we hope.
+
+#### The field
+
+```java
+@NotNull
+private final FlowSession counterpartySession;
+```
+We only need to know who has initiated the flow.
+
+#### The constructor
+
+```java
+public Responder(@NotNull final FlowSession counterpartySession) {
+    this.counterpartySession = counterpartySession;
+}
+```
+We have to avoid being creative with the constructor as instantiation happens automatically.
+
+#### The step
+
+```java
+return subFlow(new ReceiveFinalityFlow(counterpartySession));
+```
+That's right.
+
+* First, there is only 1 communication arriving from the initiator, `FinalityFlow`, so we need to dance to that tune and sub-flow its counterpart `ReceiveFinalityFlow`.
+* Second, the holders receive the tokens without much ado. The tokens are understood as assets without side-effects so we assume the holders are all too happy to receive them.
+
+When you look into `ReceiveFinalityFlow`, you will see that each holder will only store [states relevant](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/flows/FinalityFlow.kt#L274) to it, as in, if they are in the participants list. So even though multiple holders may receive the transaction, not all holders will store all token states.
+
+### Tests
+
+You will see that the tests are pretty run of the mill. They check that:
+
+* the transaction created is as expected, which includes:
+    * signatures
+    * outputs
+* the transaction has been recorded in vaults
+* states have been recorded, or not, in vaults
+
+### `IssueFlows` conclusion
+
+We saw that the contract allows, at the ledger level, an issue transaction with multiple issuers. But because of the realities of a simple flow implementation, this issue flow only allows an issue transaction with a single issuer.
+
+Keep in mind that although holder nodes will pick and choose which states they will save, all nodes have knowledge of all the states of the transaction because they received the transaction in the first place. So a determined holder can sift through their own node's transactions in order to rebuild the states that other holders owned as part of the transactions it was a part of. This to say that "what you care to keep in a convenient format" is a subset of "what was irreversibly disclosed".
+
+So, the user of this flow will also have to think about what is desirable for all parties involved. Perhaps the issuer wants to issue to Alice and Bob but Alice does not want her issued states to be known by Bob. In this case, the issuer will have to make the decision to call this simple issue flow twice, once for Alice and once for Bob. On the other hand, if Alice and Bob are both ok with the other knowing their holdings, the issuer can go with a single transaction.
+
+<HighlightBox type="tip">
+
+What a contract allows is greater than what a flow enables, which may be larger than what participants will accept.
+
+</HighlightBox>
+
+![Wenn diagram of what is possible](images/possible_contract_flow.png)

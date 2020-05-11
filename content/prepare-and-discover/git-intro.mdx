@@ -1,0 +1,405 @@
+---
+title: Git Introduction
+description: Introducing Git and quick exercise
+slug: prepare/git-intro
+---
+
+import {
+  ExpansionPanel,
+  ExpansionPanelList,
+  ExpansionPanelListItem
+} from 'gatsby-theme-apollo-docs';
+
+Using Git for version control is an essential element of developing on Corda. This introduction to Git includes tips and best practice that will be useful to beginners and occasional Git users alike.
+
+In this section, you will get:
+
+- An overview of the concepts of Git.
+- An introduction to the vocabulary of Git.
+- A guide for using Git for the first time (and every time after that).
+
+You may already be more than confident using Git, in which case, you may want to skip to the next section. You can always check back if you need to later.
+
+## Overview
+
+Conventions like mass-emailing `proposal-v2.1b-Final.doc` are so 2001. What happens if multiple participants work on the same document at the same time? How are those changes merged into the final document? What about experimental branches that might make it to the final document, or might not? These are common problems that call for a comprehensive workflow and document versioning system. Git is such a system.
+
+Git lets you work locally, completely disconnected from any remote server. It reconciles changes done by several people working independently, even within a single file and it includes a change-management scheme with versions and change history so previous versions of documents are always recoverable.
+
+For these reasons, and more, it has gained considerable popularity in the software development community.
+
+## Vocabulary
+
+A **repository** is a self-contained entity that contains all information, including the history. Where you work, typically with folders and files, is the **working tree**. All information necessary for Git to function properly is hidden away inside the **`.git`** sub-folder, which you should not touch unless you absolutely know what you are doing. Git is distributed, so we talk about **local** and **remote** versions of a repository. [Here](https://github.com/corda/corda) is a remote repository of Corda. When you work on a project, you work on your local version. When data goes from local to remote, we say that we **push**, and from remote to local, we **pull**. If the data goes from remote to local, and remains hidden inside the `.git` folder, we call this a **fetch**. Sometimes, when people create a new copy of a repository, we say they **forked** it, which [happens a lot](https://github.com/corda/corda/network/members) for Corda; although forking is not a Git concept per se, rather a convention in the Git ecosystem. When you get an existing remote repository for the first time, we say you **clone** it.
+
+The files that you see in your local repository are at a given **version**. Here is an [example](https://github.com/corda/corda/tree/452e78f531a3f16e63ed9aa62d6b165cdd4da2bf) of a version of Corda. The version id is `452e78f531a3f16e63ed9aa62d6b165cdd4da2bf` or `452e78f` for short. This version id was calculated by SHA1-hashing the content of the whole working tree at this version, plus some metadata, and there is a pretty good chance that it is absolutely unique across all repositories of the world. See the reading list at the end for in-depth articles. A version has [one](https://github.com/corda/corda/commit/452e78f531a3f16e63ed9aa62d6b165cdd4da2bf) or [two](https://github.com/corda/corda/commit/80cf34b81a0da51541262bf7bad8ed7b540d29e0) parents, which is mentioned in the header `2 parents ea22a10 + 723399d`. When a version has two parents, we call it a **merge**. In effect, the series of versions in a Git repository form a directed acyclic graph, a D.A.G.. Almost like the states and transactions in Bitcoin and Corda. You can see for instance [here](https://github.com/corda/corda/network) how all arrows are pointing to the right, with each dot symbolising a version. When you want to have a version in your working tree, you **checkout** (or **switch** to, if your Git is new) this version.
+
+When you want to create a new version you first have to decide which of your changed files are going into this new version, we say you **stage** your changes, and then you **commit** them along with a text message. We often swap the word commit with version. Before staging, you can see what differences you made to your files compared with the last version. Git calls that a **diff**. When staging, if you use a convenient [GUI tool](https://desktop.github.com/), it can even help you select which lines to stage per file. And do not forget that all this staging and committing happens in your local repository. No remote is involved in these operations until you push. As an aside, this means that it is easy to uncommit and unstage, a.k.a. **reset** or **restore**, if you never pushed your new version.
+
+By convention you make commits of files that make sense together, and&nbsp;/ or commits that address a specific bug or feature. It is also a convention to describe in human language the purpose of the commit. Nothing good comes from making commits of 500 files with the message "Today's work". Another convention is to not commit files that can be fetched from elsewhere, like a library, or recreated, like a build folder. It is bad practice to commit private keys and other sensitive information. In order to achieve that with less effort, you are encouraged to populate the **`.gitignore`** file that lists the files to... ignore.
+
+These versions / commits are all nice and dandy but their ids are not very friendly. So it is possible to **tag** selected ones in order to give them a human-friendly name like [`release-os-4.3`](https://github.com/corda/corda/releases/tag/release-os-4.3) of Corda, which is the pretty name of [id `d679784`](https://github.com/corda/corda/commit/d679784a179e95c57696d13c95beeccfe350d7d5).
+
+Now, the reality of development is that it will take a number of versions with your teammates, or even yourself alone, before a bug is considered fixed, or a new feature implemented. Git provides such a logical pathway, named **branch**. For instance, [here](https://github.com/corda/corda/tree/release-os-4.3) is the branch that hosts the evolution of Corda to version 4.3. The **head** commit of a branch advances commit after commit. The repository always has a default branch, most likely named **`master`**, although, for instance, at the time of writing, it is [`release/os/4.5`](https://github.com/corda/corda/tree/release/os/4.5) for Corda. A typical workflow is to have a bug fixed in a separate branch. Then, when it is ready to be merged into `master`, the developer opens a [merge request](https://github.com/corda/corda/pull/6047), also called a pull request; here again, this is a convention in the Git ecosystem. On the other hand, if a branch cannot wait for what can be a lengthy process, and some changes are required from one branch to another, it is possible to **cherry-pick** them by specifying which commits are of interest; with the caveat that it replays the commit's diff on your branch, in effect creating a new commit.
+
+Since using branches is very convenient, it may happen that you go back and forth between branches, even before you have changes that are sufficiently complete to stage and commit them. In these situations, you can **stash** away your unstaged changes, give these changes names, and **pop** them at a later date.
+
+Just in case, this depiction of Git appears too rosy, rest assured that you will hit snags, the most typical ones being conflicts between your changes and someone else's. During these worrying times, or at any other times, you can always ask Git what is the **status** of your project. It [happens](https://twitter.com/zurihunter/status/1067838684505038848) to the best of us.
+
+## Use it
+
+It is entirely possible that Git already comes installed with your computer. If not, head over to the [installation guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). If you can, create a free account on [Github](https://github.com) and [add an SSH key](https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent). It may seem daunting but it saves time later.
+
+A bit of configuration. Let's do it now. In your command-line type:
+
+```bash
+$ git config --global user.name "John Doe"
+$ git config --global user.email johndoe@example.com
+```
+Or whichever name and email you want to use. This will identify your commits, and, if your email is associated with an avatar on [Gravatar](https://gravatar.com/), it will show on Github too.
+
+With that work done, let's have fun with the command-line and the [Corda samples](https://github.com/corda/samples-java) repository.
+
+1. Go into your workspace, or whichever folder to which you want to download this repo:
+
+    ```bash
+    $ cd ~/Workspace
+    ```
+2. **Clone** the repository and give it a name that won't make you scratch your head in 3 months:
+
+    ```bash
+    $ git clone https://github.com/corda/samples-java.git corda-samples
+    ```
+3. Go into it:
+
+    ```bash
+    $ cd corda-samples
+    ```
+4. Check the **status**
+
+    ```bash
+    $ git status
+    On branch master
+    Your branch is up to date with 'origin/master'.
+
+    nothing to commit, working tree clean
+    ```
+    Right there you know that `master` is a **branch** and is currently the default one. Your **working tree** has nothing new. Also, `origin` is a **remote**, the one on Github. `origin` is the conventional name for a default remote.
+    
+5. So what is this `origin` remote?
+
+    ```bash
+    $ git remote show origin
+    * remote origin
+      Fetch URL: https://github.com/corda/samples-java.git
+      Push  URL: https://github.com/corda/samples-java.git
+      HEAD branch: master
+      Remote branches:
+        devrel-1606            tracked
+        master                 tracked
+        oracle-primenumber_CCV tracked
+      Local branch configured for 'git pull':
+        master merges with remote master
+      Local ref configured for 'git push':
+        master pushes to master (up to date)
+    ```
+    All good, lots of information. Including, at the bottom that our **local** `master` branch is configured to push and pull from the remote branch of the same name. It is welcome, as it avoids confusion, but not necessary. You could well name your local branch something, and have it push to a different name on the remote.
+
+6. Check the version this branch is at
+
+    ```bash
+    $ git log | head -n 20
+    commit a61e2cc9910d7d5de83122bf7d36fd071796a7c3
+    Author: peterli-r3 <51169685+peterli-r3@users.noreply.github.com>
+    Date:   Wed May 6 12:10:13 2020 -0400
+
+        add cordapp-example/springserver
+
+    commit d42351d1fb3bc07730895650f71c7b9a93fc4197
+    Author: peterli-r3 <51169685+peterli-r3@users.noreply.github.com>
+    Date:   Wed May 6 09:37:26 2020 -0400
+
+        Update README.md
+
+    commit c15a5d21c1ae39750bec6d87abda9fcc36b36d46
+    Author: peterli-r3 <51169685+peterli-r3@users.noreply.github.com>
+    Date:   Tue May 5 16:32:31 2020 -0400
+
+        Update README.md
+
+    commit 2269eeb1e228ec41a9fab712bee60106e7a91c75
+    Author: david awad <me@davidawad.com>
+    ```
+    We can see **commit** ids and messages, developer names and dates.
+
+7. If you want to **checkout** the previous version, so back by `1` commit, in your working tree:
+
+    ```bash
+    $ git checkout HEAD~1
+    Note: checking out 'HEAD~1'.
+
+    You are in 'detached HEAD' state. You can look around, make experimental
+    changes and commit them, and you can discard any commits you make in this
+    state without impacting any branches by performing another checkout.
+
+    If you want to create a new branch to retain commits you create, you may
+    do so (now or later) by using -b with the checkout command again. Example:
+
+      git checkout -b <new-branch-name>
+
+    HEAD is now at d42351d Update README.md
+    ```
+    Yep, `d42351d` is the second commit id we saw previously. We are detached, meaning that we are no longer tracking our `master` branch, and we are not going to update the branch either. That can be a problem if you start creating something.
+
+8. Find your place in the DAG of commits
+
+    ```bash
+    $ git log | head -n 20
+    commit d42351d1fb3bc07730895650f71c7b9a93fc4197
+    Author: peterli-r3 <51169685+peterli-r3@users.noreply.github.com>
+    Date:   Wed May 6 09:37:26 2020 -0400
+
+        Update README.md
+
+    commit c15a5d21c1ae39750bec6d87abda9fcc36b36d46
+    Author: peterli-r3 <51169685+peterli-r3@users.noreply.github.com>
+    Date:   Tue May 5 16:32:31 2020 -0400
+
+        Update README.md
+
+    commit 2269eeb1e228ec41a9fab712bee60106e7a91c75
+    Author: david awad <me@davidawad.com>
+    Date:   Tue May 5 12:30:20 2020 -0400
+
+        cleaner relative links
+
+    commit c42a5f23bc99e5944958d139790a8958513c36d4
+    Author: peterli-r3 <51169685+peterli-r3@users.noreply.github.com>
+    ```
+    You no longer know about the previous head at `01c9845`. Of course, the commit was not deleted, it just is not in your working tree.
+
+9. Proof:
+
+    ```bash
+    $ git checkout d42351d
+    Previous HEAD position was cf89972f Update README.md
+    HEAD is now at 01c98454 Merge pull request #91 from corda/java-oracle-example
+    ```
+    This commit id was there, hidden inside the `.git` folder, and we can call it back at any moment.
+10. Status?
+
+    ```bash
+    $ git status
+    HEAD detached at d42351d
+    nothing to commit, working tree clean
+    ```
+    Admittedly, commit ids are not a friendly way to go about. And although we are at exactly the same commit as the current **head** of `master` branch, we are still detached. Shall we "reattach"?
+11. What are our branches again?
+
+    ```bash
+    $ git branch --list
+    * (HEAD detached at d42351d)
+      master
+    (END)
+    ```
+    Press <kbd>q</kbd> to quit. Ok, this is my local branch. Thank you for letting me know about only the branches I previously worked with, but...
+
+12. Where did all those branches we saw at the beginning go?
+
+    ```bash
+    $ git branch --all
+    * (HEAD detached at d42351d)
+      master
+      remotes/origin/HEAD -> origin/master
+      remotes/origin/devrel-1606
+      remotes/origin/master
+      remotes/origin/oracle-primenumber_CCV
+    ...
+    ```
+    Phew!
+
+13. You can now get back on track:
+
+    ```bash
+    $ git checkout master
+    Previous HEAD position was d42351d Update README.md
+    Switched to branch 'master'
+    Your branch is up to date with 'origin/master'.
+    ```
+    Now we can start working in our working tree.
+
+14. Let's pretend that appending a `;` at the end of the file is a worthy contribution to an open-source project:
+
+    ```bash
+    $ echo ";" >> Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
+    ```
+15. And see where we are at:
+
+    ```bash
+    $ git status
+    On branch master
+    Your branch is up to date with 'origin/master'.
+
+    Changes not staged for commit:
+      (use "git add <file>..." to update what will be committed)
+      (use "git checkout -- <file>..." to discard changes in working directory)
+
+    	modified:   Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
+
+    no changes added to commit (use "git add" and/or "git commit -a")
+    ```
+    Some help is always visible, and the messages are often clear.
+16. What is our **diff**?
+
+    ```bash
+    $ git diff
+    diff --git a/Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java b/Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
+    index 6b5af69..6acc240 100644
+    --- a/Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
+    +++ b/Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
+    @@ -70,4 +70,4 @@ public class IOUState implements LinearState, QueryableState {
+         public String toString() {
+             return String.format("IOUState(value=%s, lender=%s, borrower=%s, linearId=%s)", value, lender, borrower, linearId);
+         }
+    -}
+    \ No newline at end of file
+    +};
+    ```
+    Not always very clear, but at the end the last line `}` is removed, that's `-`, and as a replacement, that's `+`, we have `};`. Exit with <kbd>q</kbd>.
+17. Let's **stage** it:
+
+    ```bash
+    $ git add Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
+    ```
+    That's it?
+18. And my status?
+
+    ```bash
+    $ git status
+    On branch master
+    Your branch is up to date with 'origin/master'.
+
+    Changes to be committed:
+      (use "git reset HEAD <file>..." to unstage)
+
+    	modified:   Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
+    ```
+    Clear enough.
+19. Time to **commit**:
+
+    ```bash
+    $ git commit -m "Added a semicolon at the end, you're welcome."
+    [master 1fca5f5] Added a semicolon at the end, you're welcome.
+     1 file changed, 1 insertion(+), 1 deletion(-)
+    ```
+    Ok. An insertion is an added line, a deletion is a deleted line.
+20. Status please:
+
+    ```bash
+    $ git status
+    On branch master
+    Your branch is ahead of 'origin/master' by 1 commit.
+      (use "git push" to publish your local commits)
+
+    nothing to commit, working tree clean
+    ```
+    So shall we **push**?
+21. Let's try:
+
+    ```bash
+    $ git push
+    ERROR: Permission to corda/samples-java.git denied to YOUR_NAME.
+    fatal: Could not read from remote repository.
+
+    Please make sure you have the correct access rights
+    and the repository exists.
+    ```
+    Of course, there are access rights to it. This is not your repository.
+22. But you know what? This commit was not very helpful, and since it never left my computer, let's revert it:
+
+    ```bash
+    $ git reset HEAD~1
+    Unstaged changes after reset:
+    M    Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
+    ```
+    And we are back to before staging, with our extra semicolon.
+23. Let's revert this minor change.
+
+    ```bash
+    $ git checkout -- Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
+    ```
+    That's it?
+24. And my status?
+
+    ```bash
+    $ git status
+    On branch master
+    Your branch is up to date with 'origin/master'.
+
+    nothing to commit, working tree clean
+    ```
+25. Do you want to start contributing to the `corda/samples` repository for real? Ok, let's do that. Click on the top right "**Fork**" button [here](https://github.com/corda/samples-java), and pick which Github account to copy it to. It takes a second. Make a note of the repo it was copied to, when you click on the "Clone or download" button. It should be of the form `git@github.com:YOUR_NAME/samples-java.git`.
+26. Ok now, we have 2 remotes, the official one and yours. How do we differentiate them? The convention is to name _your_ repo `origin`, and the _official_ one `upstream`, so first, we add `upstream`:
+
+    ```bash
+    $ git remote add upstream https://github.com/corda/samples-java.git
+    ```
+27. What remotes do we have?
+
+    ```bash
+    $ git remote show
+    origin
+    upstream
+    ```
+    Ok, no surprise there. Where do they point to?
+
+    ```bash
+    $ git remote show origin
+    * remote origin
+      Fetch URL: https://github.com/corda/samples-java.git
+      Push  URL: https://github.com/corda/samples-java.git
+    [...]
+    $ git remote show upstream
+    git remote show upstream
+    * remote upstream
+      Fetch URL: https://github.com/corda/samples-java.git
+      Push  URL: https://github.com/corda/samples-java.git
+    [...]
+    ```
+    Mmh, the same. Not very helpful.
+28. Let's update the URL for `origin` to point to our remote:
+
+    ```bash
+    $ git remote set-url origin git@github.com:YOUR_NAME/samples-java.git
+    ```
+    You can do another `git remote show origin` to make sure.
+29. With this set, let's make and push a change, the same silly one we did earlier:
+
+    ```bash
+    $ echo ";" >> Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
+    $ git add Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
+    $ git commit -m "Added a semicolon at the end, you're welcome."
+    [master 5d513097] Added a semicolon at the end, you're welcome.
+     1 file changed, 2 insertions(+), 1 deletion(-)
+    $ git push
+    Enumerating objects: 21, done.
+    Counting objects: 100% (21/21), done.
+    Delta compression using up to 8 threads
+    Compressing objects: 100% (6/6), done.
+    Writing objects: 100% (11/11), 742 bytes | 742.00 KiB/s, done.
+    Total 11 (delta 4), reused 0 (delta 0)
+    remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+    To github.com:YOUR_NAME/samples-java.git
+       feca7a27..882d83a0  master -> master
+    ```
+    Ha! Done, it is in the `origin` remote. And if you go to it on Github, it will tell you that `This branch is 1 commit ahead of corda:master.` with a <kbd>pull request</kbd> and <kbd>Compare</kbd> buttons.
+
+That will do for now. Install a Git GUI tool if you are not a command-line warrior, and remember that for all Git questions, Google is your friend.
+
+<ExpansionPanel title="Optional Reading List">
+
+* Git as a [content-addressable filesystem](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects), SHA-1 and more.
+* See Github discussing SHA-1 collisions [here](https://github.blog/2017-03-20-sha-1-collision-detection-on-github-com/).
+* Even `git stash` is [useful](https://www.freecodecamp.org/news/useful-tricks-you-might-not-know-about-git-stash-e8a9490f0a1a/).
+
+</ExpansionPanel>
