@@ -87,7 +87,7 @@ The idea here is to solve the “rich man gets richer” problem, which arises i
 
 ## Practical Byzantine Fault Tolerance (PBFT)
 
-PBFT was published in 1999 and arose from academia. It is a three-phase protocol in which the client sends a request to a so called primary. In the first phase, the primary broadcasts to the replicas. Then, the replicas agree that it is properly signed, properly formed, and otherwise acceptable. When a threshold of required endorsements is achieved, the message is verified and replicas agree on the overall order of endorsed transactions within a view. This canonical transaction order is forwarded to clients. This of course is very simplified. You can access the paper by Miguel Castro and Barabara Liskov [here](http://pmg.csail.mit.edu/papers/osdi99.pdf). But there is also a very understandble [presentation](http://www.comp.nus.edu.sg/~rahul/allfiles/cs6234-16-pbft.pdf).
+PBFT was published in 1999 and arose from academia. It is a three-phase protocol in which the client sends a request to a so called primary. In the first phase, the primary broadcasts to the replicas. Then, the replicas agree that it is properly signed, properly formed, and otherwise acceptable. When a threshold of required endorsements is achieved, the message is verified and replicas agree on the overall order of endorsed transactions within a view. This canonical transaction order is forwarded to clients. This of course is very simplified. You can access the paper by Miguel Castro and Barabara Liskov [here](http://pmg.csail.mit.edu/papers/osdi99.pdf). But there is also a very understandable [presentation](http://www.comp.nus.edu.sg/~rahul/allfiles/cs6234-16-pbft.pdf).
 
 ## Proof-of-Activity (PoA)
 
