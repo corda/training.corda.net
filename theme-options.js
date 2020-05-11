@@ -1,16 +1,16 @@
 const navConfig = {
   'Corda Open Source': {
-    url: 'https://docs.corda.net/docs/corda-os/4.3.html',
+    url: 'https://docs.corda.net/docs/corda-os/index.html',
     description:
       'Documentation for the free version of Corda'
   },
   'Corda Enterprise': {
-    url: 'https://docs.corda.net/docs/corda-enterprise/4.3.html',
+    url: 'https://docs.corda.net/docs/corda-enterprise/index.html',
     description:
       'Documentation for the Enterprise version of Corda'
   },
   'CENM': {
-    url: 'https://docs.corda.net/docs/cenm/1.2.html',
+    url: 'https://docs.corda.net/docs/cenm/index.html',
     description:
       "Documentation for the Corda Enterprise Network Manager"
   },

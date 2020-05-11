@@ -103,7 +103,7 @@ const apolloDocsOptions = {
   root: __dirname,
   subtitle: 'Corda Training and Tutorials',
   description: 'Learn how to use the Corda platform',
-  githubRepo: 'corda/corda',
+  githubRepo: 'corda/training.corda.net',
   sidebarCategories: sidebarConfig,
 }
 
@@ -212,6 +212,14 @@ module.exports = {
         useMozJpeg: false,
         stripMetadata: true
       }
+    },
+    {
+      resolve: `gatsby-plugin-google-analytics`,
+      options: {
+        trackingId: "UA-87760032-4",
+        head: false,
+        cookieDomain: "corda.net",
+      },
     }
   ]
 };
