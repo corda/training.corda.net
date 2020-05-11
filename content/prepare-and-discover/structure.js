@@ -6,7 +6,7 @@ module.exports = [
     `${here}prepare-computer`,
     `${here}discover-example`,
     `${here}run-example`,
-    `${here}discover-tests`,
     `${here}see-db`,
+    `${here}discover-tests`,
     `${here}design-corda`
 ];

@@ -87,7 +87,7 @@ Of course, the `List<StateAndRef<TokenState>>` type is not exactly the user-frie
 <HighlightBox type="info">
 
 > Why not add another constructor that takes an amount of tokens to send to another party, and do the `StateAndRef` transformation in the constructor itself?
- 
+
 It is not possible because [`.toStateAndRef`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/node/ServiceHub.kt#L241) requires access to the vault, and, as you recall, a flow has access to the service hub only when `call`ed. At instantiation, a flow is a simple Java object that does not know on which node it will run.
 
 If you need a more friendly flow that, for instance, takes an amount of your tokens to send to another party, then:
