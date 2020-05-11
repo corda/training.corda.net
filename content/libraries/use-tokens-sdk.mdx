@@ -6,6 +6,12 @@ slug: libraries/use-tokens-sdk
 
 import HighlightBox from "../../src/HighlightBox"
 
+import {
+  ExpansionPanel,
+  ExpansionPanelList,
+  ExpansionPanelListItem
+} from 'gatsby-theme-apollo-docs';
+
 ## Exercise summary
 
 In your project, from the previous module, you created a fungible token, ostensibly to be used as an air-mile by the world's airlines. Now, oops, you are going to make use of the Tokens SDK and focus your efforts only on what you have to do on our own. So go ahead and do the following:
@@ -43,6 +49,12 @@ Achieving these modest aims might not be as easy as the list above suggests. Mor
 
     * also inherits from `AbstractRedeemTokensFlow`
     * and takes inputs as `List<StateAndRef<AbstractToken>>`. Boom.
+
+<ExpansionPanel title="If you prefer to work from the Web IDE">
+
+Just reopen it, and you should find your state, contract and flow code as you left them at http://ide.corda.net.
+
+</ExpansionPanel>
 
 ## Conclusion
 
