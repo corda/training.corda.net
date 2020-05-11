@@ -1,6 +1,6 @@
 ---
 title: Git Introduction
-description: Introducing Git and quick exercise
+description: Introducing Git with a quick exercise
 slug: prepare/git-intro
 ---
 
@@ -34,7 +34,7 @@ A **repository** is a self-contained entity that contains all information, inclu
 
 The files that you see in your local repository are at a given **version**. Here is an [example](https://github.com/corda/corda/tree/452e78f531a3f16e63ed9aa62d6b165cdd4da2bf) of a version of Corda. The version id is `452e78f531a3f16e63ed9aa62d6b165cdd4da2bf` or `452e78f` for short. This version id was calculated by SHA1-hashing the content of the whole working tree at this version, plus some metadata, and there is a pretty good chance that it is absolutely unique across all repositories of the world. See the reading list at the end for in-depth articles. A version has [one](https://github.com/corda/corda/commit/452e78f531a3f16e63ed9aa62d6b165cdd4da2bf) or [two](https://github.com/corda/corda/commit/80cf34b81a0da51541262bf7bad8ed7b540d29e0) parents, which is mentioned in the header `2 parents ea22a10 + 723399d`. When a version has two parents, we call it a **merge**. In effect, the series of versions in a Git repository form a directed acyclic graph, a D.A.G.. Almost like the states and transactions in Bitcoin and Corda. You can see for instance [here](https://github.com/corda/corda/network) how all arrows are pointing to the right, with each dot symbolising a version. When you want to have a version in your working tree, you **checkout** (or **switch** to, if your Git is new) this version.
 
-When you want to create a new version you first have to decide which of your changed files are going into this new version, we say you **stage** your changes, and then you **commit** them along with a text message. We often swap the word commit with version. Before staging, you can see what differences you made to your files compared with the last version. Git calls that a **diff**. When staging, if you use a convenient [GUI tool](https://desktop.github.com/), it can even help you select which lines to stage per file. And do not forget that all this staging and committing happens in your local repository. No remote is involved in these operations until you push. As an aside, this means that it is easy to uncommit and unstage, a.k.a. **reset** or **restore**, if you never pushed your new version.
+When you want to create a new version you first have to decide which of your changed files are going into this new version, we say you **stage** your changes, and then you **commit** them along with a text message. It is common to swap the word commit with version. Before staging, you can see what differences you made to your files compared with the last version. Git calls that a **diff**. When staging, if you use a convenient [GUI tool](https://desktop.github.com/), it can even help you select which lines to stage per file. And do not forget that all this staging and committing happens in your local repository. No remote is involved in these operations until you push. As an aside, this means that it is easy to uncommit and unstage, a.k.a. **reset** or **restore**, if you never pushed your new version.
 
 By convention you make commits of files that make sense together, and&nbsp;/ or commits that address a specific bug or feature. It is also a convention to describe in human language the purpose of the commit. Nothing good comes from making commits of 500 files with the message "Today's work". Another convention is to not commit files that can be fetched from elsewhere, like a library, or recreated, like a build folder. It is bad practice to commit private keys and other sensitive information. In order to achieve that with less effort, you are encouraged to populate the **`.gitignore`** file that lists the files to... ignore.
 
@@ -68,12 +68,17 @@ With that work done, let's have fun with the command-line and the [Corda samples
 2. **Clone** the repository and give it a name that won't make you scratch your head in 3 months:
 
     ```bash
-    $ git clone https://github.com/corda/samples-java.git corda-samples
+    $ git clone git@github.com:corda/samples-java.git corda-samples-java
+    ```
+    Or, if you did not add an SSH key to your account:
+
+    ```bash
+    $ git clone https://github.com/corda/samples-java.git corda-samples-java
     ```
 3. Go into it:
 
     ```bash
-    $ cd corda-samples
+    $ cd corda-samples-java
     ```
 4. Check the **status**
 
@@ -85,7 +90,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
     nothing to commit, working tree clean
     ```
     Right there you know that `master` is a **branch** and is currently the default one. Your **working tree** has nothing new. Also, `origin` is a **remote**, the one on Github. `origin` is the conventional name for a default remote.
-    
+
 5. So what is this `origin` remote?
 
     ```bash
@@ -109,26 +114,26 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
     ```bash
     $ git log | head -n 20
-    commit a61e2cc9910d7d5de83122bf7d36fd071796a7c3
+    commit 03fe800534ca2a684b0cb892a379a8c7eebbe259
+    Merge: 4a6314f 89988e9
     Author: peterli-r3 <51169685+peterli-r3@users.noreply.github.com>
-    Date:   Wed May 6 12:10:13 2020 -0400
+    Date:   Thu May 7 09:34:58 2020 -0400
 
-        add cordapp-example/springserver
+        Merge pull request #2 from corda/oracle-primenumber_CCV
 
-    commit d42351d1fb3bc07730895650f71c7b9a93fc4197
+        oracle-primenumber: added checkCommandVisibility to oracle service
+
+    commit 4a6314fd4e65087b556aa94d8696e9b391803a81
+    Merge: a61e2cc cf21fb3
     Author: peterli-r3 <51169685+peterli-r3@users.noreply.github.com>
-    Date:   Wed May 6 09:37:26 2020 -0400
+    Date:   Thu May 7 09:34:46 2020 -0400
 
-        Update README.md
+        Merge pull request #3 from corda/training_material_readme
 
-    commit c15a5d21c1ae39750bec6d87abda9fcc36b36d46
-    Author: peterli-r3 <51169685+peterli-r3@users.noreply.github.com>
-    Date:   Tue May 5 16:32:31 2020 -0400
+        README for training samples inserts
 
-        Update README.md
-
-    commit 2269eeb1e228ec41a9fab712bee60106e7a91c75
-    Author: david awad <me@davidawad.com>
+    commit cf21fb3dbf9972d61eb9b543e6fe79698f843110
+    Author: Anthony Nixon <anixon604@gmail.com>
     ```
     We can see **commit** ids and messages, developer names and dates.
 
@@ -147,50 +152,50 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
       git checkout -b <new-branch-name>
 
-    HEAD is now at d42351d Update README.md
+    HEAD is now at 4a6314f Merge pull request #3 from corda/training_material_readme
     ```
-    Yep, `d42351d` is the second commit id we saw previously. We are detached, meaning that we are no longer tracking our `master` branch, and we are not going to update the branch either. That can be a problem if you start creating something.
+    Yep, `4a6314f` is the second commit id we saw previously. We are detached, meaning that we are no longer tracking our `master` branch, and we are not going to update the branch either. That can be a problem if you start creating something.
 
 8. Find your place in the DAG of commits
 
     ```bash
     $ git log | head -n 20
-    commit d42351d1fb3bc07730895650f71c7b9a93fc4197
+    commit 4a6314fd4e65087b556aa94d8696e9b391803a81
+    Merge: a61e2cc cf21fb3
     Author: peterli-r3 <51169685+peterli-r3@users.noreply.github.com>
-    Date:   Wed May 6 09:37:26 2020 -0400
+    Date:   Thu May 7 09:34:46 2020 -0400
 
-        Update README.md
+        Merge pull request #3 from corda/training_material_readme
 
-    commit c15a5d21c1ae39750bec6d87abda9fcc36b36d46
+        README for training samples inserts
+
+    commit cf21fb3dbf9972d61eb9b543e6fe79698f843110
+    Author: Anthony Nixon <anixon604@gmail.com>
+    Date:   Thu May 7 00:50:34 2020 +0100
+
+        README for training samples inserts
+
+    commit a61e2cc9910d7d5de83122bf7d36fd071796a7c3
     Author: peterli-r3 <51169685+peterli-r3@users.noreply.github.com>
-    Date:   Tue May 5 16:32:31 2020 -0400
+    Date:   Wed May 6 12:10:13 2020 -0400
 
-        Update README.md
-
-    commit 2269eeb1e228ec41a9fab712bee60106e7a91c75
-    Author: david awad <me@davidawad.com>
-    Date:   Tue May 5 12:30:20 2020 -0400
-
-        cleaner relative links
-
-    commit c42a5f23bc99e5944958d139790a8958513c36d4
-    Author: peterli-r3 <51169685+peterli-r3@users.noreply.github.com>
+        add cordapp-example/springserver
     ```
-    You no longer know about the previous head at `01c9845`. Of course, the commit was not deleted, it just is not in your working tree.
+    You no longer know about the previous head at `03fe800`. Of course, the commit was not deleted, it just is not in your working tree.
 
 9. Proof:
 
     ```bash
-    $ git checkout d42351d
-    Previous HEAD position was cf89972f Update README.md
-    HEAD is now at 01c98454 Merge pull request #91 from corda/java-oracle-example
+    $ git checkout 03fe800
+    Previous HEAD position was 4a6314f Merge pull request #3 from corda/training_material_readme
+    HEAD is now at 03fe800 Merge pull request #2 from corda/oracle-primenumber_CCV
     ```
     This commit id was there, hidden inside the `.git` folder, and we can call it back at any moment.
 10. Status?
 
     ```bash
     $ git status
-    HEAD detached at d42351d
+    HEAD detached at 03fe800
     nothing to commit, working tree clean
     ```
     Admittedly, commit ids are not a friendly way to go about. And although we are at exactly the same commit as the current **head** of `master` branch, we are still detached. Shall we "reattach"?
@@ -198,7 +203,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
     ```bash
     $ git branch --list
-    * (HEAD detached at d42351d)
+    * (HEAD detached at 03fe800)
       master
     (END)
     ```
@@ -208,7 +213,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
     ```bash
     $ git branch --all
-    * (HEAD detached at d42351d)
+    * (HEAD detached at 03fe800)
       master
       remotes/origin/HEAD -> origin/master
       remotes/origin/devrel-1606
@@ -222,7 +227,6 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
     ```bash
     $ git checkout master
-    Previous HEAD position was d42351d Update README.md
     Switched to branch 'master'
     Your branch is up to date with 'origin/master'.
     ```
@@ -244,7 +248,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
       (use "git add <file>..." to update what will be committed)
       (use "git checkout -- <file>..." to discard changes in working directory)
 
-    	modified:   Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
+        modified:   Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
 
     no changes added to commit (use "git add" and/or "git commit -a")
     ```
@@ -282,14 +286,14 @@ With that work done, let's have fun with the command-line and the [Corda samples
     Changes to be committed:
       (use "git reset HEAD <file>..." to unstage)
 
-    	modified:   Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
+        modified:   Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
     ```
     Clear enough.
 19. Time to **commit**:
 
     ```bash
     $ git commit -m "Added a semicolon at the end, you're welcome."
-    [master 1fca5f5] Added a semicolon at the end, you're welcome.
+    [master bcd90e3] Added a semicolon at the end, you're welcome.
      1 file changed, 1 insertion(+), 1 deletion(-)
     ```
     Ok. An insertion is an added line, a deletion is a deleted line.
@@ -315,7 +319,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
     and the repository exists.
     ```
     Of course, there are access rights to it. This is not your repository.
-22. But you know what? This commit was not very helpful, and since it never left my computer, let's revert it:
+22. But you know what? This commit was not very helpful, and since it never left your computer, let's revert it:
 
     ```bash
     $ git reset HEAD~1
@@ -342,6 +346,11 @@ With that work done, let's have fun with the command-line and the [Corda samples
 26. Ok now, we have 2 remotes, the official one and yours. How do we differentiate them? The convention is to name _your_ repo `origin`, and the _official_ one `upstream`, so first, we add `upstream`:
 
     ```bash
+    $ git remote add upstream git@github.com:corda/samples-java.git
+    ```
+    Or, if you did not add an SSH key:
+
+    ```bash
     $ git remote add upstream https://github.com/corda/samples-java.git
     ```
 27. What remotes do we have?
@@ -356,14 +365,14 @@ With that work done, let's have fun with the command-line and the [Corda samples
     ```bash
     $ git remote show origin
     * remote origin
-      Fetch URL: https://github.com/corda/samples-java.git
-      Push  URL: https://github.com/corda/samples-java.git
+      Fetch URL: git@github.com:corda/samples-java.git
+      Push  URL: git@github.com:corda/samples-java.git
     [...]
     $ git remote show upstream
     git remote show upstream
     * remote upstream
-      Fetch URL: https://github.com/corda/samples-java.git
-      Push  URL: https://github.com/corda/samples-java.git
+      Fetch URL: git@github.com:corda/samples-java.git
+      Push  URL: git@github.com:corda/samples-java.git
     [...]
     ```
     Mmh, the same. Not very helpful.
@@ -379,7 +388,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
     $ echo ";" >> Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
     $ git add Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
     $ git commit -m "Added a semicolon at the end, you're welcome."
-    [master 5d513097] Added a semicolon at the end, you're welcome.
+    [master bcd90e3] Added a semicolon at the end, you're welcome.
      1 file changed, 2 insertions(+), 1 deletion(-)
     $ git push
     Enumerating objects: 21, done.

@@ -12,13 +12,13 @@ import {
   ExpansionPanelListItem
 } from 'gatsby-theme-apollo-docs';
 
-This is an example solution to the simplified project exercise of the previous chapter. By no means should you interpret this implementation as the only possible one. Just one of many valid ones. 
+This is an example solution to the simplified project exercise of the previous chapter. By no means should you interpret this implementation as the only possible one -- just one of many valid ones.
 
 ## Design decisions
 
-The decision was taken to not alter the existing `SalesProposal` and contract, and leave them as they are. Adding complexity to something that works well is always fraught. The DMV's _lien_ oracle will be handled by other, new, elements.
+The decision was taken to not alter the existing `SalesProposal` and contract, and leave them as they are. Adding complexity to something that works well is always risky. The DMV's _lien_ oracle will be handled by other, new, elements.
 
-Another decision taken is that the buyer could singlehandedly decide to have a verification done at the time of purchase, or involve the seller in it as well. Also, the ledger constraints are designed to allow purchases even if there are liens. The control of the desired situation is left to flows. It is a business decision.
+Another decision is that the buyer could singlehandedly decide to have a verification done at the time of purchase, or involve the seller in it as well. Also, the ledger constraints are designed to allow purchases even if there are liens. The control of the desired situation is left to flows. It is a business decision.
 
 Because there needs to be some enforcement nonetheless, and the `SalesProposalContract` is left intact, there needs to be a new state to require this contract.
 
@@ -37,7 +37,7 @@ public class DueDiligence implements LinearState {
     private final AbstractParty oracle;
     @NotNull
     private final List<AbstractParty> participants;
-    
+
     // Plus constructor, getters, equals and hashCode.
     [...]
 ```
@@ -71,7 +71,7 @@ public interface Commands extends CommandData {
 ```
 `Prepare` is used to simply create the instance in the first place, `Drop` is used to simply consume, i.e. take the state out of the ledger, and `Certify` is used to ask confirmation from the oracle, consuming the state at the same time.
 
-Evidently, `Status` needs to be defined:
+`Status` needs to be defined:
 
 ```java
 @CordaSerializable
@@ -93,7 +93,7 @@ The [tests](TODO-link) test these few constraints in turn.
 
 ## [DiligenceOracleUtilities](TODO-link)
 
-Defining those early on can clear some future mental load. When the oracle informs about a status, it has a certain validity period:
+Defining those early on can minimise future mental overhead. When the oracle informs about a status, it has a certain validity period:
 
 ```java
 public static final Duration VALID_DURATION = Duration.ofMinutes(10);
@@ -163,7 +163,7 @@ Where it assumes that absence is proof of absence, the perks of being a centrali
         return serviceHub.createSignature(ftx, oracleKey);
     }
 ```
-Looks like a copy-pasta of what you learned, with the additional check that the key needs to have been set. What is this `isCommandWithCorrectParameters`:
+Looks like a copy-paste of what you learned, with the additional check that the key needs to have been set. What is this `isCommandWithCorrectParameters`:
 
 ```java
 private boolean isCommandWithCorrectParameters(@NotNull final Object elem) {
@@ -189,7 +189,7 @@ It must look familiar to you. It accepts a `Certify` command with valid paramete
 
 > `cmdData.getStatus().equals(query(cmdData.getTokenId()))`
 
-Here you can see that it can certify either that the vehicle is clear or that it is linked. Oh and it checks, via the time-window, that the transaction will be notarised before the status expires.
+Here you can see that it can certify either that the vehicle is clear or that it is linked. And it checks, via the time-window, that the transaction will be notarised before the status expires.
 
 <ExpansionPanel title="The other functions are example boilerplate">
 
@@ -215,7 +215,7 @@ public PublicKey getOracleKey() {
 
 ## [`DiligenceOracleInternalFlows`](TODO-link)
 
-To assist in controlling the state of the oracle, a couple internal flows were created. They are meant to run on the same node of the oracle and do not have handling counterpart:
+To assist in controlling the state of the oracle, a couple of internal flows were created. They are meant to run on the same node of the oracle and do not have handling counterpart:
 
 ```java
 class SetOracleKeyFlow extends FlowLogic<Void> {
@@ -297,7 +297,7 @@ It collects the signatures of all participants when applicable. Its handler is a
 @InitiatedBy(PrepareFlow.class)
 class PrepareHandlerFlow extends FlowLogic<StateAndRef<DueDiligence>> {
 ```
-It only accepts to sign as a participant if it can find that it owns a token with a matching id:
+It only signs as a participant if it can find that it owns a token with a matching id:
 
 ```java
 final QueryCriteria idCriteria = new QueryCriteria.LinearStateQueryCriteria()
@@ -370,15 +370,15 @@ requesterSession.send(sig);
 
 ### The `RequestStraight` / `FinaliseStraight` pair
 
-Ok so far, if you are meticulous, you will notice that there has been no flows that does a proper `Certify` transaction, one where the oracle's opinion is used for real. So far it has all been data passed around.
+Ok so far, if you are meticulous, you will notice that there has been no flow that does a proper `Certify` transaction, one where the oracle's opinion is used materially. So far, it has all been data passed around.
 
-The role of this flow is to demonstrate how a simple transaction can be built where a `DueDiligence` is consumed. There is no vehicle sale just yet, it's coming in a bit.
+The role of this flow is to demonstrate how a simple transaction can be built where a `DueDiligence` is consumed. There is no vehicle sale just yet. It's coming in a bit.
 
 ```java
 @InitiatingFlow
 class RequestStraight extends FlowLogic<SignedTransaction> {
 ```
-And it takes what is needed for resolution:
+And, it takes what is needed for resolution:
 
 ```java
 @NotNull
@@ -397,20 +397,20 @@ final TransactionBuilder builder = new TransactionBuilder(dueDilRef.getState().g
         .setTimeWindow(TimeWindow.untilOnly(
                 Instant.now().plus(VALID_DURATION).minus(Duration.ofSeconds(1))));
 ```
-Note that the token id and oracle key are taken from the `DueDiligence` instance, and that the time-window is taking the maximum possible. After all, supposing this node and the oracle's node have the same time, given delays in communication, when the oracle checks validity, it should pass. On the other hand, if this node runs fast (in terms of time), then the time-window should be adjusted to less aggressively so close to the validation limit.
+Note that the token id and oracle key are taken from the `DueDiligence` instance, and that the time-window is taking the maximum possible. After all, supposing this node and the oracle's node have the same time, given delays in communication, when the oracle checks validity, it should pass. On the other hand, if this node runs fast (in terms of time), then the time-window should be adjusted to be less aggressive, i.e. less close to the validation limit.
 
-Then time comes to ask for a signature:
+Then, the time comes to ask for a signature:
 
 ```java
 final WireTransaction wtx = builder.toWireTransaction(getServiceHub());
 final TransactionSignature oracleSig = subFlow(new Request(dueDil.getOracle(), wtx));
 ```
-Glad that the `Request` flow exists to chip away at the boilerplate that would otherwise be here. Then, it is time to add the signature to the transaction:
+The `Request` flow helps chip away at the boilerplate that would otherwise be here. Then, it is time to add the signature to the transaction:
 
 ```java
 final SignedTransaction signed = new SignedTransaction(wtx, Collections.singletonList(oracleSig));
 ```
-That's right, this node does not need to sign. Only the oracle signature is required, so you might as well built your `SignedTransaction` out of its elements...
+That's right. This node does not need to sign. Only the oracle signature is required, so you might as well build your `SignedTransaction` out of its elements...
 
 <ExpansionPanel title="Then it is just a matter of sending it to participants">
 
@@ -429,13 +429,13 @@ return subFlow(new FinalityFlow(signed, sessions));
 
 Its handler, `FinaliseStraight` just does a finalisation.
 
-Check out the [tests](TODO-link) too.
+Check out the [tests](TODO-link) as well.
 
-Ok, this flow demonstrates the interaction of a `DueDiligence` and an oracle in a single transaction. But what about a `SalesProposal`, a buyer and all those things that this work was intended to improve?
+Ok, this flow demonstrates the interaction of a `DueDiligence` and an oracle in a single transaction. But, what about a `SalesProposal`, a buyer and all those things that this work was intended to improve?
 
 <HighlightBox type="tip">
 
-Remember that the `SalesProposal` state and contract were not modified to facilitate this `DueDiligence` thingy. They are 2 separate entities and have no knowledge of each other. This separation of concern at the ledger level in no way forces you to a symmetrical separation of concern at the business layer, i.e. flows.
+Remember that the `SalesProposal` state and contract were not modified to address this `DueDiligence` concern. They are 2 separate entities and they have no knowledge of each other. This separation of concerns at the ledger level in no way forces you to a symmetrical separation of concerns at the business layer, i.e. flows.
 
 </HighlightBox>
 

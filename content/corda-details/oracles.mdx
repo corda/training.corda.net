@@ -119,7 +119,7 @@ myFilteredTransaction.checkWithFun(element -> {
     return false;
 });
 ```
-Where `elementIsStrictlyNecessary` is pseudo-code for your complete verification of the element. 
+Where `elementIsStrictlyNecessary` is pseudo-code for your complete verification of the element.
 
 <HighlightBox type="info">
 
@@ -153,7 +153,7 @@ In fact, there is a common usage that you have been using from the start, it is 
 
 Where the inputs are actually [`StateRef`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/Structures.kt#L161), i.e. they do not disclose the actual content of the inputs.
 
-## Example preparation 
+## Example preparation
 
 After all this theory sprinkled with a bit of code, let's look at an example. You can find the code for it [here](TODO-link). Let's say you want to implement a foreign exchange oracle that gives current quotes for currency pairs Let's define the `FxQuote` data type that takes in:
 
@@ -179,13 +179,13 @@ public class FxContract implements Contract {
         class Swap implements Commands {
             @NotNull
             private final FxQuote quote;
-    
+
             public Swap(@NotNull final FxQuote quote) {
                 //noinspection ConstantConditions
                 if (quote == null) throw new NullPointerException("quote cannot be null");
                 this.quote = quote;
             }
-    
+
             // Plus accessor, equals and hashCode
         }
     }
@@ -472,7 +472,7 @@ public FxQuote getQuote(@NotNull final Pair<TokenType,TokenType> pair) {
 Notice how it does a bit of cleaning up before sending something back. It is not aimed at being threadsafe here. It also needs to be able to sign:
 
 ```java
-public TransactionSignature sign(@NotNull final FilteredTransaction ftx) 
+public TransactionSignature sign(@NotNull final FilteredTransaction ftx)
         throws FilteredTransactionVerificationException,
         ComponentVisibilityException {
     // Check that the partial Merkle tree is valid.
