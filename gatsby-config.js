@@ -136,6 +136,13 @@ let remarkPluginConfig = [
       related: false, //Optional: Will remove related videos from the end of an embedded YouTube video.
       noIframeBorder: true, //Optional: Disable insertion of <style> border: 0
     }
+  },
+  {
+    resolve: `gatsby-remark-katex`,
+    options: {
+      // Add any KaTeX options from https://github.com/KaTeX/KaTeX/blob/master/docs/options.md here
+      strict: `ignore`
+    }
   }
 ]
 
