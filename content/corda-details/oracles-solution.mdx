@@ -24,6 +24,8 @@ Because there needs to be some enforcement nonetheless, and the `SalesProposalCo
 
 ## [`DueDiligence`](TODO-link)
 
+![CDL of DueDiligence state](images/due_diligence_state.png)
+
 This is the new state. It is a `LinearState` created by its participants and it lists the vehicle id and the lien oracle:
 
 ```java
@@ -47,6 +49,8 @@ The idea is that it is created independently, and then added to the purchase `Ac
 Which brings us to the contract that controls it:
 
 ## [`DueDiligenceContract`](TODO-link)
+
+![CDL of DueDiligence contract](images/due_diligence_state_machine.png)
 
 It defines 3 commands:
 
@@ -91,7 +95,7 @@ Not overly restrictive.
 
 The [tests](TODO-link) test these few constraints in turn.
 
-## [DiligenceOracleUtilities](TODO-link)
+## [`DiligenceOracleUtilities`](TODO-link)
 
 Defining those early on can minimise future mental overhead. When the oracle informs about a status, it has a certain validity period:
 
@@ -317,7 +321,7 @@ That should ward off spam.
 
 ## [`Drop` flows](TODO-link)
 
-Yes, you need to go through all the basic stuff before munching on the interesting bits. These flows are the mirror image of the `Prepare` flows. Expectedly, the handler checks that it is a participant in the input `DueDiligence`. That's a strong check, because you have to sign to become a participant in the first place.
+Yes, you need to go through all the basic stuff before munching on the interesting bits. These `Drop` flows are the mirror image of the `Prepare` flows. Expectedly, the handler checks that it is a participant in the input `DueDiligence`. That's a strong check, because you have to sign to become a participant in the first place.
 
 ## [`Certify` flows](TODO-link)
 
@@ -442,6 +446,8 @@ Remember that the `SalesProposal` state and contract were not modified to addres
 You are free to keep your existing `SalesProposalAcceptFlows` as they are and add other sales proposal accept flows that require a `DueDiligence` in their process. The decision taken here is to modify the existing accept flow and make it take an optional `DueDiligence`.
 
 ## [Modified `SalesProposalAcceptFlows`](TODO-link)
+
+![Modified SalesProposalAcceptFlow](images/oracle_atomic_car_buy_bpmn.png)
 
 In fact, the initiator takes additionally:
 
