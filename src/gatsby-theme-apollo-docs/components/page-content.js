@@ -6,7 +6,8 @@ import useMount from 'react-use/lib/useMount';
 import {HEADER_HEIGHT} from 'gatsby-theme-apollo-docs/src/utils';
 import {IconGithub} from '@apollo/space-kit/icons/IconGithub';
 import {IconSchema} from '@apollo/space-kit/icons/IconSchema';
-import { ReactComponent as IconSupportSVG } from "../../assets/ic-support.svg";
+import {ReactComponent as SlackLogo} from '../assets/slack.svg';
+import {ReactComponent as IconSupportSVG} from "../../assets/ic-support.svg";
 import {PageNav, breakpoints, colors} from 'gatsby-theme-apollo-core';
 import {ReactComponent as SpectrumLogo} from 'gatsby-theme-apollo-docs/src/assets/spectrum.svg';
 import {withPrefix} from 'gatsby';
@@ -148,7 +149,6 @@ const EditLink = styled.div({
 const SVGIconWrapper = styled.div`
   width: 20px;
   margin-right: 6px;
-  padding-top: 2px;
 `
 
 const IconSupport = () => {
@@ -161,7 +161,7 @@ const IconSupport = () => {
   )
 }
 
-export default function PageContent(props) {
+export default function PageContent(props, {data} ) {
   const contentRef = useRef(null);
   const [imagesToLoad, setImagesToLoad] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState(0);
@@ -219,6 +219,12 @@ export default function PageContent(props) {
     </AsideLinkWrapper>
   );
 
+  const slackLink = (
+    <AsideLink href="https://corda.slack.com/">
+      <SlackLogo /> Discuss on Slack
+    </AsideLink>
+  );
+
   return (
     <Wrapper>
       <InnerWrapper>
@@ -227,6 +233,7 @@ export default function PageContent(props) {
 
         </BodyContent>
         <EditLink>{editLink}</EditLink>
+        <EditLink>{slackLink}</EditLink>
         <EditLink>{supportLink}</EditLink>
 
         <PageNav
@@ -245,6 +252,7 @@ export default function PageContent(props) {
           />
         )}
         {editLink}
+        {slackLink}
         {supportLink}
         {props.spectrumUrl && (
           <AsideLink href={props.spectrumUrl}>
