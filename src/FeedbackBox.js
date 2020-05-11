@@ -31,6 +31,11 @@ export default class FeedbackBox extends React.Component {
   }
 
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if(!prevState.showForm && this.state.showForm) {
+      window.scrollTo(0,document.body.scrollHeight);
+    }
+  }
 
   
   render() {
@@ -122,7 +127,6 @@ export default class FeedbackBox extends React.Component {
         rating: rating,
         page: window.location.href
       } );
-      // TODO: Need to scroll down
     }
 
 
@@ -152,6 +156,7 @@ export default class FeedbackBox extends React.Component {
       });
 
     }
+
 
     return (
       <FeedbackBoxWrapper>
