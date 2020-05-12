@@ -52,7 +52,7 @@ This simple process is sometimes used to confirm the integrity of a large file s
 
 Now, how can you extend this idea to confirm an unbroken transaction history?
 
-You can start with the first version of a file and record a hash of the file contents. This can be as simple as an empty log with no transactions because nothing has happened yet. You can further suppose that we will have a rule: You can only append new entries to the end of the file. That is to say, the transaction history will be an append-only structure. Accountants have known the advantages of append-only ledgers for centuries.
+You can start with the first version of a file and record a hash of the file contents. This can be as simple as an empty log with no transactions because nothing has happened yet. You can further suppose that you will have a rule: You can only append new entries to the end of the file. That is to say, the transaction history will be an append-only structure. Accountants have known the advantages of append-only ledgers for centuries.
 
 > The following examples are written in pseudocode:
 
@@ -94,10 +94,10 @@ Blockchain functions in a similar manner. Blocks of transactions are appended us
 
 Transaction blocks are logical units that wrap up a set of transactions in a specific order. While the implementation details are somewhat more subtle, for now, let us think of this as the set of transactions that occurred during a time interval, in a specific order.
 
-Transaction ordering is surprisingly challenging in a blockchain system due to design goals and constraints. We will use the example of Bitcoin and its novel solution to understand the issues and how this can be addressed.
+Transaction ordering is surprisingly challenging in a blockchain system due to design goals and constraints. Consider the example of Bitcoin and its novel solution to understand the issues and how this can be addressed.
 
 - As a distributed network, everyone has a little bit of authority. For example, all nodes can generate transactions and then announce that information to other nodes.
-- In a truly distributed network, no one's clock is considered more authoritative than anyone else's clock. Therefore, we need a transaction ordering solution that does not involve timestamps or network time.
+- In a truly distributed network, no one's clock is considered more authoritative than anyone else's clock. Therefore, the network needs a transaction ordering solution that does not involve timestamps or network time.
 - Anyone can, theoretically, listen to transaction proposals and organise a valid block containing an *opinion* about the correct order of events.
 - Because of physics and network latency, everyone on the network will learn about transaction proposals in a slightly different order. How then can the *correct* order of transactions be determined?
 
@@ -119,7 +119,7 @@ A blockchain starts with a known state. This is a simple matter of an initialise
 
 Bitcoin is a Public blockchain, also sometimes called a permissionless network. The Proof-of-Work process shows that a network of nodes that do not know or necessarily trust each other can arrive at a convincingly robust consensus. This brief description would be incomplete without a word about mining and mining rewards.
 
-Blockchain networks that rely on Proof-of-Work employ financial incentives as an approximate substitute for accountability. We have mentioned a lottery. This in an apt description of a guessing game. Participants, called miners, guess at a number that when included in with a block of transactions and the previous hash will produce a hash that meets a certain criteria. Since hash functions are one-way functions there is no more efficient approach to discovering a winning ticket (a number called the nonce) than brute force trial and error. The "certain criteria" relates to the odds of a random guess that produces a desired result.
+Blockchain networks that rely on Proof-of-Work employ financial incentives as an approximate substitute for accountability. A lottery has been mentioned. This in an apt description of a guessing game. Participants, called miners, guess at a number that when included in with a block of transactions and the previous hash will produce a hash that meets a certain criteria. Since hash functions are one-way functions there is no more efficient approach to discovering a winning ticket (a number called the nonce) than brute force trial and error. The "certain criteria" relates to the odds of a random guess that produces a desired result.
 
 For example, consider this contrived transaction log that records Alice sending 10 to Bob and then Bob sending 5 to Carol, in that order.
 
@@ -132,7 +132,7 @@ For example, consider this contrived transaction log that records Alice sending 
 }
 ```
 
-We can plug that in at [<http://onlinemd5.com/>](<http://onlinemd5.com/>), select SHA256 which Bitcoin uses and it will generate `0901F8FCF7C4B88D9041C3A008D862AB798D89002540469DD047E16CCD75933C`. Don't panic if your result differs because whitespace is important. The point is that any input produces a hash that is unpredictable.
+You can plug that in at [<http://onlinemd5.com/>](<http://onlinemd5.com/>), select SHA256 which Bitcoin uses and it will generate `0901F8FCF7C4B88D9041C3A008D862AB798D89002540469DD047E16CCD75933C`. Don't panic if your result differs because whitespace is important. The point is that any input produces a hash that is unpredictable.
 
 Now, the lottery that miners compete in involves adding another element, the nonce, so that the hash will turn out a certain way.
 
@@ -175,9 +175,9 @@ Public networks that rely on anonymous nodes to help secure the network generall
 
 ## Shared Facts and Reliable Processes
 
-Proof-of-Work and blockchain demonstrates that a set of nodes that do not know or necessarily trust each other can form a consensus about a set of facts. We also see that Bitcoin's simple processes, i.e. business logic, reliably execute on a distributed platform because consensus disregards inputs from attacking or malfunctioning nodes.
+Proof-of-Work and blockchain demonstrates that a set of nodes that do not know or necessarily trust each other can form a consensus about a set of facts. Bitcoin's simple processes, i.e. business logic, reliably execute on a distributed platform because consensus disregards inputs from attacking or malfunctioning nodes.
 
-Reliable shared history, shared state and robust processes without the need for a centralised ledger-keeper has inspired fresh thinking about how to construct systems for the regulated financial services industry. But, as we will see, the environment is very different from the public network target for which Bitcoin is optimised.
+Reliable shared history, shared state and robust processes without the need for a centralised ledger-keeper has inspired fresh thinking about how to construct systems for the regulated financial services industry. But, as you will see, the environment is very different from the public network target for which Bitcoin is optimised.
 
 ## Private Networks and Consensus
 
@@ -185,7 +185,7 @@ Corda networks are private. In this context, "private" means that access is limi
 
 There is also a possibility of some nodes having different roles or privileges. The participants can work out a mutually agreeable topology that does not give any participant in particular an unfair advantage. This re-introduction of accountability negates the need for proof-of-work, mining or a native currency to reward good behaviour. Instead, private networks like Corda can use specially appointed nodes to perform certain tasks.
 
-As we get into the details, we will see that Corda uses shared states and cryptographic proofs to detect and repel improper behaviour. It does so in a way uniquely adapted to the environments for which it is intended.
+As you get into the details, you will see that Corda uses shared states and cryptographic proofs to detect and repel improper behaviour. It does so in a way uniquely adapted to the environments for which it is intended.
 
 Corda was originally designed for regulated financial institutions and has found applicability elsewhere where networks of organisations that do know one another and do possess a degree of pre-existing trust and find benefit in shared sets of facts and a common history of the facts.
 
