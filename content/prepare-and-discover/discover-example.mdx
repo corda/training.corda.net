@@ -1,6 +1,6 @@
 ---
 title: Corda's Example Project
-description: A walk through code
+description: Get and explore sample code
 slug: discover/discover-example
 ---
 
@@ -45,7 +45,7 @@ This section is inspired by the tutorial found on docs.corda.net [here](https://
 
 Then head to https://ide.corda.net/?folder=%2Fhome%2Fcoder%2Fsamples-java%2FBasic%2Fcordapp-example
 
-This Web IDE is good if you want to see around and dabble. On the other hand, if your plan is to code for Corda seriously, you owe it to yourself to follow the IntelliJ route.
+This Web IDE is good if you want to look around and dabble. On the other hand, if your plan is to code for Corda seriously, you owe it to yourself to follow the IntelliJ route.
 
 </ExpansionPanel>
 
@@ -63,7 +63,7 @@ $ cd samples-java/cordapp-example
 $ git checkout cf21fb3dbf9972d61eb9b543e6fe79698f843110
 ```
 
-You have now cloned the project to your local storage and then changed to the version that was used for the production of this training. This eliminates the possibility that late-breaking changes could lead to confusion as you work through this exercise.
+You have now cloned the project to your local storage and then changed to the version that was used for the production of this training. This eliminates the possibility that late-breaking changes could lead to confusion as you work through these exercises.
 
 Now you are ready to start working with the code in IntelliJ.
 
@@ -116,7 +116,7 @@ Be patient as it may take a couple minutes for IntelliJ as it is:
 
 <HighlightBox type="tip">
 
-**Gradle** is a versatile project management tool, which of course includes dependency management. Admittedly, there may be as few as 3 people in the whole world who fully understand how it works and what it is doing but it works for our purpose. Regrettably, there is no auto-completion for Gradle commands.
+**Gradle** is a versatile project management tool, which of course includes dependency management. Admittedly, there may be as few as 3 people in the whole world who fully understand how it works and what it is doing but it works for your purpose. Regrettably, there is no auto-completion for Gradle commands.
 
 You group your Gradle commands into 1 or more `build.gradle` files, which can call other `build.gradle` files. What you did earlier is select the root Gradle file.
 
@@ -137,7 +137,7 @@ The `cordapp-example` project contains 6 `build.gradle` files in total:
 * `contracts-kotlin/build.gradle`
 * `workflows-kotlin/build.gradle`
 
-`build.gradle` is called the root file. All 5 other `build.gradle` files incorporate what is done in this root `build.gradle`. For instance, `contracts-java/build.gradle` knows about the root `build.gradle`. In fact, a given `build.gradle` automatically incorporates what other `build.gradle` files did up in the folder structure. You can see an example of that [here](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/contracts-java/build.gradle#L28), where `corda_release_group` is defined up in the root, [there](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/build.gradle#L6).
+`build.gradle` is called the root file. All 5 other `build.gradle` files incorporate what is done in this root `build.gradle`. For instance, `contracts-java/build.gradle` knows about the root `build.gradle`. In fact, a given `build.gradle` automatically incorporates what other `build.gradle` files did higher in the folder structure. You can see an example of that [here](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/contracts-java/build.gradle#L28), where `corda_release_group` is defined up in the root, [there](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/build.gradle#L6).
 
 Not down the tree. Not sideways either. For instance, `contracts-kotlin/build.gradle` does not incorporate what was done in `contracts-java/build.gradle`.
 
@@ -185,10 +185,6 @@ In fact, in this example app, it is as if you had 2 independent examples in 1 fo
 
 1. `workflows-java`'s `build.gradle`'s [dependency](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/build.gradle#L62): `cordapp project(":contracts-java")`
 2. `workflows-kotlin`'s `build.gradle`'s [dependency](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-kotlin/build.gradle#L54): `cordapp project(":contracts-kotlin")`
-
-Watch a short demonstration of this process:
-
-`video: https://www.youtube.com/watch?v=uqWOLovpYK8`
 
 Ok, enough about loading and configuration. Let's dive in:
 
@@ -295,7 +291,7 @@ It says it found 26 implementations, which include `IOUState` in both `contracts
 * `corda-finance-contracts-4.3.jar`
 * `corda-core-4.3.jar`
 
-There are not 26 (minus our 2 `IOUState`) libraries. There are 3 libraries that contain 26 implementations of `ContractState`.
+There are not 26 (minus the 2 `IOUState`) libraries. There are 3 libraries that contain 26 implementations of `ContractState`.
 
 <HighlightBox type="tip">
 
@@ -601,7 +597,7 @@ Flows are pseudo-synchronous processes. They are written as synchronous code whi
 
 Since a flow can be suspended, there is a mechanism that lets observers know what stage the flow is at. That is the role of the [`progressTracker`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L72-L75). [Before](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L109) and [after](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L116) checkpoints, or [any](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L87) [other](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L99) [point](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L104) really, it can be updated with a descriptive state.
 
-Our `Initiator` is annotated with `@InitiatingFlow` and our `Acceptor` is annotated with `@InitiatedBy(Initiator.class)`. This means that once the `Initiator` flow has made its first contact with a peer node, the `Acceptor` flow is automatically instantiated on the peer node:
+The `Initiator` is annotated with `@InitiatingFlow` and the`Acceptor` is annotated with `@InitiatedBy(Initiator.class)`. This means that once the `Initiator` flow has made its first contact with a peer node, the `Acceptor` flow is automatically instantiated on the peer node:
 
 * At this point, the 2 flow instances are connected to each other by a [session id](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L127) identifying the 1-to-1 link.
 * If the initiator makes contact with more than 1 peer node, then there are as many 1-to-1 sessions as there are peer nodes, with 1 responder flow instance per peer node.
@@ -670,7 +666,7 @@ As you may have suspected, it is always a good decision to keep the flow pair in
 
 Now, this `ExampleFlow.Acceptor` flow is automatically spawned when a request arrives. That is a potential security risk. What if this acceptor flow, that you think remains dormant on your node, suddenly accepts any lending proposition that arrives? Will you end up owing money to random peers on the network? Owing money to random peers is not desirable but is not a breakage of the ledger layer, so the contract does not protect you from that. It is the flow's responsibility. Does this example flow protect you from that risk?
 
-Generally, with a traditional off-ledger IOU, a human borrower will want to screen what to accept, via an _inbox_ mechanism. That would require a checkpoint that waits for human input. However, Corda is designed to accommodate rapid, high-volume transactions between counterparties; and so this wait-for-approval pattern is not supported by default. Instead, to facilitate constraints specific to an individual party there is a [`checkTransaction`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/flows/CollectSignaturesFlow.kt#L341) function, which must be overridden any time a `SignTransactionFlow` is instantiated. In our case, the checks are rudimentary:
+Generally, with a traditional off-ledger IOU, a human borrower will want to screen what to accept, via an _inbox_ mechanism. That would require a checkpoint that waits for human input. However, Corda is designed to accommodate rapid, high-volume transactions between counterparties; and so this wait-for-approval pattern is not supported by default. Instead, to facilitate constraints specific to an individual party there is a [`checkTransaction`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/flows/CollectSignaturesFlow.kt#L341) function, which must be overridden any time a `SignTransactionFlow` is instantiated. In this case, the checks are rudimentary:
 
 * there is [one `IOUState`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L142-L143) in Java, or [exactly one](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-kotlin/src/main/kotlin/com/example/flow/ExampleFlow.kt#L106) in Kotlin.
 * the borrowed amount is [not too high](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L145).

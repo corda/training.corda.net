@@ -1,6 +1,6 @@
 ---
 title: Issue flow example solution
-description: We give you an example of Token flows - Issue
+description: An example Token flow - Issue
 slug: first-code/solution-flows-issue
 ---
 
@@ -11,7 +11,7 @@ import {
   ExpansionPanelListItem
 } from 'gatsby-theme-apollo-docs';
 
-In the same way we proceeded with state and contract, you have done your exercise, you have your own `IssueFlow`, `MoveFlow` and `RedeemFlow`, and perhaps more than that. Now, compare what you did to what we think is a good example observing some best practices. As always, there is no single truth as to implementation but we hope you will reflect on your first attempt given our remarks here. Let's go.
+In the same way you proceeded with state and contract, you have done your exercise, you have your own `IssueFlow`, `MoveFlow` and `RedeemFlow`, and perhaps more than that. Now, compare what you did to this example observing some best practices. As always, there is no single truth as to implementation but we hope you will reflect on your first attempt given the remarks here. Let's go.
 
 Once again, we link only to Java code and let you discover the equivalent Kotlin code on your own. They both achieve the same result with the steps in the same order for better comprehension.
 
@@ -25,7 +25,7 @@ Strange, we declare our:
 String desiredNotaryName = "O=Notary, L=London, C=GB";
 CordaX500Name desiredNotary = CordaX500Name.parse(desiredNotaryName);
 ```
-Of course we need a notary to proceed, but why do we pick a preferred one? After all, many code examples just roll with the first in the list:
+Of course it needs a notary to proceed, but why do we pick a preferred one? After all, many code examples just roll with the first in the list:
 
 ```java
 final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
@@ -37,7 +37,7 @@ Choosing a notary is a decision in itself, so declaring a preference is R3's rec
 * The notary you picked, is it a for-profit notary that wants to be paid per transaction batch or with a subscription?
 * Why would your consortium app use the notary of another consortium?
 
-The downside of having it hard-coded is that, should it change, you would have to redeploy your Jars. So, as part of a proper deployment, you would put this information into a configuration file, as we shall see later. Here and now, for simplicity's sake, we declared it as a hard-coded `static` member.
+The downside of having it hard-coded is that, should it change, you would have to redeploy your Jars. So, as part of a proper deployment, you would put this information into a configuration file, as you will see later. Here and now, for simplicity's sake, it is declared as a hard-coded `static` member.
 
 ## [`IssueFlows`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/workflows/src/main/java/com/template/flows/IssueFlows.java)
 
@@ -47,26 +47,26 @@ First, let's have a diagram that sums up this flow:
 
 ![IssueFlows CDL](images/cdl_issue_tokens.png)
 
-What our issue **initiator** flow does in a nutshell is:
+What the issue **initiator** flow does in a nutshell is:
 
-1. collect the required information.
-2. generate the transaction.
-3. verify it.
-4. sign the transaction.
-5. send it over to the holders.
+1. Collect the required information.
+2. Generate the transaction.
+3. Verify it.
+4. Sign the transaction.
+5. Send it over to the holders.
 
-And all our issue **responder** flow does is:
+And all the issue **responder** flow does is:
 
-1. accept the transaction.
+1. Accept the transaction.
 
 The following design decisions were taken:
 
-* initiating and responder flows are encapsulated inside an `interface`. This provides a way to clearly identify them, by `new IssueFlows.Initiator()`, considering that we do not need to instantiate the encapsulating `IssueFlows`.
-* we use the preferred notary, instead of letting the flow creator decide.
-* we can issue as many `TokenState` instances, with whichever `holder` and `quantity` as we want. Not necessarily 1 instance per holder which we found to be unreasonably restrictive.
-* it is the issuer that initiates the flow.
-* this flow handles a single issuer. Yes, yes, previously we asked you to try your hand at an issue flow that handles more than 1 issuer, but we think this is too risky to do before we have seen more advanced topics. Indeed, the initiating issuer would require signatures from other issuers automatically, so these other issuers would have no oversight on whether this is the right business decision. So we dropped the "atomically issue for multiple issuers" idea altogether.
-* the issuer keeps a record of the states. Why this has to be a design decision will become clearer later on. For now, we will say that we want the issuer to be able to know the current total supply with a simple local query.
+* Initiating and responder flows are encapsulated inside an `interface`. This provides a way to clearly identify them, by `new IssueFlows.Initiator()`, considering that we do not need to instantiate the encapsulating `IssueFlows`.
+* We use the preferred notary, instead of letting the flow creator decide.
+* We can issue as many `TokenState` instances, with whichever `holder` and `quantity` as we want. Not necessarily 1 instance per holder which we found to be unreasonably restrictive.
+* It is the issuer that initiates the flow.
+* This flow handles a single issuer. Yes, yes, previously we asked you to try your hand at an issue flow that handles more than 1 issuer, but we think this is too risky to do before we have seen more advanced topics. Indeed, the initiating issuer would require signatures from other issuers automatically, so these other issuers would have no oversight on whether this is the right business decision. So we dropped the "atomically issue for multiple issuers" idea altogether.
+* The issuer keeps a record of the states. Why this has to be a design decision will become clearer later on. For now, we will say that we want the issuer to be able to know the current total supply with a simple local query.
 
 ### `Initiator`
 

@@ -31,7 +31,7 @@ Learning to think about design on Corda is a key step in progressing towards bec
 
 ## Exploring Design Concepts
 
-Let us consider a scenario originally conceived by the R3 team to introduce Corda design patterns in a slightly more complex scenario. We will design a CorDapp that will model the end-to-end process of an accounts receivable (AR) Purchase.
+Let us consider a scenario originally conceived by the R3 team to introduce Corda design patterns in a slightly more complex scenario. You will consider a CorDapp that will model the end-to-end process of an accounts receivable (AR) Purchase.
 
 For clarity, AR Purchase is not about the everyday purchase of a product or service on a “pay later” basis. An AR Purchase refers to an arrangement between the seller of such things and their bank. The bank will purchase the AR from the seller, giving the seller liquidity (cash) immediately instead of waiting for the purchaser(s) to pay. The purchaser will pay the bank to settle the debt.
 
@@ -62,20 +62,20 @@ The general flow is:
 
 ![Account Receivables Purchase Process](images/account-receivables-process.png)
 
-For the sake of simplicity, we will assume the invoice discounting/AR purchasing agreement is already in place between the seller and the bank. We’ll begin at the point where the seller invoices the buyer and we’ll assume that the invoice is assignable, meaning, the seller has the right to appoint the bank as the new receiver.
+For the sake of simplicity,you will assume the invoice discounting/AR purchasing agreement is already in place between the seller and the bank. Begin at the point where the seller invoices the buyer and assume that the invoice is assignable, meaning, the seller has the right to appoint the bank as the new receiver.
 
 ## The States
 
-What are the specific states represented here? This is about the data that we need to track.
+What are the specific states represented here? This is about the data that you need to track.
 Consider two categories of states:
 
-- Contracts: represent agreements. These would be things like our invoice. Other examples include options, bonds and other kinds of debt instruments.
+- Contracts: represent agreements. These would be things like the invoice. Other examples include options, bonds and other kinds of debt instruments.
 - Assets: represent tangibles. These would be things like property and cash. These things are ownable.
 
-In our example there are two agreements:
+In the example there are two agreements:
 
-- The AR agreement between the seller and the bank, which we will set aside for simplicity. Let us just say it exists so that what we intend to do is permissible.
-- The invoice. The invoice represents a commercial transaction for goods or services. Many invoice details lie outside our scope of concerns. The buyer, net amount and due date will be important.
+- The AR agreement between the seller and the bank, which are set aside for simplicity. Let us just say it exists so that what you intend to do is permissible.
+- The invoice. The invoice represents a commercial transaction for goods or services. Many invoice details lie outside the scope of concerns. The buyer, net amount and due date will be important.
 
 There is one asset:
 
@@ -85,7 +85,7 @@ Remember, cash is most likely represented as an account within the bank, so in C
 
 ## Transactions
 
-Once you have identified the states your CorDapp will work with, it’s time to consider how those states will evolve. We have chosen a modestly simple example with a linear step-by-step process.
+Once you have identified the states your CorDapp will work with, it’s time to consider how those states will evolve. This is a modestly simple example with a linear step-by-step process.
 
 1. The buyer and seller enter in a commercial arrangement. For simplicity, let us say that this activity is outside of the system.
 2. The seller issues an invoice with payment instructions. Again, for simplicity, let us say the invoice is correct and the buyer will sign it leaving no doubt about the accuracy and acceptability of the invoice.
@@ -118,9 +118,9 @@ As well as the CorDapp design you will design the networks themselves.
 
 ## Orchestration and Ledger Layers
 
-When thinking about the logic of your CorDapp, separate concerns into two logical layers. We will cover this in more detail later on. For now, let us briefly introduce this important concept to help you begin thinking the Corda way.
+When thinking about the logic of your CorDapp, separate concerns into two logical layers. You will see this in more detail later on. For now, a brief introduction to this important concept to help you begin thinking the Corda way.
 
-A CorDapp has two distinct layers, the Ledger Layer and the Orchestration Layer. Of course, a complete implementation has a UI, integrations, non-ledger storage etc., but let us set those concerns aside and think about two families of concerns you will address with Corda itself.
+A CorDapp has two distinct layers, the Ledger Layer and the Orchestration Layer. Of course, a complete implementation has a UI, integrations, non-ledger storage etc., but set those concerns aside and think about two families of concerns you will address with Corda itself.
 
 - **The Ledger Layer** (States, Contracts and Transactions) provides the Distributed Ledger guarantees over the common data and common processing logic.
 - **The Orchestration Layer** (Flows and APIs) coordinates communication between parties, builds proposed transactions and the Corda Contracts which govern the evolutions of those States via Transactions which update the ledger.
@@ -137,8 +137,8 @@ To say this another way, Flows and APIs *suggest* processes that parties should 
 
 ## API
 
-User Interfaces usually communicate with CorDapps via APIs. We will cover API design and constructors later in the course.
+User Interfaces usually communicate with CorDapps via APIs. API design and constructors are covered later in the course.
 
 ## Testing
 
-We will cover unit tests for Corda contracts and transactions later in this course.
+Tests for Corda contracts and transactions are covered later in this course.

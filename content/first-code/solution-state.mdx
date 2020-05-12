@@ -41,7 +41,7 @@ annotation class BelongsToContract(val value: KClass<out Contract>)
 ```
 The `BelongsToContract` annotation carries over at runtime, which allows the Corda system to cross-check whether it is instructed to use the expected contract when verifying a transaction.
 
-Dig in to [`ContractState`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/ContractState.kt#L16-L17) and see that this class is `@CordaSerializable`. Indeed, it is expected that a state needs to be serialised and transmitted over the wire to the relevant parties. It is thus important that all our fields are marked as serialisable as well.
+Dig in to [`ContractState`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/ContractState.kt#L16-L17) and see that this class is `@CordaSerializable`. Indeed, it is expected that a state needs to be serialised and transmitted over the wire to the relevant parties. It is thus important that all your fields are marked as serialisable as well.
 
 ## The fields
 
@@ -74,7 +74,7 @@ Why pick the **names** of `issuer`, `holder` and `quantity`? Because, later on, 
 What if:
 
 * you had omitted the `issuer` field? It would mean that all airline miles are equal&nbsp;- that air-miles issued by one company are the same as (fungible with) air-miles issued by another company. It would mean that one rogue airline could issue air-miles and burden competitors with the liabilities and redemption.
-* you had omitted the `holder` field? Did you plan on having this information stored elsewhere? What would a state without holder mean in our case?
+* you had omitted the `holder` field? Did you plan on having this information stored elsewhere? What would a state without holder mean in this case?
 * you had omitted the `quantity` field? Did you plan on issuing 1 state instance for each air-mile? It would not be very database-friendly to issue 5,000 times 1 air-mile for a single long trip.
 * you had a 4th field? We are curious, let us know.
 

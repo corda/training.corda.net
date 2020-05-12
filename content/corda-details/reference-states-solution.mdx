@@ -142,7 +142,7 @@ req.using("There should be a single sales proposal output on offer",
     req.using("The reference token should match the sales proposal output asset",
             proposal.isSameAsset(refToken));
     ```
-    It is here that the **benefit** of reference states is delivered. We are sure that:
+    It is here that the **benefit** of reference states is delivered. You are sure that:
 
     * the asset exists, for real.
     * the seller owns the token.
@@ -174,7 +174,7 @@ req.using("The seller should be the only signer on the offer",
 </ExpansionPanelListItem>
 <ExpansionPanelListItem number="5">
 
-Note that we already have assurance that the seller is the holder of the `asset` as per the `SalesProposal` constructor.
+Note that you already have assurance that the seller is the holder of the `asset` as per the `SalesProposal` constructor.
 
 </ExpansionPanelListItem>
 </ExpansionPanelList>
@@ -963,6 +963,6 @@ As you have seen, the intent of selling and buying is split into 2 transactions.
 
 It was a design decision to keep a lot of verifications in the contract on accept, but a lighter version is also possible, where the fraud verifications are shifted to the flows. In this case, the `SalesProposal` serves only as the repository for the seller's intent.
 
-As an additional note, now that we have a safe atomic sale mechanism, which expresses a desired price, the time has come to remove the `price` from `CarTokenType`.
+As an additional note, now that you have a safe atomic sale mechanism, which expresses a desired price, the time has come to remove the `price` from `CarTokenType`.
 
-In the next exercise, we will look at how we can protect the buyer from having the _door shut_ too early by the seller. This assures the buyer that the offer is indeed open to acceptance.
+In the next exercise, you will look at how we can protect the buyer from having the _door shut_ too early by the seller. This assures the buyer that the offer is indeed open to acceptance.
