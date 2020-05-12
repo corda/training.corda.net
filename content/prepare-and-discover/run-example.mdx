@@ -24,6 +24,10 @@ Running the project in a test and development context is a 3 step process. You w
 2. Create the nodes' configuration files.
 3. Launch the executables.
 
+Here is a screencast of what comes ahead. You can always come back to it when you hit difficulties doing it on your own.
+
+`vimeo: 417639538`
+
 ### Declare the configuration
 
 The configuration is already declared with the help of [`deployNodes`](https://github.com/corda/samples-java/blob/a61e2cc9910d7d5de83122bf7d36fd071796a7c3/Basic/cordapp-example/workflows-java/build.gradle#L70-L114). Each `node` task statically declares a new node and its configuration. The lot represents a small, though whole, network, complete with its notary. Indeed, however small, a network needs a network map service to help each node connect to the other nodes it will interact with. The `deployNodes` task, among other things, distributes the network information on all declared nodes.
