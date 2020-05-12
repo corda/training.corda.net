@@ -138,29 +138,29 @@ Let's work this in detail.
 
 How to calculate a $(pubKey,n)$ and a $priKey$ ?
 
-* First we have to choose two prime numbers $p$ and $q$. Then we can calculate $n(p,q)=p \cdot q$.
-* After that, we calculate Euler's totient function
+* First you have to choose two prime numbers $p$ and $q$. Then, you can calculate $n(p,q)=p \cdot q$.
+* After that, you calculate Euler's totient function
 
 $$\phi(n(p,q))= (p-1)\cdot(q-1)$$ only if p and q are prime numbers. Otherwise, it is a NP problem.
 
-* Now we can use a random $pubKey$, which is not a divisor of $\phi(n)$ and is smaller than $\phi(n)$.
+* Now, youcan use a random $pubKey$, which is not a divisor of $\phi(n)$ and is smaller than $\phi(n)$.
 
 Calculating $priKey$ means calculating $b$ in following equation:
 
 $$a \cdot \phi(n)+b \cdot pubKey=1$$
 
-Where we can use the extended euclidean algorithm. Now we can delete $p,q$ and $\phi(n)$.
+Where you can use the extended euclidean algorithm. Now you can delete $p,q$ and $\phi(n)$.
 
 ### Example
 
 Let's have a look on an example.
 
-* We use $p=2399$ and $q=26371$, which are prime numbers.
-Then we have $n=63264029$ and $\phi(n)= 63235260$.
-* Now, we have to set a $pubKey< \phi(n)$. So we use $pubKey=54833$.
-* That gives us with extended euclid a $priKey=6589577$
+* You use $p=2399$ and $q=26371$, which are prime numbers.
+Then you have $n=63264029$ and $\phi(n)= 63235260$.
+* Now, you have to set a $pubKey< \phi(n)$. So you use $pubKey=54833$.
+* That gives you, with extended euclid, a $priKey=6589577$
 
-Now we delete $p,q$ and $\phi(n)$. If we want to encrypt the $message=9874587$ we get:
+Now you delete $p,q$ and $\phi(n)$. If you want to encrypt the $message=9874587$m you get:
 
 $$9874587^{54833} \equiv 36898107 \mod 63264029 $$
 
@@ -169,7 +169,7 @@ $$36898107^{6589577} \equiv 9874587 \mod 63264029$$
 
 ### Why it works
 
-There is a proof with Fermat's little theorem, that $$(message ^ {pubKey}) ^ {priKey} \equiv message \mod n$$ is true.
+There is a proof with Fermat's theorem, that $$(message ^ {pubKey}) ^ {priKey} \equiv message \mod n$$ is true.
 
 $a \cdot \phi(n)+ priKey \cdot pubKey=1$ means:
 
@@ -195,14 +195,14 @@ Otherwise:
 
 $message \cdot (message^{p-1})^{h} \equiv message \cdot 1^{h} \equiv message \mod p$
 
-If we do the same steps for $q$, we show, $$(message ^ {pubKey}) ^ {priKey} \equiv message \mod {p \cdot q}$$ This is, why RSA works.
+If you do the same steps for $q$, you show, $$(message ^ {pubKey}) ^ {priKey} \equiv message \mod {p \cdot q}$$ This is, why RSA works.
 
 ### Trivial zero knowledge Proof
 
 RSA fits  $E(x) \cdot E(y)=x^e \cdot y^e=e^{xy}=E(xy)$
-That means we can prove, if $x \cdot y$ calculated well, without knowing x or y.
+That means you can prove, if $x \cdot y$ calculated well, without knowing x or y.
 
-In our example, if we use $x=12$ and $y=24$, then we get $12 \cdot 24=288$  for the output and we get $$E(12) \cdot E(24) \equiv E(288) \equiv 60822364  \mod 63264029 $$ with same $(pubKey,n)$ and $priKey$ like in the above section. So if we give someone $E(12)$, $E(24)$ and our output $288$, he can verify, if the calculation is done well, without knowing $x$ and $y$.
+In our example, if you use $x=12$ and $y=24$, then you get $12 \cdot 24=288$  for the output and you get $$E(12) \cdot E(24) \equiv E(288) \equiv 60822364  \mod 63264029 $$ with same $(pubKey,n)$ and $priKey$ like in the above section. So if you give someone $E(12)$, $E(24)$ and our output $288$, they can verify, if the calculation is done well, without knowing $x$ and $y$.
 
 Another trivial example are digital Signatures with RSA. They are zero-knowledge proofs, because, you are proving, that you have a private key, which is the pair to the public key, without giving any information about your private key.
 
@@ -246,7 +246,7 @@ It is possible to index content by its hash, in essence creating a hashtable. If
 
 ## Digital Certificates
 
-Digital certificates are used (among other things) to prove an identity. They are given by a recognised Certification Authority(CA). A widespread procedure is the public key certificate. It proves the ownership of a public key. Below, we describe the X.509 standard.
+Digital certificates are used (among other things) to prove an identity. They are given by a recognised Certification Authority(CA). A widespread procedure is the public key certificate. It proves the ownership of a public key. Below, the X.509 standard is described.
 
 The X.509 standard is defined by the Telecommunication Standardization Sector (ITU-T) of the International Telecommunication Union (ITU).[[1]](https://en.wikipedia.org/wiki/X.509) It offers format and semantics for public key certificates. [X.509](https://www.ietf.org/rfc/rfc5280.txt) is profiled in the formal language ASN.1. Common use cases are validation of documents and securing of communication. For an example, X.509 is used in TLS/SSL. Its origin is in the X.500 standard issued in 1988. Since version 3, X.509 enables flexible topologies, like bridges and meshes. Invalid certificates are listed in certificate revocation lists (CRLs). CRL is vulnerable against DoS attacks.
 
@@ -254,7 +254,7 @@ A X.509 certificate contains information such as version number, serial number, 
 
 ### Signature
 
-The concept of digital signatures is simple. If a given message is first hashed and then encrypted by a private key, one can verify the signature by decryption with corresponding public key. We need to hash the message to avoid the creation of signatures by mixing the messages and corresponding signatures. (See RSA chapter) This way, we know, that the sender has the private key to the given public key. However, this is not truly an identification. Here comes the CA. The CA signs a certificate to prove the identity of the owner of a public key. The certificate includes, as described above, the subject name. This must be verified by the CA. So, the identity is given, if one can verify the CA’s signature and trust the CA.
+The concept of digital signatures is simple. If a given message is first hashed and then encrypted by a private key, one can verify the signature by decryption with corresponding public key. You need to hash the message to avoid the creation of signatures by mixing the messages and corresponding signatures. (See RSA chapter) This way, you know that the sender has the private key to the given public key. However, this is not truly an identification. Here comes the CA. The CA signs a certificate to prove the identity of the owner of a public key. The certificate includes, as described above, the subject name. This must be verified by the CA. So, the identity is given, if one can verify the CA’s signature and trust the CA.
 
 Here is a Hyperledger Fabric example certificate:
 ![HLF Certificate](images/cert.png)
