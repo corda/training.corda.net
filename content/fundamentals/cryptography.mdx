@@ -130,67 +130,70 @@ $$message ^{pubKey} \equiv encMessage \mod n$$
 
 $$encMessage ^{priKey} \equiv  message \mod n$$
 
-Or that in fact there exist $(priKey,pubKey,n)$ such that $(message ^{pubKey}) ^ {priKey} \equiv message \mod n$, with the additional hurdle that calculating $priKey$ out of $(pubKey,n)$ is computationally expensive and in practice impossible.
+Or that in fact there exist $(priKey, pubKey, n)$ such that $(message ^ {pubKey}) ^ {priKey} \equiv message \mod n$, with the additional hurdle that calculating $priKey$ out of $(pubKey, n)$ is computationally expensive and in practice impossible.
 
 Let's work this in detail.
 
 ### How
 
-How to calculate a $(pubKey,n)$ and a $priKey$ ?
+How to calculate a $(pubKey, n)$ and a $priKey$ ?
 
-* First we have to choose two prime numbers $p$ and $q$. Then we can calculate $n(p,q)=p \cdot q$.
+* First we have to choose two prime numbers $p$ and $q$. Then we can calculate $n(p, q)=p \cdot q$.
 * After that, we calculate Euler's totient function
 
-$$\phi(n(p,q))= (p-1)\cdot(q-1)$$ only if p and q are prime numbers. Otherwise, it is a NP problem.
+$$\phi(n(p, q)) = (p-1) \cdot (q-1)$$ only if $p$ and $q$ are prime numbers. Otherwise, it is a NP problem.
 
 * Now we can use a random $pubKey$, which is not a divisor of $\phi(n)$ and is smaller than $\phi(n)$.
 
 Calculating $priKey$ means calculating $b$ in following equation:
 
-$$a \cdot \phi(n)+b \cdot pubKey=1$$
+$$a \cdot \phi(n)+b \cdot pubKey = 1$$
 
-Where we can use the extended euclidean algorithm. Now we can delete $p,q$ and $\phi(n)$.
+Where we can use the extended euclidean algorithm. Now we can delete $p, q$ and $\phi(n)$.
 
 ### Example
 
 Let's have a look on an example.
 
-* We use $p=2399$ and $q=26371$, which are prime numbers.
-Then we have $n=63264029$ and $\phi(n)= 63235260$.
-* Now, we have to set a $pubKey< \phi(n)$. So we use $pubKey=54833$.
-* That gives us with extended euclid a $priKey=6589577$
+* We use $p = 2399$ and $q = 26371$, which are prime numbers.
+Then we have $n = 63264029$ and $\phi(n) = 63235260$.
+* Now, we have to set a $pubKey < \phi(n)$. So we use $pubKey = 54833$.
+* That gives us with extended euclid a $priKey = 6589577$
 
-Now we delete $p,q$ and $\phi(n)$. If we want to encrypt the $message=9874587$ we get:
+Now we delete $p, q$ and $\phi(n)$. If we want to encrypt the $message = 9874587$ we get:
 
 $$9874587^{54833} \equiv 36898107 \mod 63264029 $$
 
 If you have the $priKey$, then you can calculate the message:
+
 $$36898107^{6589577} \equiv 9874587 \mod 63264029$$
 
 ### Why it works
 
 There is a proof with Fermat's little theorem, that $$(message ^ {pubKey}) ^ {priKey} \equiv message \mod n$$ is true.
 
-$a \cdot \phi(n)+ priKey \cdot pubKey=1$ means:
+$a \cdot \phi(n)+ priKey \cdot pubKey = 1$ means:
 
 $$priKey \cdot pubKey\equiv 1 \mod \phi(n)$$
 
-And because $\phi(n)=(p-1)(q-1)$
-It follows $$priKey \cdot pubKey-1=h(p-1)=k(q-1)$$
+And because $\phi(n) = (p-1)(q-1)$
+
+It follows $$priKey \cdot pubKey-1 = h(p-1) = k(q-1)$$
 
 And then:
 
 $$(message^{pubKey})^{priKey} $$
 
-$$=message^{pubKey \cdot priKey} $$
+$$= message^{pubKey \cdot priKey}$$
 
-$$=message \cdot message^{pubKey \cdot priKey-1} $$
+$$= message \cdot message^{pubKey \cdot priKey-1}$$
 
-$$=message \cdot message^{h(p-1)} $$
+$$= message \cdot message^{h(p-1)}$$
 
-$$=message \cdot (message^{p-1})^{h} $$
+$$= message \cdot (message^{p-1})^{h}$$
 
-Fermat's little theorem is: $$message^{p-1}\equiv 1 \mod p$$ if $p$ does not divide $message$.  If $message \equiv 0 \mod p$ then $$message^{pq} \equiv message \mod p$$
+Fermat's little theorem is: $$message^{p-1} \equiv 1 \mod p$$ if $p$ does not divide $message$. If $message \equiv 0 \mod p$ then $$message^{pq} \equiv message \mod p$$.
+
 Otherwise:
 
 $message \cdot (message^{p-1})^{h} \equiv message \cdot 1^{h} \equiv message \mod p$
@@ -199,10 +202,10 @@ If we do the same steps for $q$, we show, $$(message ^ {pubKey}) ^ {priKey} \equ
 
 ### Trivial zero knowledge Proof
 
-RSA fits  $E(x) \cdot E(y)=x^e \cdot y^e=e^{xy}=E(xy)$
-That means we can prove, if $x \cdot y$ calculated well, without knowing x or y.
+RSA fits  $E(x) \cdot E(y) = x^e \cdot y^e = e^{xy} = E(xy)$
+That means we can prove, if $x \cdot y$ calculated well, without knowing $x$ or $y$.
 
-In our example, if we use $x=12$ and $y=24$, then we get $12 \cdot 24=288$  for the output and we get $$E(12) \cdot E(24) \equiv E(288) \equiv 60822364  \mod 63264029 $$ with same $(pubKey,n)$ and $priKey$ like in the above section. So if we give someone $E(12)$, $E(24)$ and our output $288$, he can verify, if the calculation is done well, without knowing $x$ and $y$.
+In our example, if we use $x = 12$ and $y = 24$, then we get $12 \cdot 24 = 288$  for the output and we get $$E(12) \cdot E(24) \equiv E(288) \equiv 60822364  \mod 63264029 $$ with same $(pubKey, n)$ and $priKey$ like in the above section. So if we give someone $E(12)$, $E(24)$ and our output $288$, he can verify, if the calculation is done well, without knowing $x$ and $y$.
 
 Another trivial example are digital Signatures with RSA. They are zero-knowledge proofs, because, you are proving, that you have a private key, which is the pair to the public key, without giving any information about your private key.
 
@@ -210,19 +213,19 @@ Another trivial example are digital Signatures with RSA. They are zero-knowledge
 
 Such a hash function:
 
-* converts an input, a.k.a. the message, into an output, a.k.a the hash
-* does the conversion in a reasonable amount of time
-* is such that it is practically impossible to re-generate the message out of the hash
-* is such that the tiniest change in the message, changes the hash beyond recognition
-* is such that it is practically impossible to find 2 different messages with the same hash
+* Converts an input, a.k.a. the message, into an output, a.k.a the hash.
+* Does the conversion in a reasonable amount of time.
+* Is such that it is practically impossible to re-generate the message out of the hash.
+* Is such that the tiniest change in the message, changes the hash beyond recognition.
+* Is such that it is practically impossible to find 2 different messages with the same hash.
 
 With such a function, you can:
 
-*  prove that you have a message without disclosing the content of the message, for instance:
-    * to prove you know your password
-    * to prove you previously wrote a message
-* rest assured the message was not altered
-* index your messages
+* Prove that you have a message without disclosing the content of the message, for instance:
+    * To prove you know your password.
+    * To prove you previously wrote a message.
+* Rest assured the message was not altered.
+* Index your messages.
 
 MD5 is such a function:
 
@@ -261,6 +264,7 @@ Here is a Hyperledger Fabric example certificate:
 
 ## Learn More
 
+- Someone had to SHA-256 [with pencil and paper](https://www.youtube.com/watch?v=y3dqhixzGVo)
 - [Zero-knowledge proof](https://en.wikipedia.org/wiki/Zero-knowledge_proof)
 - [EC Operations](https://wiki.openssl.org/index.php/Command_Line_Elliptic_Curve_Operations)
 - [Encrypt and Decrypt](http://osxdaily.com/2012/01/30/encrypt-and-decrypt-files-with-openssl/)

@@ -10,7 +10,7 @@ import {
   ExpansionPanel,
   ExpansionPanelList,
   ExpansionPanelListItem
-} from 'gatsby-theme-apollo-docs'; 
+} from 'gatsby-theme-apollo-docs';
 
 In the previous chapter, you worked on your project to make sure that your CorDapp is account-safe and account-aware. Now, compare your work to an example solution.
 
@@ -155,7 +155,7 @@ So, how does the seller flow identify the future holder of the car token? It has
     @NotNull
     abstract protected FlowLogic<AbstractParty> getSyncBuyerPartyHandlerFlow();
     ```
-    
+
 Do you notice the naming symmetry? It hints at the fact that these 2 functions should return inlined flows that are compatible with each. For instance:
 
 * A `.send` here and a `.receive` there.
@@ -375,12 +375,12 @@ The tests confirm that:
 * It works with well-known parties, see [`partiesCanDoAtomicSaleAccountsSafe`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L145).
 *  It works with account keys as well, see [`accountsCanDoAtomicSaleAccountsSafe`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L145). Notice how:
     * the dealer is [informed about Dan the car holder](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L206) beforehand:
-    
+
     ```java
     inform(alice, danParty.getOwningKey(), Collections.singletonList(bmwDealer));
     ```
     * the seller's host and the mint are [informed about Emma the buyer](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L213) beforehand:
-    
+
     ```java
     inform(bob, emmaParty.getOwningKey(), Arrays.asList(alice, usMint));
     ```
@@ -518,7 +518,7 @@ Using `ProvideKeyFlow` as expected, and overriding the query criteria to use the
 The only test confirms that it works with accounts, see [`accountsCanDoAtomicSaleAccounts`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsTests.java#L162). Notice how:
 
 * the dealer is [informed about Dan the car holder](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsTests.java#L169), beforehand, but only about the public key:
-    
+
   ```java
   informKeys(alice,
           Collections.singletonList(danParty.getOwningKey()),
@@ -526,13 +526,13 @@ The only test confirms that it works with accounts, see [`accountsCanDoAtomicSal
   ```
 * Emma the buyer has 2 tokens:
     * These tokens cover the price of the car only together (2 * 15,000 > 25,000):
-    
+
     ```java
     final Amount<IssuedTokenType> amountOfUsd = AmountUtilitiesKt
             .amount(15_000L, usMintUsd);
     ```
     * Each token is held by a different public key:
-    
+
     ```java
     final FungibleToken usdTokenEmma1 = new FungibleToken(
             amountOfUsd, emmaParty1, null);
