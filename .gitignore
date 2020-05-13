@@ -1,7 +1,9 @@
 node_modules
+package.json
 package-lock.json
 public
 .cache
 .vscode
 .env
+.gitignore
 

@@ -1,6 +1,6 @@
 ---
 title: Refactor Solution
-description: Where we describe how we modified our project to use the SDK
+description: Example project using the token SDK
 slug: libraries/how-we-used-tokens-sdk
 ---
 
@@ -24,8 +24,8 @@ The `FungibleToken` takes an [`AbstractParty holder`](https://github.com/corda/t
 
 There are 3 `build.gradle` files:
 
-* the root one
-    * where you add the constants definition in `buildscript.ext`:
+* The root one
+    * Where you add the constants definition in `buildscript.ext`:
 
         ```groovy
         tokens_release_version = constants.getProperty("tokensReleaseVersion")
@@ -34,7 +34,7 @@ There are 3 `build.gradle` files:
         confidential_id_release_group = constants.getProperty("confidentialIdReleaseGroup")
         ```
 
-    * the `dependencies`:
+    * The `dependencies`:
 
         ```groovy
         // Token SDK dependencies.
@@ -44,7 +44,7 @@ There are 3 `build.gradle` files:
         cordapp "$tokens_release_group:tokens-money:$tokens_release_version"
         cordapp "$tokens_release_group:tokens-selection:$tokens_release_version"
         ```
-    * for completeness, the `deployNodes.nodeDefaults`:
+    * For completeness, the `deployNodes.nodeDefaults`:
 
         ```groovy
         cordapp project(':contracts')
@@ -58,18 +58,18 @@ There are 3 `build.gradle` files:
         cordapp "$tokens_release_group:tokens-money:$tokens_release_version"
         cordapp "$tokens_release_group:tokens-selection:$tokens_release_version"
         ```
-    * explicitly clear the notary `node`:
+    * Explicitly clear the notary `node`:
 
         ```groovy
         cordapps.clear()
         ```
-* for contracts, only the `dependencies` need updating:
+* For contracts, only the `dependencies` need updating:
 
     ```groovy
     cordapp "$tokens_release_group:tokens-contracts:$tokens_release_version"
     cordapp "$tokens_release_group:tokens-money:$tokens_release_version"
     ```
-* for workflows, also only `dependencies`:
+* For workflows, also only `dependencies`:
 
     ```groovy
     cordapp "$confidential_id_release_group:ci-workflows:$confidential_id_release_version"
@@ -249,16 +249,16 @@ notary="O=App Notary,L=London,C=GB"
 First thing you will notice is that the responder flows are removed. Each refactored flow is only doing local actions before calling `subFlow`, **once**, on an existing flow of the Tokens SDK. So the responding actions are already defined. In detail:
 
 1. The `IssueFlows.Initiator`:
-    * sub-flows `IssueTokens`, which has its auto-initiated handler: `IssueTokensHandler`.
-    * therefore does not need to be `@Initiating`.
+    * Sub-flows `IssueTokens`, which has its auto-initiated handler: `IssueTokensHandler`.
+    * Therefore does not need to be `@Initiating`.
 2. The `MoveFlows.Initiator`:
-    * sub-flows `AbstractMoveTokensFlow`, which is not `@Initiating` and has the `MoveTokensFlowHandler`.
-    * therefore needs to be `@Initiating`.
-    * because it will be used in tests only, it will be registered for auto-initiation in tests only.
+    * Sub-flows `AbstractMoveTokensFlow`, which is not `@Initiating` and has the `MoveTokensFlowHandler`.
+    * Therefore needs to be `@Initiating`.
+    * Because it will be used in tests only, it will be registered for auto-initiation in tests only.
 3. The `RedeemFlows.Initiator`:
-    * sub-flows `RedeemTokensFlow`, which is not `@Initiating` and has the `RedeemTokensFlowHandler`.
-    * therefore needs to be `@Initiating`.
-    * because it will be used in tests only, register for auto-initiation in tests only.
+    * Sub-flows `RedeemTokensFlow`, which is not `@Initiating` and has the `RedeemTokensFlowHandler`.
+    * Therefore needs to be `@Initiating`.
+    * Because it will be used in tests only, register for auto-initiation in tests only.
 
 ### Multiple signatures
 

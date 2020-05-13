@@ -517,14 +517,14 @@ Using `ProvideKeyFlow` as expected, and overriding the query criteria to use the
 
 The only test confirms that it works with accounts, see [`accountsCanDoAtomicSaleAccounts`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsTests.java#L162). Notice how:
 
-* the dealer is [informed about Dan the car holder](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsTests.java#L169), beforehand, but only about the public key:
+* The dealer is [informed about Dan the car holder](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsTests.java#L169), beforehand, but only about the public key:
 
   ```java
   informKeys(alice,
           Collections.singletonList(danParty.getOwningKey()),
           Collections.singletonList(bmwDealer));
   ```
-* Emma the buyer has 2 tokens:
+* Emma, the buyer, has 2 tokens:
     * These tokens cover the price of the car only together (2 * 15,000 > 25,000):
 
     ```java
@@ -542,7 +542,7 @@ The only test confirms that it works with accounts, see [`accountsCanDoAtomicSal
             Arrays.asList(usdTokenBob, usdTokenEmma1, usdTokenEmma2),
             Collections.emptyList());
     ```
-* the mint is [informed about Emma the buyer](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L213), but only on her **public keys**, beforehand:
+* The mint is [informed about Emma the buyer](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L213), but only on her **public keys**, beforehand:
 
   ```java
   informKeys(bob,

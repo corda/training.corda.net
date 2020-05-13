@@ -133,7 +133,7 @@ final Set<PublicKey> allInputHolderKeys = inputs.stream()
         .map(it -> it.getHolder().getOwningKey())
         .collect(Collectors.toSet());
 ```
-The `.collect(Collectors.toSet())` gets rid of duplicates so that we keep shorter collections. You may wonder why the `.map(it -> it.getHolder().getOwningKey())` lambda is used instead of:
+The `.collect(Collectors.toSet())` gets rid of duplicates for shorter collections. You may wonder why the `.map(it -> it.getHolder().getOwningKey())` lambda is used instead of:
 
 ```java
 .map(TokenState::getHolder)
@@ -289,6 +289,6 @@ And of course, there is a complex transaction example that passes.
 Did you get the crucial checks right when you wrote your own token contract? If:
 
 * You were too lax, you need to think more adversarially, putting yourself in the shoes of a malicious actor trying to gain undue benefits. The ledger's integrity is of utmost importance.
-* You were too restrictive, try to think big and differentiate what is really necessary for the system's integrity. Separate this from the mental straightjacket you have about the world as we know it. For instance, when an airline rejects miles from 2 different holders, is it a system's integrity matter or is it a business decision? Would a more passenger-friendly airline choose differently? Might the policy differ between airlines or over time? Also, as you are about to move on to the flows, you will see that actors still have a lot of leeway to restrict what they accept, even when the contract would accept it. If it is cognitively useful, remember that a dollar or an air-mile should be indifferent to how it is spent, or for what purpose, but certain properties define what they are.
+* You were too restrictive, try to think big and differentiate what is really necessary for the system's integrity. Separate this from the mental straightjacket you have about the world as you know it. For instance, when an airline rejects miles from 2 different holders, is it a system's integrity matter or is it a business decision? Would a more passenger-friendly airline choose differently? Might the policy differ between airlines or over time? Also, as you are about to move on to the flows, you will see that actors still have a lot of leeway to restrict what they accept, even when the contract would accept it. If it is cognitively useful, remember that a dollar or an air-mile should be indifferent to how it is spent, or for what purpose, but certain properties define what they are.
 
-And don't skip tests.
+And, don't skip tests.

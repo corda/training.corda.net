@@ -190,7 +190,7 @@ public class FxContract implements Contract {
         }
     }
 ```
-Since we intend to let the exchange of tokens be controlled by the token contracts themselves, we need a dummy state to attach the `FxContract` in a transaction.
+Since you intend to let the exchange of tokens be controlled by the token contracts themselves, you need a dummy state to attach the `FxContract` in a transaction.
 
 ```java
 @BelongsToContract(FxContract.class)
@@ -354,7 +354,7 @@ class Answer extends FlowLogic<TransactionSignature> {
     }
 }
 ```
-Back to buck passing, with a touch of exception catching. Here we see that we need to implement an aptly named `sign` function in our oracle:
+Back to buck passing, with a touch of exception catching. Here, you need to implement an aptly named `sign` function in your oracle:
 
 * `.sign` as the oracle's _sign_ function.
 
@@ -374,7 +374,7 @@ public class FxOracle extends SingletonSerializeAsToken {
     private final AppServiceHub serviceHub;
     private final PublicKey oracleKey;
 ```
-It is a service after all. For the exercise we are going to make it simple and suppose it keeps a simple map of quotes:
+It is a service after all. For the exercise you are going to make it simple and suppose it keeps a simple map of quotes:
 
 ```java
 public static final Duration VALID_DURATION = Duration.ofSeconds(20);

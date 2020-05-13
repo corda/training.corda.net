@@ -104,21 +104,19 @@ Among them, this type of model did not become dominant because of IBM’s prefer
 
 Examples of a network model are the Integrated Data Store (IDS), Integrated Database Management System (IDMS) and Raima Database Manager.
 
-## A Comparison: Differences between Hierarchical Databases and Network Models
+## Comparing Hierarchical Databases and Network Models
 
-Hierarchical models follow a simple structure, but this makes them also inflexible.
+Hierarchical models follow a simple structure, but this also makes them inflexible.
 They are not suited for large amounts of relationships because of the navigational constraints and tree-like schema.
 In addition, the implementation is quite complex and they are difficult to manage. A lack of structural independence and standards can be observed.
 
-Network models have a more natural manner of modelling relations between entities and thus more flexible, but create a complex system, which is difficult to design and to maintain.
+Network models have a more natural manner of modelling relations between entities and are thus more flexible, but they create complex systems which are difficult to design and to maintain.
 As hierarchical models, they lack structural independence.
 
 ![Model Comparison](images/datatable.png)
 
-This makes them differently fitting for networks.
-
-In the beginning 1980s, low-level navigational interfaces based on hierarchical and network models were used for large-scale applications due to their benefits in performance.
-With hardware evolving, relational models provided more productivity and flexibility.
+In the early 1980s, low-level navigational interfaces based on hierarchical and network models were used for large-scale applications for performance reasons.
+With improved hardware performance, relational models provided more productivity and flexibility.
 In the end, relational models made them more and more obsolete, especially in the context of networks for corporate enterprises.
 
 ## Relational Databases
@@ -152,10 +150,10 @@ NoSQL databases, which are non-relational, introduced key-value stores and docum
 These new type of databases are resource intensive and confront database admins (DBA) and maintainers with new issues, unknown in the context of relational databases.
 NoSQL databases are often differentiated as:
 
-* document-oriented databases with strong query engines and index controls, such as MongoDB, Amazon Dynamo DB;
-* column stores that store data as portions of columns and not rows, for example Cassandra or Cloudera;
-* key-value stores, like Redis, Berkeley DB or Aerospike;
-* graph data stores based on graph theory, e.g. Neo4j, GraphBase, Titan.
+* Document-oriented databases with strong query engines and index controls, such as MongoDB, Amazon Dynamo DB;
+* Column stores that store data as portions of columns and not rows, for example Cassandra or Cloudera;
+* Key-value stores, like Redis, Berkeley DB or Aerospike;
+* Graph data stores based on graph theory, e.g. Neo4j, GraphBase, Titan.
 
 While all of this development was taking place, networking between computers was developed and improved. More on this in the next section.
 
@@ -268,7 +266,7 @@ In this case, there is a fork. The protocol provides a mechanism to eventually f
 
 ### Eventual consensus
 
-The CAP theorem states that in a distributed system, you can at most pick 2 out of the 3:
+The CAP theorem states that in a distributed system, you can, at most, pick 2 out of these 3 properties:
 
 - Consistency
 - Availability
