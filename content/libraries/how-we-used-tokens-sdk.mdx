@@ -6,7 +6,7 @@ slug: libraries/how-we-used-tokens-sdk
 
 import HighlightBox from "../../src/HighlightBox"
 
-You will get the most from this example if you compare to your own attempt. Did you refactor your project to use the SDK? Compare this example to your attempt. The code can be found [here](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/tree/030-tokens-sdk/030-tokens-sdk).
+You will get the most from this example if you compare to your own attempt. Did you refactor your project to use the SDK? Compare this example to your attempt. The code can be found [here](https://github.com/corda/corda-training-code/tree/master/030-tokens-sdk).
 
 You will notice more than bland replacements. There are some extra learning nuggets in here.
 
@@ -24,7 +24,7 @@ The `FungibleToken` takes an [`AbstractParty holder`](https://github.com/corda/t
 
 There are 3 `build.gradle` files:
 
-* The root one
+* The root one:
     * Where you add the constants definition in `buildscript.ext`:
 
         ```groovy
@@ -77,7 +77,7 @@ There are 3 `build.gradle` files:
     cordapp "$tokens_release_group:tokens-selection:$tokens_release_version"
     ```
 
-## The [air-mile type](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/contracts/src/main/java/com/template/states/AirMileType.java)
+## The [air-mile type](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/contracts/src/main/java/com/template/states/AirMileType.java)
 
 The first decision is how to agree on a common `TokenType` for the air-mile. Remember, this is not the issued type, it is the base type. The first idea that will work is to do something like:
 
@@ -92,7 +92,7 @@ public final class AirMileType extends TokenType {
     }
 }
 ```
-Why use a static constructor and not make it a proper class? Good question. This is to avoid having to handle complications surrounding `FungibleToken`. We skipped the _detail_ that the `FungibleToken` constructor wants the [hash of the JAR](https://github.com/corda/token-sdk/blob/1.1/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/states/FungibleToken.kt#L38) file that hosts your token type. With our `static` constructor, lazily doing:
+Why use a static constructor and not make it a proper class? Good question. This is to avoid having to handle complications surrounding `FungibleToken`. Skipped is the _detail_ that the `FungibleToken` constructor wants the [hash of the JAR](https://github.com/corda/token-sdk/blob/1.1/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/states/FungibleToken.kt#L38) file that hosts your token type. With the `static` constructor, lazily doing:
 
 ```java
 new FungibleToken(amount, alice, null)
@@ -127,11 +127,11 @@ public final class AirMileType extends TokenType {
     }
 }
 ```
-Of course, do not forget the `hashCode` and `equals` functions that ensure an `AirMileType` instance is no different from another. This `getContractAttachment()` function is the one we will need to use when instantiating `FungibleToken`s.
+Of course, do not forget the `hashCode` and `equals` functions that ensure an `AirMileType` instance is no different from another. This `getContractAttachment()` function is the one you will need to use when instantiating `FungibleToken`s.
 
 You will notice a `DummyContract`, to satisfy the basics of a "Contracts" CorDapp.
 
-## The [contract _learning_ tests](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/tree/030-tokens-sdk/020-first-token/contracts/src/test/java/com/template/contracts)
+## The [contract _learning_ tests](https://github.com/corda/corda-training-code/tree/master/030-tokens-sdk/contracts/src/test/java/com/template/contracts)
 
 The previous tests on `TokenContract` are no longer needed.
 
@@ -207,7 +207,7 @@ Isn't it now obvious that it was `d` in the command that was the problem? Since 
 
 <HighlightBox type="tip">
 
-Thanks to `tweak` we have a high assurance that the error we thought we tested is what we tested indeed. Having it all in a single test is more encapsulated than having 2 individual tests testing both scenarios. Those 2 individual tests might be modified independently by a developer who may not fully grasp the connection between the 2.
+Thanks to `tweak` you have a high assurance that the error you thought you tested is what you tested indeed. Having it all in a single test is more encapsulated than having 2 individual tests testing both scenarios. Those 2 individual tests might be modified independently by a developer who may not fully grasp the connection between the 2.
 
 </HighlightBox>
 
@@ -234,7 +234,7 @@ In `TokenContract`, quantity `0` is prevented in all situations. However, the To
 
 Here too the specifications have changed, and tests need to reflect that: `@Test redeemTransactionMustHaveLessInOutputs()`. The outputs are understood as the _change_ (as in "Do you have _change_ for a &#36;20 bill?") given when redeeming states with a quantity larger than desired. Remember the `RedeemFlows.SimpleInitiator`? It did a move transaction, in order to reorganise the states, before a redeem if the collected quantity was too high. Here, with the _change_ mechanism, the Tokens SDK allows for a single redeem transaction.
 
-## The [flows](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/tree/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/flows)
+## The [flows](https://github.com/corda/corda-training-code/tree/master/030-tokens-sdk/workflows/src/main/java/com/template/flows)
 
 ### Config file
 
@@ -263,14 +263,14 @@ First thing you will notice is that the responder flows are removed. Each refact
 ### Multiple signatures
 
 1. The `IssueFlows` was configured to issue from a single issuer. This is also what `IssueTokens` does, so no big change here.
-2. The `MoveFlows` was ready to move tokens from multiple holders. However, `AbstractMoveTokensFlow` does not allow that, so we have to restrict our `MoveFlows` to accommodate this. Of course, you can write a more complex flow for multiple holders, but as mentioned earlier, this is a potentially dangerous route, so that is left for a later chapter when a flow wants to do more than just move tokens.
+2. The `MoveFlows` was ready to move tokens from multiple holders. However, `AbstractMoveTokensFlow` does not allow that, so you have to restrict `MoveFlows` to accommodate this. Of course, you can write a more complex flow for multiple holders, but as mentioned earlier, this is a potentially dangerous route, so that is left for a later chapter when a flow wants to do more than just move tokens.
 3. The `RedeemFlows` was ready to redeem tokens from multiple holders and issuers. However, here too, it is limited by the sub flows it calls and it is ok.
 
 ### `progressTracker`
 
 Alas, the SDK flows do not make it easy to pass a progress tracker, so it sort of drops the ball here, hoping a future version will accommodate this. Except on `MoveFlows.Initiator` where you can override the getter on `AbstractMoveTokensFlow`.
 
-## [Flow tests](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/tree/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/flows)
+## [Flow tests](https://github.com/corda/corda-training-code/tree/master/030-tokens-sdk/workflows/src/test/java/com/template/flows)
 
 ### Setting up the mocks
 

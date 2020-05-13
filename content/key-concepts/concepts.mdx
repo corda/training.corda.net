@@ -96,7 +96,7 @@ With states, transactions and contracts, Corda has the basic elements of data an
 
 ## Commands
 
-We've seen how contracts lay out rules about allowable state transitions and transactions propose state transitions. You have seen that the necessary signatures are collected to prepare to finalise a transaction which will consume the input states and create new output states. You could say that the purpose of a transaction is *implied*.
+You've seen how contracts lay out rules about allowable state transitions and transactions propose state transitions. You have seen that the necessary signatures are collected to prepare to finalise a transaction which will consume the input states and create new output states. You could say that the purpose of a transaction is *implied*.
 
 In case this isn't clear, consider that Alice proposes to adjust her IOU down by &#36;10 while giving &#36;10 to Bob. *Implicitly* she is offering to make a payment and she is informing Bob about her opinion of what that means. State transition proposals are technically sufficient to model transactions, but it becomes confusing as complexity and the variety of possible transaction types increases. What if Bob has difficulty understanding Alice's intent?
 
@@ -114,13 +114,13 @@ In Corda, Timestamps assert that something happened within a specified window. T
 
 For example:
 
-- Between the earliest time and the latest time
-- Before the deadline time
-- After the commencement time
+- Between the earliest time and the latest time.
+- Before the deadline time.
+- After the commencement time.
 
 Never:
 
-- At exact time
+- At exact time.
 
 Time ranges map to our understanding of real-world business processes and Legal Prose that is (presumably) enforceable in law courts. For example, an offer open to acceptance before a certain deadline becomes invalid quite naturally as the overseeing verification rules disregard acceptance if it arrives after the deadline.
 

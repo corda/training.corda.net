@@ -4,6 +4,8 @@ description: Where you learn of a reusable SDK
 slug: libraries/tokens-sdk
 ---
 
+import HighlightBox from "../../src/HighlightBox"
+
 Here, you are going to explore the concepts introduced in the Tokens SDK. In the next chapter, you will learn how to use it in practice.
 
 As a broad concept, a token can be one of 2 things:
@@ -81,10 +83,6 @@ Being fungible, fungible tokens can be split and merged, meaning their quantity 
 
 Here, Alice has one token state with a quantity of 5, which she spends to cover the required quantity of 4 (1 for Bob and 3 for Carol), and gets a quantity of 1 as change.
 
-<!-- TODO
-Fix name and quantities on image.
--->
-
 ![Merge FungibleToken](images/merge_fungible_token.png)
 
 Here Alice spends 2 tokens, each with a quantity of 2, to cover the required output quantity of 4, split between as 1 for Bob and 3 for Carol.
@@ -114,7 +112,13 @@ Notice in the above example how the `issuer` and `maintainers` are different ent
 * When the car goes through the yearly inspection, the DMV evolves the `CarTokenType` instance with the newly relevant information.
 * When the owner of the car sells it, the owner replaces its instance with a new `NonFungibleToken` instance with the new owner as the `holder`.
 
-**Food For Thought:** Just because something is non-fungible in real life doesn't mean you have to treat it as a `NonFungibleToken` on the ledger. It all depends on your business case, and that's where the design decision of having a token-type and a fungible&nbsp;/ non-fungible token of that token-type came from. For instance, a house is something non-fungible, you can't physically split a house. But let's say you have a CorDapp where several people can invest and buy one property. Then they rent it out and get a return on their investment. For this, you can create a token-type `House` and issue several `FungibleToken` instances of the same `House`, where the quantity of each token is different and represents the ownership share of the `holder` in that house. This way anyone can sell their share to multiple buyers or buy from multiple sellers, which, in Corda, would be splitting and merging the `FungibleToken` of the `House` token-type.
+<HighlightBox type="info">
+
+Just because something is non-fungible in real life doesn't mean you have to treat it as a `NonFungibleToken` on the ledger. It all depends on your business case, and that's where the design decision of having a token-type and a fungible&nbsp;/ non-fungible token of that token-type came from.
+
+For instance, a house is something non-fungible, you can't physically split a house. But let's say you have a CorDapp where several people can invest and buy one property. Then they rent it out and split the return on their investment. For this, you can create a token-type `House` and issue several `FungibleToken` instances of the same `House`, where the quantity of each token is different and represents the ownership share of the `holder` in that house. This way anyone can sell their share to multiple buyers or buy from multiple sellers, which, in Corda, would be splitting and merging the `FungibleToken` of the `House` token-type.
+
+</HighlightBox>
 
 ### `EvolvableTokenType` Again
 
@@ -126,15 +130,15 @@ Let's first introduce the [`LinearPointer`](https://github.com/corda/corda/blob/
 
 Ok, now the [`TokenPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/types/TokenPointer.kt#L19-L22) class. This class:
 
-* is a `TokenType`
-* stores a `LinearPointer`
+* Is a `TokenType`.
+* Stores a `LinearPointer`.
 
 So there you have it. To access the underlying `EvolvableTokenType` instance of your `NonFungibleToken` instance, you need to:
 
-1. Get the `TokenType` instance of your `NonFungibleToken` instance
-2. Confirm [it is a `TokenPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/types/TokenType.kt#L60) itself
-3. If yes, then you cast it as a `TokenPointer`
-4. With the `TokenPointer` instance in hand, you get [its `LinearPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/types/TokenPointer.kt#L20) instance
+1. Get the `TokenType` instance of your `NonFungibleToken` instance.
+2. Confirm [it is a `TokenPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/types/TokenType.kt#L60) itself.
+3. If yes, then you cast it as a `TokenPointer`.
+4. With the `TokenPointer` instance in hand, you get [its `LinearPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/types/TokenPointer.kt#L20) instance.
 5. With the `LinearPointer` instance in hand, you [`resolve`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/StatePointer.kt#L175) it to your `EvolvableTokenType` instance. Yes, that's a round-trip to the vault.
 
 You may have to do some aggressive casting do get the desired sub-class. Also note that your _latest_ resolved `EvolvableTokenType` instance is as good as your vault knows. If your vault was not informed of changes, then your vault is still on an older version, without your knowledge.

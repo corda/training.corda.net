@@ -10,11 +10,11 @@ In the previous chapter, you were asked to try your hand at creating a flow that
 
 Some important decisions were made:
 
-* The seller initiates, and collects all states,
-* The seller creates the transaction and signs it first,
+* The seller initiates, and collects all states.
+* The seller creates the transaction and signs it first.
 * The buyer verifies then signs the transaction after.
 
-The code can be found [here](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/AtomicSale.java).
+The code can be found [here](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/AtomicSale.java).
 
 ## Walkthrough
 
@@ -152,8 +152,8 @@ Examine the steps of this flow:
     ```
     Note the result:
 
-    1. A `List<StateAndRef<FungibleToken>>` for the inputs
-    2. A `List<FungibleToken>` for the outputs
+    1. A `List<StateAndRef<FungibleToken>>` for the inputs.
+    2. A `List<FungibleToken>` for the outputs.
 
     By an amazing turn of events, the first list is exactly what the seller has been waiting for since attention turned to the buyer.
 * So have the buyer send the input states:

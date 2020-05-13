@@ -186,6 +186,10 @@ In fact, in this example app, it is as if you had 2 independent examples in 1 fo
 1. `workflows-java`'s `build.gradle`'s [dependency](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/build.gradle#L62): `cordapp project(":contracts-java")`
 2. `workflows-kotlin`'s `build.gradle`'s [dependency](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-kotlin/build.gradle#L54): `cordapp project(":contracts-kotlin")`
 
+Watch a short demonstration of this process:
+
+`video: https://www.youtube.com/watch?v=uqWOLovpYK8`
+
 Ok, enough about loading and configuration. Let's dive in:
 
 <ExpansionPanel title="Fallback: open in ide.corda.net">
@@ -607,7 +611,7 @@ The `Initiator` is annotated with `@InitiatingFlow` and the`Acceptor` is annotat
 For the avoidance of doubt, know that **not** all flows come in pairs. Indeed, you may create a so called unary flow to make a calculation, query and return local data or query an external API. Additionally, even if flows come in pairs, there are 2 types of pairs:
 
 * **Auto-initiated session pair**, as seen above, whereby the flows have been annotated with `@InitiatingFlow` and `@InitiatedBy(XX.class)`.
-* **Inlined** or **free-riding pair**, whereby the _responder_ is not necessarily automatically awoken by the _initiator_, but instead it is the responsibility of the encapsulating flows to both launch the initiator and the responder at the right point in the choreography, as we'll see with `CollectSignaturesFlow`. Inlined flows always take at least one flow session among their constructor parameters.
+* **Inlined** or **free-riding pair**, whereby the _responder_ is not necessarily automatically awoken by the _initiator_, but instead it is the responsibility of the encapsulating flows to both launch the initiator and the responder at the right point in the choreography, as you'll see with `CollectSignaturesFlow`. Inlined flows always take at least one flow session among their constructor parameters.
 
 A productive way to look at flows is as small pieces of a workflow that can be composed or chained together in order to achieve a larger orchestration.
 
@@ -617,7 +621,7 @@ Another point is that, in this example, the `Initiator` and the `Acceptor` flows
 
 Here, the initiator flow creates the full transaction proposal and then only sends it for acceptance. So the flow:
 
-* [Dathers the notary](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L84)
+* [Gathers the notary](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L84).
 * [Creates the `IOUState`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L90). Notice that `me = getOurIdentity()` is placed in the `lender` position. So really this flow has to be started by the lender. The code could make this a bit more explicit, for instance, when using Kotlin's [named arguments](https://kotlinlang.org/docs/reference/functions.html#named-arguments), like so:
 
     ```kotlin
@@ -647,8 +651,8 @@ Notice how `CollectSignaturesFlow` asks you to pass [`val sessionsToCollectFrom:
 
 As mentioned earlier, this flow is annotated with `@InitiatedBy` so that it is bound to and responds to `Initiator` flows, and its sub classes. If you recall, the initiator initiates 2 actions that involve the responder:
 
-1. It calls `CollectSignaturesFlow`
-2. And `FinalityFlow`
+1. It calls `CollectSignaturesFlow`.
+2. And `FinalityFlow`.
 
 Neither "sub" flow is annotated with any `@InitiatedBy`, so the responder, as part of its run, **has to** launch their respective responder actions, which, **in order**, are none other than:
 

@@ -22,7 +22,7 @@ Another decision is that the buyer could singlehandedly decide to have a verific
 
 Because there needs to be some enforcement nonetheless, and the `SalesProposalContract` is left intact, there needs to be a new state to require this contract.
 
-## [`DueDiligence`](TODO-link)
+## [`DueDiligence`](https://github.com/corda/corda-training-code/blob/master/080-oracle/contracts/src/main/java/com/template/diligence/state/DueDiligence.java)
 
 ![CDL of DueDiligence state](images/due_diligence_state.png)
 
@@ -48,7 +48,7 @@ The idea is that it is created independently, and then added to the purchase `Ac
 
 Which brings us to the contract that controls it:
 
-## [`DueDiligenceContract`](TODO-link)
+## [`DueDiligenceContract`](https://github.com/corda/corda-training-code/blob/master/080-oracle/contracts/src/main/java/com/template/diligence/state/DueDiligenceContract.java)
 
 ![CDL of DueDiligence contract](images/due_diligence_state_machine.png)
 
@@ -85,7 +85,7 @@ public enum Status {
 ```
 A simple response from the oracle, boolean-like. So the `Certify` command is there for the oracle to confirm the status of the given vehicle id.
 
-As for the [contract constraints](TODO-link), beside the classic ones, they are:
+As for the [contract constraints](https://github.com/corda/corda-training-code/blob/master/080-oracle/contracts/src/main/java/com/template/diligence/state/DueDiligenceContract.java#L29-L66), beside the classic ones, they are:
 
 * All participants need to sign on `Prepare` and `Drop`.
 * Only the oracle needs to sign on `Certify`.
@@ -93,9 +93,9 @@ As for the [contract constraints](TODO-link), beside the classic ones, they are:
 
 Not overly restrictive.
 
-The [tests](TODO-link) test these few constraints in turn.
+The [tests](https://github.com/corda/corda-training-code/tree/master/080-oracle/contracts/src/test/java/com/template/diligence/state) test these few constraints in turn.
 
-## [`DiligenceOracleUtilities`](TODO-link)
+## [`DiligenceOracleUtilities`](https://github.com/corda/corda-training-code/blob/master/080-oracle/contracts/src/main/java/com/template/diligence/state/DiligenceOracleUtilities.java)
 
 Defining those early on can minimise future mental overhead. When the oracle informs about a status, the information returned has a certain validity period:
 
@@ -122,7 +122,7 @@ Note how the predicate selects the `TimeWindow` too.
 
 Time to move to the oracle proper.
 
-## [`DiligenceOracle`](TODO-link)
+## [`DiligenceOracle`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DiligenceOracle.java)
 
 Let's start with the obvious:
 
@@ -228,7 +228,7 @@ public PublicKey getOracleKey() {
 
 </ExpansionPanel>
 
-## [`DiligenceOracleInternalFlows`](TODO-link)
+## [`DiligenceOracleInternalFlows`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DiligenceOracleInternalFlows.java)
 
 To assist in controlling the state of the oracle, a couple of internal flows were created. They are meant to run on the same node of the oracle and do not have handling counterpart:
 
@@ -248,7 +248,7 @@ class SetStatus extends FlowLogic<Void> {
 ```
 Do as their names suggest.
 
-## [`DueDiligenceOracleFlows`](TODO-link)
+## [`DueDiligenceOracleFlows`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java)
 
 This big flows container is itself sub-divided into:
 
@@ -272,7 +272,7 @@ public interface DueDiligenceOracleFlows {
 }
 ```
 
-## [`Query` flows](TODO-link)
+## [`Query` flows](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L35)
 
 As expected, and learned earlier, it just passes data from the requester, for instance the buyer's node:
 
@@ -290,7 +290,7 @@ final Status status = getServiceHub().cordaService(DiligenceOracle.class)
 requesterSession.send(status);
 ```
 
-## [`Prepare` flows](TODO-link)
+## [`Prepare` flows](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L93)
 
 These allow any party to `Prepare`, i.e. create, a new `DueDiligence` state:
 
@@ -330,13 +330,13 @@ if (!myKey) throw new FlowException("The underlying NonFungibleToken is not held
 ```
 That should ward off spam. It could also be made to check if there is a `SalesProposal` offered by this responder.
 
-## [`Drop` flows](TODO-link)
+## [`Drop` flows](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L266)
 
 Yes, you need to go through all the basic stuff before munching on the interesting bits. These `Drop` flows are the mirror image of the `Prepare` flows. Expectedly, the handler checks that it is a participant in the input `DueDiligence`. That's a strong check, because you have to sign to become a participant in the first place.
 
-## [`Certify` flows](TODO-link)
+## [`Certify` flows](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L410)
 
-### The `Request` / `Answer` pair
+### The [`Request`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L528) / [`Answer`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L564) pair
 
 This one is the simple data passing of a signature that you saw in the learning chapter:
 
@@ -384,7 +384,7 @@ try {
 requesterSession.send(sig);
 ```
 
-### The `RequestStraight` / `FinaliseStraight` pair
+### The [`RequestStraight`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L416) / [`FinaliseStraight`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L505) pair
 
 Ok so far, if you are meticulous, you will notice that there has been no flow that does a proper `Certify` transaction, one where the oracle's opinion is used materially. So far, it has all been data passed around.
 
@@ -445,7 +445,7 @@ return subFlow(new FinalityFlow(signed, sessions));
 
 Its handler, `FinaliseStraight` just does a finalisation.
 
-Check out the [tests](TODO-link) as well.
+Check out the [tests](https://github.com/corda/corda-training-code/tree/master/080-oracle/workflows/src/test/java/com/template/diligence/flow) as well.
 
 Ok, this flow demonstrates the interaction of a `DueDiligence` and an oracle in a single transaction. But, what about a `SalesProposal`, a buyer and all those things that this work was intended to improve?
 
@@ -457,7 +457,7 @@ Remember that the `SalesProposal` state and contract were not modified to addres
 
 You are free to keep your existing `SalesProposalAcceptFlows` as they are and add other sales proposal accept flows that require a `DueDiligence` in their process. The decision taken here is to modify the existing accept flow and make it take an optional `DueDiligence`.
 
-## [Modified `SalesProposalAcceptFlows`](TODO-link)
+## [Modified `SalesProposalAcceptFlows`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/proposal/flow/SalesProposalAcceptFlows.java)
 
 ![Modified SalesProposalAcceptFlow](images/oracle_atomic_car_buy_bpmn.png)
 
@@ -469,7 +469,7 @@ private final StateAndRef<DueDiligence> dueDiligenceRef;
 @Nullable
 private final Status diligenceStatus;
 ```
-With the additional constraint that if `dueDiligenceId == null`, then `diligenceStatus` is not even looked at. This loose coupling is somewhat expressed through public constructors that [take both](TODO-link) of them, or [none](TODO-link) of them.
+With the additional constraint that if `dueDiligenceId == null`, then `diligenceStatus` is not even looked at. This loose coupling is somewhat expressed through public constructors that [take both](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/proposal/flow/SalesProposalAcceptFlows.java#L100-L101) of them, or [none](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/proposal/flow/SalesProposalAcceptFlows.java#L94) of them.
 
 So how is it modified? When building the transaction, it adds it:
 
@@ -564,7 +564,7 @@ if (!certifyCommands.isEmpty()) {
 ```
 Other than that, the handler is unchanged.
 
-Check out the [new test file](TODO-link) for the case when there is a `DueDiligence`.
+Check out the [new test file](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/test/java/com/template/proposal/flow/SalesProposalAcceptDueDiligenceFlowsTests.java) for the case when there is a `DueDiligence`.
 
 ## Conclusion
 
