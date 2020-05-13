@@ -1,7 +1,7 @@
 {
   "scripts": {
     "prestart": "gatsby clean",
-    "start": "gatsby develop --port 4000 --host 192.168.0.64",
+    "start": "gatsby develop --port 4000",
     "build": "gatsby build --prefix-paths",
     "serve": "gatsby serve"
   },
