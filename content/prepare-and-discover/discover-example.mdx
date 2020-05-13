@@ -584,8 +584,8 @@ To achieve this consensus, the flow goes through a number of steps:
 
 As you will see later, it was a design decision to have the lender initiate the process and for the borrower to then accept the transaction proposal. The back and forth business process is expressed in:
 
-* the [`Initiator extends FlowLogic<>`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L33-L35), which, you will notice is annotated with `@InitiatingFlow`.
-* the [`Acceptor extends FlowLogic <>`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L122-L123), which is annotated with `@InitiatedBy(Initiator.class)`.
+* The [`Initiator extends FlowLogic<>`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L33-L35), which, you will notice is annotated with `@InitiatingFlow`.
+* The [`Acceptor extends FlowLogic <>`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L122-L123), which is annotated with `@InitiatedBy(Initiator.class)`.
 
 In other flow examples you will often see this _initiator_ / _responder_ naming convention.
 
@@ -606,8 +606,8 @@ The `Initiator` is annotated with `@InitiatingFlow` and the`Acceptor` is annotat
 
 For the avoidance of doubt, know that **not** all flows come in pairs. Indeed, you may create a so called unary flow to make a calculation, query and return local data or query an external API. Additionally, even if flows come in pairs, there are 2 types of pairs:
 
-* **auto-initiated session pair**, as seen above, whereby the flows have been annotated with `@InitiatingFlow` and `@InitiatedBy(XX.class)`.
-* **inlined** or **free-riding pair**, whereby the _responder_ is not necessarily automatically awoken by the _initiator_, but instead it is the responsibility of the encapsulating flows to both launch the initiator and the responder at the right point in the choreography, as we'll see with `CollectSignaturesFlow`. Inlined flows always take at least one flow session among their constructor parameters.
+* **Auto-initiated session pair**, as seen above, whereby the flows have been annotated with `@InitiatingFlow` and `@InitiatedBy(XX.class)`.
+* **Inlined** or **free-riding pair**, whereby the _responder_ is not necessarily automatically awoken by the _initiator_, but instead it is the responsibility of the encapsulating flows to both launch the initiator and the responder at the right point in the choreography, as we'll see with `CollectSignaturesFlow`. Inlined flows always take at least one flow session among their constructor parameters.
 
 A productive way to look at flows is as small pieces of a workflow that can be composed or chained together in order to achieve a larger orchestration.
 
@@ -617,8 +617,8 @@ Another point is that, in this example, the `Initiator` and the `Acceptor` flows
 
 Here, the initiator flow creates the full transaction proposal and then only sends it for acceptance. So the flow:
 
-* [gathers the notary](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L84)
-* [creates the `IOUState`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L90). Notice that `me = getOurIdentity()` is placed in the `lender` position. So really this flow has to be started by the lender. The code could make this a bit more explicit, for instance, when using Kotlin's [named arguments](https://kotlinlang.org/docs/reference/functions.html#named-arguments), like so:
+* [Dathers the notary](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L84)
+* [Creates the `IOUState`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L90). Notice that `me = getOurIdentity()` is placed in the `lender` position. So really this flow has to be started by the lender. The code could make this a bit more explicit, for instance, when using Kotlin's [named arguments](https://kotlinlang.org/docs/reference/functions.html#named-arguments), like so:
 
     ```kotlin
     val iouState = IOUState(
@@ -626,14 +626,14 @@ Here, the initiator flow creates the full transaction proposal and then only sen
         lender = serviceHub.myInfo.legalIdentities.first(),
         borrower = otherParty)
     ```
-* [creates a command](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L91-L93) with the required signers.
-* [associates](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L95) the `IOUState` with the `IOUContract`. This is where the state is actually _pointing_ to the contract that will verify the transaction on its behalf. In fact, the [`BelongsToContract`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java#L22) annotation allows the compiler to add cross-checks in order to minimise mistakes. There is the [`StateAndContract`](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/contracts/Structures.kt#L342) class that you could use too in order [to achieve the same](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/transactions/TransactionBuilder.kt#L120).
-* [verifies locally](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L101) that the transaction is valid. Do you remember that the contract does not check for the presence of signatures, only of expected signers? Here the contract accepts the transaction before it has been signed.
-* [signs it](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L106) with the lender's signature.
-* [opens a peer-to-peer session](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L111) with the borrower, [without sending](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/flows/FlowLogic.kt#L144-L149) anything yet. The remote peer will be notified only when an actual request is made.
-* [asks for signatures](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L112-L113) from the borrower. This triggers a checkpoint on the initiating peer as the initiating peer awaits a fully signed transaction.
-* at some point it receives the fully signed transaction and carries on.
-* [finalises](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L118), without communicating with the notary in this case because there are no input states, by sending the transaction to the borrower. You could choose to send it to more than the `participants`, for instance to a regulator or observer.
+* [Creates a command](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L91-L93) with the required signers.
+* [Associates](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L95) the `IOUState` with the `IOUContract`. This is where the state is actually _pointing_ to the contract that will verify the transaction on its behalf. In fact, the [`BelongsToContract`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java#L22) annotation allows the compiler to add cross-checks in order to minimise mistakes. There is the [`StateAndContract`](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/contracts/Structures.kt#L342) class that you could use too in order [to achieve the same](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/transactions/TransactionBuilder.kt#L120).
+* [Verifies locally](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L101) that the transaction is valid. Do you remember that the contract does not check for the presence of signatures, only of expected signers? Here the contract accepts the transaction before it has been signed.
+* [Signs it](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L106) with the lender's signature.
+* [Opens a peer-to-peer session](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L111) with the borrower, [without sending](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/flows/FlowLogic.kt#L144-L149) anything yet. The remote peer will be notified only when an actual request is made.
+* [Asks for signatures](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L112-L113) from the borrower. This triggers a checkpoint on the initiating peer as the initiating peer awaits a fully signed transaction.
+* At some point it receives the fully signed transaction and carries on.
+* [Finalises](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L118), without communicating with the notary in this case because there are no input states, by sending the transaction to the borrower. You could choose to send it to more than the `participants`, for instance to a regulator or observer.
 
 There are quite a number of steps although they should make sense. Notice how, when asking for signatures, it specifically calls [`CollectSignaturesFlow`](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/flows/CollectSignaturesFlow.kt#L67), which is an inlined flow, not a `@InitiatingFlow`. This means that the `Acceptor` flow will have to respond with the responder [`SignTransactionFlow`](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/flows/CollectSignaturesFlow.kt#L261) at the appropriate position in the choreographed sequence.
 
@@ -647,12 +647,12 @@ Notice how `CollectSignaturesFlow` asks you to pass [`val sessionsToCollectFrom:
 
 As mentioned earlier, this flow is annotated with `@InitiatedBy` so that it is bound to and responds to `Initiator` flows, and its sub classes. If you recall, the initiator initiates 2 actions that involve the responder:
 
-1. it calls `CollectSignaturesFlow`
-2. and `FinalityFlow`
+1. It calls `CollectSignaturesFlow`
+2. And `FinalityFlow`
 
 Neither "sub" flow is annotated with any `@InitiatedBy`, so the responder, as part of its run, **has to** launch their respective responder actions, which, **in order**, are none other than:
 
-1. [calling `SignTransactionFlow`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L151), which conditionally adds a signature to the transaction,
+1. [Calling `SignTransactionFlow`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L151), which conditionally adds a signature to the transaction,
 2. [and `ReceiveFinalityFlow`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L153), which conditionally saves the transaction to the vault.
 
 Fear not, there is no guess-work involved here. If you go to:
@@ -668,8 +668,8 @@ Now, this `ExampleFlow.Acceptor` flow is automatically spawned when a request ar
 
 Generally, with a traditional off-ledger IOU, a human borrower will want to screen what to accept, via an _inbox_ mechanism. That would require a checkpoint that waits for human input. However, Corda is designed to accommodate rapid, high-volume transactions between counterparties; and so this wait-for-approval pattern is not supported by default. Instead, to facilitate constraints specific to an individual party there is a [`checkTransaction`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/flows/CollectSignaturesFlow.kt#L341) function, which must be overridden any time a `SignTransactionFlow` is instantiated. In this case, the checks are rudimentary:
 
-* there is [one `IOUState`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L142-L143) in Java, or [exactly one](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-kotlin/src/main/kotlin/com/example/flow/ExampleFlow.kt#L106) in Kotlin.
-* the borrowed amount is [not too high](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L145).
+* There is [one `IOUState`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L142-L143) in Java, or [exactly one](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-kotlin/src/main/kotlin/com/example/flow/ExampleFlow.kt#L106) in Kotlin.
+* The borrowed amount is [not too high](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L145).
 
 Very simple, and still dangerous, as the borrower could end up owing 100 many times over. After all, this project is meant as an example, and a decision was made not to overburden the beginning developer with this exercise. However, so as not to leave you with the impression that it is impossible to implement a safe responder flow, here are 2 _hand-waving_ ways that can reasonably close this loophole:
 

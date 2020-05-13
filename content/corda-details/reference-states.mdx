@@ -22,7 +22,7 @@ Reference data can be seen as reusable pieces of information that parties of a t
 
 Using a distributed ledger adds complexity to reference data. How is it maintained, and by whom? How to ensure that your version is the latest one?
 
-## What are options for reference data?
+## Reference data options
 
 Prior to reference states, Corda already had ways to provide reference data to transactions. Each had its own limitations:
 
@@ -82,7 +82,7 @@ To properly use reference data, Corda introduced the concept of **Reference Stat
 
 This leads to the only limitation of reference states.
 
-## Known limitation
+## Known limitations
 
 As you're aware, a transaction must have a single notary. All its states must name a single notary. If it were not so, it would open up the possibility of double-spends, where an input state that was supposedly tracked by `NotaryA`, and already marked as consumed there, is in fact being consumed again in a transaction that uses `NotaryB`. `NotaryB` would be unaware of what outcomes have already been determined in `NotaryA`.
 
@@ -97,7 +97,7 @@ Don't conflate:
 
 </HighlightBox>
 
-## How to Use Reference States
+## Using Reference States
 
 Let's upgrade the IOU CorDapp example with a simple `KYC` state made by EzKyc. The new requirement here is that in order to create an IOU, both the `lender` and the `borrower` must pass the KYC check. Start by creating a standard state:
 

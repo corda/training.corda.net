@@ -144,9 +144,9 @@ req.using("There should be a single sales proposal output on offer",
     ```
     It is here that the **benefit** of reference states is delivered. You are sure that:
 
-    * the asset exists, for real.
-    * the seller owns the token.
-    * the asset is not sold yet. It is unconsumed.
+    * The asset exists, for real.
+    * The seller owns the token.
+    * The asset is not sold yet. It is unconsumed.
 
 <ExpansionPanel title="More run of the mill Offer stuff">
 <ExpansionPanelList>
@@ -280,7 +280,7 @@ req.using("The buyer should be the only signer on the offer",
     req.using("The asset should be an input on accept", candidates.size() == 1);
     ```
     As an important side node, this means that if the seller had created 2 proposals for the same asset, then only 1 proposal can be accepted. Also, because the asset would have changed hands, so the seller would not be able to sign the asset off.
-* the buyer should own the asset on output:
+* The buyer should own the asset on output:
 
     ```java
     final List<NonFungibleToken> boughtAsset = outNFTokens.stream()

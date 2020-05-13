@@ -131,11 +131,11 @@ Ok, now the [`TokenPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434
 
 So there you have it. To access the underlying `EvolvableTokenType` instance of your `NonFungibleToken` instance, you need to:
 
-1. get the `TokenType` instance of your `NonFungibleToken` instance
-2. confirm [it is a `TokenPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/types/TokenType.kt#L60) itself
-3. if yes, then you cast it as a `TokenPointer`
-4. with the `TokenPointer` instance in hand, you get [its `LinearPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/types/TokenPointer.kt#L20) instance
-5. with the `LinearPointer` instance in hand, you [`resolve`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/StatePointer.kt#L175) it to your `EvolvableTokenType` instance. Yes, that's a round-trip to the vault.
+1. Get the `TokenType` instance of your `NonFungibleToken` instance
+2. Confirm [it is a `TokenPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/types/TokenType.kt#L60) itself
+3. If yes, then you cast it as a `TokenPointer`
+4. With the `TokenPointer` instance in hand, you get [its `LinearPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/types/TokenPointer.kt#L20) instance
+5. With the `LinearPointer` instance in hand, you [`resolve`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/StatePointer.kt#L175) it to your `EvolvableTokenType` instance. Yes, that's a round-trip to the vault.
 
 You may have to do some aggressive casting do get the desired sub-class. Also note that your _latest_ resolved `EvolvableTokenType` instance is as good as your vault knows. If your vault was not informed of changes, then your vault is still on an older version, without your knowledge.
 

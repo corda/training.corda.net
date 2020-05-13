@@ -40,8 +40,8 @@ Care to peak into the databases of the nodes and see in detail what was stored? 
 
 The database used in a development network is H2. To access it, you need to:
 
-* install some H2 software
-* reconfigure your nodes
+* Install some H2 software
+* Reconfigure your nodes
 
 ### Install the H2 console
 
@@ -63,8 +63,8 @@ extraConfig = [
 ```
 Then:
 
-1. build the nodes as you did earlier
-2. run the nodes as you did earlier
+1. Build the nodes as you did earlier
+2. Run the nodes as you did earlier
 
 On each running node shells, you should see a new line, like:
 
@@ -132,11 +132,11 @@ Flow completed with result: SignedTransaction(id=EC06EA903314BE02610032933FBA239
 
 Back to PartyA's H2 browser tab. Rerun the `VAULT_STATES` query. Now you have 1 state. The IOU you just created. Notice how the state mentions:
 
-* the transaction id of the transaction that created it
-* the `output_index` of `0`, it was the only output after all
-* the contract class name that it is associated with
-* the notary name that will record its eventual consumption
-* the interestingly named [state_status](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/node/src/main/kotlin/net/corda/node/services/vault/VaultSchema.kt#L61-L62), which is now [unconsumed](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/node/services/VaultService.kt#L124-L126)
+* The transaction id of the transaction that created it
+* The `output_index` of `0`, it was the only output after all
+* The contract class name that it is associated with
+* The notary name that will record its eventual consumption
+* The interestingly named [state_status](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/node/src/main/kotlin/net/corda/node/services/vault/VaultSchema.kt#L61-L62), which is now [unconsumed](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/node/services/VaultService.kt#L124-L126)
 
 Now, run the same `*` query on another table: `SELECT * FROM IOU_STATES `. Here again, you have a single state:
 
@@ -146,10 +146,10 @@ And yes, it displays expected values, with, you will note, the same column names
 
 You will recall that a state is uniquely identified by the transaction that created it, and its index in the list of created outputs. This pair of identifiers is neatly packaged in the [`StateRef`](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/contracts/Structures.kt#L154-L163) class. Therefore, you should expect to see this pair in different places:
 
-* in both `IOU_STATES` and `VAULT_STATES`, their primary key is the pair `(OUTPUT_INDEX, TRANSACTION_ID)`. Both values were persisted thanks to the [parent schema of `PersistentIOU`](https://github.com/corda/samples-java/blob/a61e2cc9910d7d5de83122bf7d36fd071796a7c3/Basic/cordapp-example/contracts-java/src/main/java/com/example/schema/IOUSchemaV1.java#L22), i.e. the schema of [`PersistentState`](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/schemas/PersistentTypes.kt#L85):
+* In both `IOU_STATES` and `VAULT_STATES`, their primary key is the pair `(OUTPUT_INDEX, TRANSACTION_ID)`. Both values were persisted thanks to the [parent schema of `PersistentIOU`](https://github.com/corda/samples-java/blob/a61e2cc9910d7d5de83122bf7d36fd071796a7c3/Basic/cordapp-example/contracts-java/src/main/java/com/example/schema/IOUSchemaV1.java#L22), i.e. the schema of [`PersistentState`](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/schemas/PersistentTypes.kt#L85):
 
     ![State Primary Key](images/state_primary_key.png)
-* in the notary, which [keeps track](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/internal/notary/SinglePartyNotaryService.kt#L35-L36) of the <del>unspent</del> unconsumed `StateRef`s.
+* In the notary, which [keeps track](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/internal/notary/SinglePartyNotaryService.kt#L35-L36) of the <del>unspent</del> unconsumed `StateRef`s.
 
 Open 2 other tabs to your H2 console and connect to PartyB and PartyC. You can confirm that:
 
@@ -307,12 +307,12 @@ Make the change, be sure your working directory is `samples/cordapp-example` and
 
 Here you need to close all the previously launched nodes. That is 4 terminal tabs in all. You should also close your H2 Console browser tabs because the nodes are configured to use random database ports. Then:
 
-* launch `workflows-java/build/nodes/runnodes` afresh
-* stop the Notary and PartyB.
-* in PartyA, run `>>> flow start ExampleFlow$Initiator iouValue: 50, otherParty: "O=PartyB,L=New York,C=US"`
-* confirm it waits at `Collecting signatures from counterparties.`
-* restart PartyB (from `workflows-java/build/nodes/PartyB` run `java -jar corda.jer`).
-* return to PartyA and, after a minute or so, confirm it completes - all the way to the end.
+* Launch `workflows-java/build/nodes/runnodes` afresh.
+* Stop the Notary and PartyB.
+* In PartyA, run `>>> flow start ExampleFlow$Initiator iouValue: 50, otherParty: "O=PartyB,L=New York,C=US"`
+* Confirm it waits at `Collecting signatures from counterparties.`
+* Restart PartyB (from `workflows-java/build/nodes/PartyB` run `java -jar corda.jer`).
+* Return to PartyA and, after a minute or so, confirm it completes - all the way to the end.
 
 The notary was not contacted (not needed), even when the notary is `validating: true`. Why is that? Recall that the Notary proves uniqueness of the transaction inputs to ensure they can be consumed only once. There were no inputs in _this_ transaction, so the notary was not consulted.
 
@@ -320,10 +320,10 @@ The notary was not contacted (not needed), even when the notary is `validating: 
 
 Ok, so your `Acceptor` flow can be triggered remotely by a party that launches the `Initiator` flow. Is this so mechanical? You saw that your `nodes/PartyA/cordapps/cordapp-example-contracts-0.1.jar` file was referred to in the H2 database as an attachment. So now, redeploy your nodes and remove this jar file from PartyB:
 
-* delete the whole `workflows-java/build` folder
-* run `./gradlew --build-file workflows-java/build.gradle deployNodes`
-* remove the `workflows-java/build/nodes/PartyB/cordapps/cordapp-example-contracts-0.1.jar` file manually
-* run `workflows-java/build/nodes/runnodes`
+* Delete the whole `workflows-java/build` folder
+* Run `./gradlew --build-file workflows-java/build.gradle deployNodes`
+* Remove the `workflows-java/build/nodes/PartyB/cordapps/cordapp-example-contracts-0.1.jar` file manually
+* Run `workflows-java/build/nodes/runnodes`
 
 Now open a H2 console to PartyB, run the queries `SELECT * FROM NODE_ATTACHMENTS` and `SELECT * FROM NODE_ATTACHMENTS_CONTRACTS`, and sure enough, the result set is empty.
 

@@ -1,6 +1,6 @@
 ---
 title: Move flow example solution
-description: We give you an example of Token flows - Move
+description: An example of Token flows - Move
 slug: first-code/solution-flows-move
 ---
 
@@ -63,11 +63,11 @@ Self-explanatory:
 
 Because this is a flag we send over the wire to each responder node, it had to be annotated with `@CordaSerializable`. If necessary it will also make it serialisable at checkpoints.
 
-### `Initiator`
+## `Initiator`
 
 The class declaration is unremarkable by now.
 
-#### The fields
+### The fields
 
 We mentioned that this flow takes a very prescriptive list of inputs. That is the list:
 
@@ -111,7 +111,7 @@ Why not a `List<Pair<Party, Long>>`? Because, here it is started by a holder and
 
 The other field we have is the `progressTracker`. As opposed to the `IssueFlows` case, here, we assumed that another flow would care to pass in a different tracker at instantiation, because it takes unfriendly parameters and would be launched from another flow.
 
-#### The constructors
+### The constructors
 
 This explains our main constructor:
 
@@ -145,7 +145,7 @@ public Initiator(@NotNull final List<StateAndRef<TokenState>> inputTokens,
 ```
 With this preparation done, let's move to the `call` function.
 
-#### Generating the transaction
+### Generating the transaction
 
 Shall we introduce `.stream()`? No need. You can see that we get the unique notaries:
 
@@ -206,7 +206,7 @@ And for the outputs, you should recognise it from the `IssueFlows`:
 outputTokens.forEach(it -> txBuilder.addOutputState(it, TokenContract.TOKEN_CONTRACT_ID));
 ```
 
-#### Gathering the signatures
+### Gathering the signatures
 
 Let's skip over what you have seen enough times by now:
 
@@ -261,7 +261,7 @@ Notice that:
 * There may be no extra signers, hence the `signerFlows.isEmpty() ? partlySignedTx` part.
 * We pass a `childProgressTracker` so that we can sub-track the state. This `MoveFlows.Initiator` allows similar parameter passing.
 
-#### Finalisation
+### Finalisation
 
 Before we move to the finalisation proper, we need to inform the other peers, those that are mere `PARTICIPANT`s. Who are they:
 
@@ -301,7 +301,7 @@ return subFlow(new FinalityFlow(
 ```
 With this, let's move to the `Responder` and confirm that it follows this choreography.
 
-### `Responder`
+## `Responder`
 
 You will recall that the `Initiator` did 3 actions that require responding to:
 
@@ -311,7 +311,7 @@ You will recall that the `Initiator` did 3 actions that require responding to:
 
 Because of this _optionally_, our responder will need to branch depending on its role.
 
-#### Receiving role
+### Receiving role
 
 This is straightforward:
 
@@ -322,7 +322,7 @@ and exhibits `.receive` as the action expected of the responder, when an uncerem
 
 It is worth nothing that unlike a `.send`, a `.receive` is blocking. In effect, at this point the flow is suspended, and only revived when there is something to receive.
 
-#### Branching
+### Branching
 
 With its role known, the `Responder` can branch, only `SIGNER`s do the extra step:
 
@@ -347,7 +347,7 @@ relevant = stx.toLedgerTransaction(getServiceHub(), false)
         .anyMatch(it -> it.getHolder().equals(getOurIdentity()));
 ```
 
-#### Finalising
+### Finalising
 
 Now that we are back into the main branch, we can finalise as per usual, using the expected transaction id that we, perhaps, just signed:
 
@@ -378,7 +378,7 @@ it.registerInitiatedFlow(MoveFlows.Initiator.class, MoveFlows.Responder.class);
 
 Have a look too at the `FlowHelpers` class where we parked some boilerplate to instantiate and issue tokens.
 
-### `MoveFlows` conclusion
+## Conclusion
 
 If you look carefully, you will notice that although the `Initiator` is prescriptive, it nonetheless enables all transactions allowed by the contract, at the expense of the `Responder`, which would have to be modified or child-classed to protect peers. You will also notice that if all `Initiator` inputs are held by only ourselves, no call to the `Responder` will take place. Keep this in mind when we see the `RedeemFlows`.
 
