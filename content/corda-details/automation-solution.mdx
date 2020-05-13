@@ -327,10 +327,10 @@ private void removeProposal(@NotNull final SalesProposal proposal) throws Transa
 
 Ok, time for the meat of the subject. As part of its tracking, the service needs to be updated by updates from the vault. For this, the tool is `getVaultService().trackBy`. Ideally, you would run 2 such `.trackBy`:
 
-* oen for `SalesProposal`.
-* the other for `EvolvableTokenType`.
+* One for `SalesProposal`.
+* The other for `EvolvableTokenType`.
 
-In practice, in a single service, these 2 `trackBy` are competing for the database connection, so a single one, on `ContractState` has to be used. Another potential pitfall is that if you do not provide any `QueryCriteria`, then a [default one](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/node/services/VaultService.kt#L455-L456) will be made. And the default one is for [`Vault.StateStatus.UNCONSUMED`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/node/services/vault/QueryCriteria.kt#L143) states. Recall our reject transaction? It consumes a single state and has no output. If we relied on the default query critera, this transaction would be missed.
+In practice, in a single service, these 2 `trackBy` are competing for the database connection, so a single one, on `ContractState` has to be used. Another potential pitfall is that if you do not provide any `QueryCriteria`, then a [default one](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/node/services/VaultService.kt#L455-L456) will be made. And the default one is for [`Vault.StateStatus.UNCONSUMED`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/node/services/vault/QueryCriteria.kt#L143) states. Recall the reject transaction? It consumes a single state and has no output. If it relied on the default query critera, this transaction would be missed.
 
 Additionally, although `trackBy` gives you updates, it does not tell you about the state of the database at the start. So you need to add a `queryBy` too, this one specifically for `SalesProposal` since `CarTokenType`s alone are not enough.
 
@@ -356,11 +356,11 @@ private void trackAndNotify() {
             });
 }
 ```
-Because of the `StaticPointer` we always run the risk of failing to resolve a transaction hash. Better not stop the process in this case.
+Because of the `StaticPointer` it alway runs the risk of failing to resolve a transaction hash. Better not stop the process in this case.
 
 If the `.subscribe(onNext, onError, onDone)` bit looks unfamiliar to you, have a look at [RxJava](https://github.com/ReactiveX/RxJava/wiki). That will serve you well beyond this course.
 
-As you can see, the `queryBy` starts by populating the existing `SalesProposal`s using the `putProposal` function we covered earlier. Now, have a look at `this::handleUpdate`.
+As you can see, the `queryBy` starts by populating the existing `SalesProposal`s using the `putProposal` function covered earlier. Now, have a look at `this::handleUpdate`.
 
 ## Handle updates
 

@@ -14,7 +14,7 @@ import {
 
 You should be satisfied with your token state and contract, and their tests. Proceeding to flows before States and Contracts are finalised is not recommended.
 
-The flows you are about to create will make your air-miles system operational at a basic level. They are to implement the business&nbsp;/ orchestration layer of the air-miles. We are not aiming for integration with legacy systems, or at creating flows that allow the user to use the whole space allowed by the contracts. Instead, we are aiming at 3 flows that make it possible to issue, move and redeem tokens. The primary goal here is to make it work, including unit tests.
+The flows you are about to create will make your air-miles system operational at a basic level. They are to implement the business&nbsp;/ orchestration layer of the air-miles. You are not aiming for integration with legacy systems, or at creating flows that allow the user to use the whole space allowed by the contracts. Instead, You are aiming at 3 flows that make it possible to issue, move and redeem tokens. The primary goal here is to make it work, including unit tests.
 
 The beauty of flows is that when you have addressed the basic flows, you can create new flows that will allow your users to achieve more. This is conceptually different from states and contracts where you basically need to get it right from the outset. You can also reuse well-designed flows. So do not hesitate to start small and prove the concept before you create more ambitious flows.
 
@@ -34,7 +34,7 @@ Let's take the example of a simple flow that issues a single `TokenState` instan
 * Have the transaction signed by the issuer
 * Send the transaction to the holder
 
-It sounds like a reasonably-sized bit of work. Not inconsequentially, it does the job without sprawl. It already forces you to create a responder flow, very much like the IOU create flow we saw in the previous module. Don't hesitate to peek at this walk-through and take inspiration from it.
+It sounds like a reasonably-sized bit of work. Not inconsequentially, it does the job without sprawl. It already forces you to create a responder flow, very much like the IOU create flow in the previous module. Don't hesitate to peek at this walk-through and take inspiration from it.
 
 Try creating this flow and unit test first. Go!
 
@@ -81,7 +81,7 @@ After these first wins, it will be time to add flows for `Move` and `Redeem`:
 * At a minimum, your move flow should allow Alice, who owns 20 tokens to move 2 of them to Bob.
 * For redeem, keep in mind that if you want to redeem 20, you may have a single `TokenState` instance of 40. So don't trick your users into redeeming more than they were thinking they were.
 
-Work on your own before checking our example solution in the next section. You will gain most by struggling first and taking inspiration from the cordapp-example.
+Work on your own before checking the example solution in the next section. You will gain most by struggling first and taking inspiration from the cordapp-example.
 
 <ExpansionPanel title="A hint, resist the urge to look">
 
@@ -91,13 +91,13 @@ In addition to what you did in the issue flow(s), these move and redeem flows ne
 
 ## Challenge yourself
 
-And just like that, in 3 headers, we let you loose to work on flows for 12 hours or more... If that is not enough for you, remember that we said flows can:
+And just like that, in 3 headers, you are let loose to work on flows for 12 hours or more... If that is not enough information for you, remember that flows can:
 
 * Be customised by peers:
   * By sub-classing the `@InitiatingFlow` flow
   * Br sub-classing the well-known `@InitiatedBy` flow
   * Or by declaring an entirely new flow instead of the well-known `@InitiatedBy` flow
-* be combined to be 1 moving part of a bigger orchestration, just like `CollectSignaturesFlow`.
+* Be combined to be 1 moving part of a bigger orchestration, just like `CollectSignaturesFlow`.
 
 Think about what flows you could add that would reuse some of yours. What sub-classing do you have in mind.
 

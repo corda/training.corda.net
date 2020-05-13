@@ -149,7 +149,7 @@ In either situation, letting the oracle know only about the `PublicKey` gets the
 
 </HighlightBox>
 
-Moving on. For simplicity's sake, we assume that it keeps a mapping in memory:
+Moving on. For simplicity's sake, assume that it keeps a mapping in memory:
 
 ```java
     private final Map<UniqueIdentifier, Status> freeAndClears = new HashMap<>(10);
@@ -512,7 +512,7 @@ if (dueDil != null) {
 }
 subFlow(new SyncKeyMappingFlow(sellerSession, allKeys));
 ```
-And when it's time to sign with our keys:
+And when it's time to sign with the private keys:
 
 ```java
 if (dueDil != null) {

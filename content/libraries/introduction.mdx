@@ -151,9 +151,9 @@ abstract class OnLedgerAsset<T : Any, out C : CommandData, S : FungibleAsset<T>>
 ```
 that seems to achieve what your `TokenContract` achieved. Poring through its code is more involved than the quick examples above, but you can recognise helper functions in its `Companion` object:
 
-* issue: [`generateIssue`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/finance/contracts/src/main/kotlin/net/corda/finance/contracts/asset/OnLedgerAsset.kt#L296-L298)
-* move: [`generateSpend `](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/finance/contracts/src/main/kotlin/net/corda/finance/contracts/asset/OnLedgerAsset.kt#L57-L63)
-* redeem: [`generateExit`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/finance/contracts/src/main/kotlin/net/corda/finance/contracts/asset/OnLedgerAsset.kt#L231-L235)
+* Issue: [`generateIssue`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/finance/contracts/src/main/kotlin/net/corda/finance/contracts/asset/OnLedgerAsset.kt#L296-L298)
+* Move: [`generateSpend `](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/finance/contracts/src/main/kotlin/net/corda/finance/contracts/asset/OnLedgerAsset.kt#L57-L63)
+* Redeem: [`generateExit`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/finance/contracts/src/main/kotlin/net/corda/finance/contracts/asset/OnLedgerAsset.kt#L231-L235)
 
 However, it is in the demo `corda-finance-contracts` CorDapp. R3 [advises against](https://docs.corda.net/docs/corda-os/4.3/cordapp-advanced-concepts.html#the-demo-finance-cordapp) using it in production, but this is learning, so add it to your "contracts" `build.gradle`:
 

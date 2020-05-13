@@ -190,9 +190,9 @@ final StateAndRef<CarTokenType> bmwStateAndRef = bmwTx
 ```
 The code above is rootless, and in effect split into 3 parts. To see it in context:
 
-1. the wrapping flow defined here: [`IssueCarTokenTypeFlow`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/IssueCarTokenTypeFlow.java),
-2. its usage with specific values and nodes in the unit test class: [`createNewBmw()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L57-67),
-3. its output confirmation in the unit test proper: [`@Test isCreated()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L106-113).
+1. The wrapping flow defined here: [`IssueCarTokenTypeFlow`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/IssueCarTokenTypeFlow.java),
+2. Its usage with specific values and nodes in the unit test class: [`createNewBmw()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L57-67),
+3. Its output confirmation in the unit test proper: [`@Test isCreated()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L106-113).
 
 You must think that the `IssueCarTokenTypeFlow` flow is not particularly useful, and that would be right as it really just does minimal actions prior to launching [`CreateEvolvableTokens`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/IssueCarTokenTypeFlow.java#L49) proper. It provides a sense of what to expect when working with meaningful flows.
 
@@ -213,9 +213,9 @@ subFlow(new IssueTokens(Collections.singletonList(alicesCar)));
 ```
 Again, the code above is rootless, and again split into 3 parts:
 
-1. the wrapping flow: [`IssueCarToHolderFlow`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/IssueCarToHolderFlow.java), which needs to be passed information that came from the DMV,
-2. its usage with specific values: [`issueCarTo()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L70-78),
-3. its output confirmation in the unit test proper: [`@Test isIssuedToAlice()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L116-135).
+1. The wrapping flow: [`IssueCarToHolderFlow`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/IssueCarToHolderFlow.java), which needs to be passed information that came from the DMV,
+2. Its usage with specific values: [`issueCarTo()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L70-78),
+3. Its output confirmation in the unit test proper: [`@Test isIssuedToAlice()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L116-135).
 
 You will notice that the unit test is getting longer as it indeed has to do some preparation to be able to test the interesting part.
 
@@ -232,9 +232,9 @@ final SignedTransaction updatedCarTokenTypeStateAndRef = subFlow(new UpdateEvolv
 ```
 Which, in our case, we split into 3 parts:
 
-1. the wrapping flow: [`UpdateCarTokenTypeFlow`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/UpdateCarTokenTypeFlow.java),
-2. its specific usage: [`updateMileageOn()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L81-90),
-3. its output confirmation in the unit test proper: [`@Test isIssuedThenUpdated()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L138-162), which confirms that Alice did not automatically get the update.
+1. The wrapping flow: [`UpdateCarTokenTypeFlow`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/UpdateCarTokenTypeFlow.java),
+2. Its specific usage: [`updateMileageOn()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L81-90),
+3. Its output confirmation in the unit test proper: [`@Test isIssuedThenUpdated()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L138-162), which confirms that Alice did not automatically get the update.
 
 ### Sell the car to Bob
 
@@ -248,9 +248,9 @@ subFlow(new MoveNonFungibleTokens(bobAndBmw, Collections.emptyList()));
 ```
 In practice, you split it into 3:
 
-1. the wrapping flow: [`MoveCarToNewHolderFlow`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/MoveCarToNewHolderFlow.java),
-2. its specific usage: [`moveCarTo()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L93-103),
-3. its output confirmation: [`@Test isIssuedUpdatedAndSoldToBob()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L165-193).
+1. The wrapping flow: [`MoveCarToNewHolderFlow`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/MoveCarToNewHolderFlow.java),
+2. Its specific usage: [`moveCarTo()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L93-103),
+3. Its output confirmation: [`@Test isIssuedUpdatedAndSoldToBob()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L165-193).
 
 The 4 create, issue, update and move steps demonstrate what can be done in flows with the car token type and non-fungible token. Let's discuss a bit about the reality of working with tokens.
 
@@ -258,8 +258,8 @@ The 4 create, issue, update and move steps demonstrate what can be done in flows
 
 The above example breezily overlooks the fact that variables created on a node, say the DMV node, are readily available on Alice's node. In practice, Alice would have to have been updated by whoever did the change, and then Alice would have to:
 
-1. go and fetch the updated token type from her vault. The identifying key there would be the UUID of the `CarTokenType` instance.
-2. go and fetch the `NonFungibleToken` of her car in the vault. Its identifying key is also a UUID.
+1. Go and fetch the updated token type from her vault. The identifying key there would be the UUID of the `CarTokenType` instance.
+2. Go and fetch the `NonFungibleToken` of her car in the vault. Its identifying key is also a UUID.
 
 Whether this is for an `issue`, `move`, or `redeem` flow, it would likely look like:
 
@@ -295,8 +295,8 @@ Observer nodes are parties which are not participants in the state but want to b
 
 The examples above use the observer nodes facility where it is deemed necessary, in the case of:
 
-* the DMV informing the dealership that the `CarTokenType` instance has been created, so that the dealership can issue the car.
-* the DMV informing Alice that her `CarTokenType` instance has been updated, so that Alice can sell her updated car.
+* The DMV informing the dealership that the `CarTokenType` instance has been created, so that the dealership can issue the car.
+* The DMV informing Alice that her `CarTokenType` instance has been updated, so that Alice can sell her updated car.
 
 ### The distribution list
 

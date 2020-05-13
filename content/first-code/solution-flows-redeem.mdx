@@ -45,11 +45,11 @@ The following new design decisions were taken:
 * We created an unsafe, but `abstract` `Responder`, in order to demonstrate an example of action that can be taken at the node level to fit a workflow while forcing the developer to create a safe child class.
 * This `Responder` flow is not annotated with `@InitiatedBy`, so that only a decisive action can enable the link. This does not prevent a safer child class of `Responder`, or another implementation entirely, to be later annoted with `@InitiatedBy` if so required.
 
-### `Initiator`
+## `Initiator`
 
 The class declaration is unremarkable by now.
 
-#### The fields
+### The fields
 
 You will recognise them from `MoveFlows`:
 
@@ -63,7 +63,7 @@ There are no output tokens, remember, all are redeemed.
 
 With these fields, the 2 constructors will look familiar. The declaration of the `call` function too.
 
-#### Generating the transaction
+### Generating the transaction
 
 If you followed `MoveFlows`, you will recognise the same actions with regards to the notaries. Here too we then gather the distinct signers:
 
@@ -87,9 +87,9 @@ Creating the command, creating the transaction builder, adding the inputs, verif
 
 With this, let's move to the `Responder` and confirm that it follows this rather simple choreography.
 
-### `Responder`
+## `Responder`
 
-#### The class declaration
+### The class declaration
 
 Ah something different:
 
@@ -109,7 +109,7 @@ protected abstract fun checkTransaction(stx: SignedTransaction)
 ```
 And with reason as we will see.
 
-#### Signing the transaction
+### Signing the transaction
 
 Indeed the first thing that the `Responder` has to do is sign the transaction, by, as usual, creating the responder flow of `CollectSignaturesFlow`:
 
@@ -128,7 +128,7 @@ When the flow has been instantiated, and only instantiated, it is time to run it
 final SecureHash txId = subFlow(signTransactionFlow).getId();
 ```
 
-#### Finalising
+### Finalising
 
 A classic case:
 
@@ -183,7 +183,7 @@ if (!lowEnough) throw new FlowException("Quantity must not be too high.");
 ```
 Yes, it fails when their amount is too high.
 
-### Bored already?
+## Chaining
 
 Ok, we have seen a bunch of flows that do very mechanical actions. In hindsight, they take properly prepared information, then act on it as expected. When you get the hang of it, that almost comes down to _yet another flow_.
 
@@ -226,7 +226,7 @@ This flow is not `@Initiating` and it has no tailored responder. Instead it prep
 
 <ExpansionPanel title="Optional rabbit hole">
 
-#### `StateAccumulator`
+### `StateAccumulator`
 
 Before we move on, let's look at what _fetch enough states_ means. It means that we have a **maximum quantity** in mind, and we are going to accumulate **states** until the **sum** of **quantities** is equal to or above this maximum.
 
@@ -261,7 +261,7 @@ public StateAccumulator plus(@NotNull final StateAndRef<TokenState> state) {
 
 </ExpansionPanel>
 
-#### `SimpleInitiator` constructor
+### `SimpleInitiator` constructor
 
 It takes the simple parameters we mentioned:
 
@@ -282,7 +282,7 @@ this.tokenCriteria = new QueryCriteria.VaultQueryCriteria()
 
 <ExpansionPanel title="Optional rabbit hole">
 
-#### The fetch function
+### The fetch function
 
 When you fetch states from the vault, you are limited to 200 states. That's a lot, but it may not be enough. In any case, we need to use pagination, and for that, we used recursion, whereby it will call the same function for the next page if we did not accumulate enough yet. The function is declared as:
 
@@ -300,7 +300,7 @@ And you can look into its body, but basically it:
 
 </ExpansionPanel>
 
-#### The optional move transaction
+### The optional move transaction
 
 As we go into the `call` function:
 
@@ -330,7 +330,7 @@ final SignedTransaction moveTx = accumulated.sum <= totalQuantity ? null :
     * the `TokenState` that we intend to redeem is at index `0`.
     * the _change_ is at index `1`.
 
-#### Passing over to `MoveFlows.Initiator`
+### Passing over to `MoveFlows.Initiator`
 
 Now that we need to select the states to redeem, whether we had a `Move` or not:
 
@@ -347,7 +347,7 @@ return new Pair<>(moveTx, subFlow(new Initiator(
 ```
 That's right, we return both transactions, with the first one perhaps `null`.
 
-#### Tests
+### Tests
 
 Of course, you will also find tests for this `SimpleInitiator`, whereby tokens are issued, then fetched. We cover the cases where:
 
@@ -356,6 +356,6 @@ Of course, you will also find tests for this `SimpleInitiator`, whereby tokens a
 * we have more than needed in the vault and yet manage to fetech the right count.
 * we fetch more than needed and make a split.
 
-### `RedeemFlows` conclusion
+## Conclusion
 
 This bunch of `Redeem` flows should have given you some ideas as to how you can child-class or compose your flows.

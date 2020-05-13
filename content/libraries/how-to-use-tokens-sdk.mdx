@@ -54,9 +54,9 @@ Let's start:
 
 For the next steps, the code examples shown below are actually _rootless_. When you go to the repo itself, you will see that they are split into 3 parts:
 
-1. a somewhat generic flow
-2. a convenience function that calls the flow with specific values
-3. a test function that confirms we got it right.
+1. A somewhat generic flow
+2. A convenience function that calls the flow with specific values
+3. A test function that confirms we got it right.
 
 ## Let the US mint issue
 
@@ -124,8 +124,8 @@ final SignedTransaction moveTx = subFlow(new MoveFungibleTokens(
 ```
 With its [`@Test bobGot50Dollars`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/usd/UsdTokenCourseExercise.java#L85-102). Note how we made the last parameter explicit: `changeHolder = alice`. Why did we not rely on the [default value of `getOurIdentity()`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/workflows/src/main/kotlin/com/r3/corda/lib/tokens/workflows/flows/move/MoveFungibleTokensFlow.kt#L50)?
 
-* it is best to not leave something to chance.
-* when we introduce the _Accounts Library_, this default will get messy.
+* It is best to not leave anything to chance.
+* When we introduce the _Accounts Library_, this default will get messy.
 
 So better keep this as a habit.
 
