@@ -130,7 +130,7 @@ Yes, as strange as this looks, you do indeed need to cast the result. If you did
 
 </ExpansionPanel>
 
-This flow runs locally on the node, and simply assigns itself as the `.host`. At this stage, no public key has been created. It's as if you had just added a row in the "Accounts" table. See it in action in [`canCreateAccount`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/account/AccountCourseExercise.java#L76).
+This flow runs locally on the node, and simply assigns itself as the `.host`. At this stage, no public key has been created. It's as if you had just added a row in the "Accounts" table. See it in action in [`canCreateAccount`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/account/AccountCourseExercise.java#L76).
 
 ### Request keys
 
@@ -151,7 +151,7 @@ final AnonymousParty accountAnonParty = subFlow(new RequestKeyForAccount(
         accountStateRef.getState().getData()));
 final PublicKey accountKey = accountAnonParty.getOwningKey();
 ```
-See it in action in [`canRequestANewKeyAppearsAsAlice`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/account/AccountCourseExercise.java#L90). It is not self-evident, so note that this `RequestKeyForAccount` flow can be launched from any node, and will take care of contacting the [account's host](https://github.com/corda/accounts/blob/900fe9c2ebf4ad8ecda1f494c03f747ef1579746/workflows/src/main/kotlin/com/r3/corda/lib/accounts/workflows/flows/RequestKeyForAccountFlows.kt#L92-L93). See it in action in [`canRequestANewKeyFromNonHost`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/account/AccountCourseExercise.java#L117).
+See it in action in [`canRequestANewKeyAppearsAsAlice`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/account/AccountCourseExercise.java#L90). It is not self-evident, so note that this `RequestKeyForAccount` flow can be launched from any node, and will take care of contacting the [account's host](https://github.com/corda/accounts/blob/900fe9c2ebf4ad8ecda1f494c03f747ef1579746/workflows/src/main/kotlin/com/r3/corda/lib/accounts/workflows/flows/RequestKeyForAccountFlows.kt#L92-L93). See it in action in [`canRequestANewKeyFromNonHost`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/account/AccountCourseExercise.java#L117).
 
 Notice how `RequestKeyForAccount` returns an `AnonymousParty`. Why is that? It's all in the difference between `Party` and `AnonymousParty`:
 
@@ -257,13 +257,13 @@ final QueryCriteria participatingAccountCriteria = new QueryCriteria.VaultQueryC
         .withExternalIds(Collections.singletonList(
                 accountInfo.getIdentifier().getId()));
 ```
-See it in action in the course unit test [`AccountVaultCourseExercise`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/account/AccountVaultCourseExercise.java):
+See it in action in the course unit test [`AccountVaultCourseExercise`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/account/AccountVaultCourseExercise.java):
 
-* When a node hosts an account and has a state in which the account participates, then it can retrieve it from the vault by id, see [`canFetchStateOfSeenWhenKnowsAccount`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/account/AccountVaultCourseExercise.java#L78).
-* When a node hosts an account and has a state in which the account does not participate, then it cannot retrieve it from the vault by id, see [`cannotFetchStateOfLostWhenKnowsAccount`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/account/AccountVaultCourseExercise.java#L153).
+* When a node hosts an account and has a state in which the account participates, then it can retrieve it from the vault by id, see [`canFetchStateOfSeenWhenKnowsAccount`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/account/AccountVaultCourseExercise.java#L78).
+* When a node hosts an account and has a state in which the account does not participate, then it cannot retrieve it from the vault by id, see [`cannotFetchStateOfLostWhenKnowsAccount`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/account/AccountVaultCourseExercise.java#L153).
 * When a remote node does not host an account, but has a state in which the account participates:
     1. If the remote node has no information or only information about the account, it cannot retrieve the state from the vault by id.
-    2. If the remote node has information about the account **and** associated public key, it can retrieve the state from the vault by id, see [`observerCanFetchStateOfSeenOnlyWhenKnowsAboutAccount`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/account/AccountVaultCourseExercise.java#L98).
+    2. If the remote node has information about the account **and** associated public key, it can retrieve the state from the vault by id, see [`observerCanFetchStateOfSeenOnlyWhenKnowsAboutAccount`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/account/AccountVaultCourseExercise.java#L98).
 
 <HighlightBox type="tip">
 
@@ -301,7 +301,7 @@ The same `confidential-id` library, also provides a [`RequestKey`](https://githu
 
 ## Conclusion
 
-You have just learned about the Accounts library, how to use it, how to pass accounts around, how it can be dangerous for the unaware developer and what needs to be done to fetch from the vault. There are a bunch of unit tests to familiarise yourself with the actions surrounding accounts [here](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/tree/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/account).
+You have just learned about the Accounts library, how to use it, how to pass accounts around, how it can be dangerous for the unaware developer and what needs to be done to fetch from the vault. There are a bunch of unit tests to familiarise yourself with the actions surrounding accounts [here](https://github.com/corda/corda-training-code/tree/master/040-accounts-lib/workflows/src/test/java/com/template/account).
 
 In the next chapter you are going to use the Accounts library to adjust the project.
 

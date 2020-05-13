@@ -122,9 +122,7 @@ Notice the use of `Collections.singletonList`. It creates an immutable list. You
 
 You already noted that all fields have getters. Also note that the `equals` and `hashCode` functions are here, for future convenience. These functions are another reason why you are well-advised to mark the fields `final`.
 
-## [Tests](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/contracts/src/test/java/com/template/states/TokenStateTests.java)
-
-<!-- link for now https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/contracts/src/test/java/com/template/states/TokenStateTests.java -->
+## [Tests](https://github.com/corda/corda-training-code/blob/master/020-first-token/contracts/src/test/java/com/template/states/TokenStateTests.java)
 
 Some basic tests are performed on `TokenState`:
 
@@ -136,8 +134,6 @@ Some basic tests are performed on `TokenState`:
 Notice the use of `TestIdentity` which hides away the complexity of signing keys so you can focus on testing your code.
 
 ## [`TokenStateUtilities`](https://github.com/corda/corda-training-code/blob/master/020-first-token/contracts/src/main/java/com/template/states/TokenStateUtilities.java)
-
-<!-- link for now https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/master/020-first-token/contracts/src/main/java/com/template/states/TokenStateUtilities.java -->
 
 At first it does not look like you will need such a utility but it will come in handy in the contract. So let's reduce the mental load by looking at this utility now.
 

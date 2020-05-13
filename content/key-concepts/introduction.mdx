@@ -106,7 +106,7 @@ Corda provides the network protocol for nodes to exchange messages about *possib
 
 When company A purchases new desks from company B, the following steps may have to happen:
 
-* at company A: department head asks for new desks for new recruits.
+* At company A: department head asks for new desks for new recruits.
 * A: procurement manager approves request, which triggers...
 * A: company A's Corda node to place a request for quote to company B, which triggers...
 * B: a sales person at company B to pick up the request.
@@ -114,20 +114,20 @@ When company A purchases new desks from company B, the following steps may have 
 * B: sales manager approves the quote, which triggers...
 * B: company B's Corda node to send the quote to company A, which triggers...
 * A: the procurement manager to look at the quote and to, say, approve it, which triggers...
-* company A's Corda node to place the order to company B, which triggers...
+* Company A's Corda node to place the order to company B, which triggers...
 * B: company B's Corda node to place an invoice to company A, and
 * B: the production team to fulfill the order
 
 You know the whole story because you read about it here, but in Corda, the only things:
 
-* company A knows about B are:
-  * B received the request and sent a quote in response
-  * B received the order and sent an invoice in response
-  * presumably B is busy fulfilling the order
-* company B knows about A are:
-  * A sent a request
-  * A accepted the quote and sent an order in response
-  * A received the invoice
+* Company A knows about B are:
+  * B received the request and sent a quote in response.
+  * B received the order and sent an invoice in response.
+  * presumably B is busy fulfilling the order.
+* Company B knows about A are:
+  * A sent a request.
+  * A accepted the quote and sent an order in response.
+  * A received the invoice.
 
 This list is the inarguable history of the shared facts.
 

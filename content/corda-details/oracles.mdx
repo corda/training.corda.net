@@ -155,7 +155,7 @@ Where the inputs are actually [`StateRef`](https://github.com/corda/corda/blob/6
 
 ## Example preparation
 
-After all this theory sprinkled with a bit of code, let's look at an example. You can find the code for it [here](TODO-link). Let's say you want to implement a foreign exchange oracle that gives current quotes for currency pairs Let's define the `FxQuote` data type that takes in:
+After all this theory sprinkled with a bit of code, let's look at an example. You can find the code for it [here](https://github.com/corda/corda-training-code/tree/master/080-oracle/contracts/src/main/java/com/example/oracle). Let's say you want to implement a foreign exchange oracle that gives current quotes for currency pairs Let's define the `FxQuote` data type that takes in:
 
 ```java
 @CordaSerializable
@@ -216,7 +216,7 @@ public class FXState implements ContractState {
 
 ## Filtered transaction example
 
-What type of `FilteredTransaction` does the developer of the oracle intend to receive? Let's assume that the developer made public this utility function to inform you:
+What type of `FilteredTransaction` does the developer of the oracle intend to receive? Let's assume that the developer made public [this utility function](https://github.com/corda/corda-training-code/blob/master/080-oracle/contracts/src/main/java/com/example/oracle/FxOracleUtilities.java) to inform you:
 
 ```java
 public class FxOracleUtilities {
@@ -235,7 +235,7 @@ That's how you build a filtered transaction. You pass a predicate that tells whe
 
 ## Example _query_ flows
 
-The developer of the oracle also made public an example of flow pairs for you to both query and sign. The handlers of both run on the oracle's node. First the ones to query for a new quote. Here is a CDL of what it does:
+The developer of the oracle also made public an example of flow pairs for you to both [query](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/example/flow/FxOracleFlows.java#L21) and [sign](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/example/flow/FxOracleFlows.java#L86). The handlers of both run on the oracle's node. First the ones to query for a new quote. Here is a CDL of what it does:
 
 ![Oracle Sign Flow](images/oracle_query_bpmn.png)
 
@@ -290,7 +290,7 @@ It's not overly complicated either. It receives the pair, retrieves the `FxOracl
 
 ## Example _sign_ flows
 
-Now that _query_, the first function of an oracle is covered by flows, the developer of the oracle made public an example of flow pairs for this _sign_ function. Here is the CDL of what it does:
+Now that _query_, the first function of an oracle is covered by flows, the developer of the oracle made public an example of flow pairs for this [_sign_](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/example/flow/FxOracleFlows.java#L86) function. Here is the CDL of what it does:
 
 ![Oracle Query Flow](images/oracle_sign_bpmn.png)
 
@@ -366,7 +366,7 @@ If your business requires that you query the oracle, scrutinise the returned val
 
 ## Example oracle
 
-The oracle runs on a dedicated server. When you, as a user have access to the above state, contract, utility and flows, you can work with it. The oracle code itself need not be public. Anyway, here goes for the oracle:
+The oracle runs on a dedicated server. When you, as a user have access to the above state, contract, utility and flows, you can work with it. The oracle code itself need not be public. Anyway, [here goes for the oracle](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/example/oracle/FxOracle.java):
 
 ```java
 @CordaService
@@ -512,7 +512,7 @@ You see, it only accepts a `Swap` command, and it must contain a previously quer
 
 ## Further ideas
 
-Of course, your oracle can choose not to keep track of what it sent. In the case of a temperature oracle, see example [here](TODO-link), it could instead:
+Of course, your oracle can choose not to keep track of what it sent. In the case of a temperature oracle, see example [here](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/example/oracle/TemperatureOracle.java), it could instead:
 
 * Check that the temperature in the command is the actual temperature, within some tolerance.
 * Check that the time-window's `untilTime` is no more than, say, 5 minutes in the future.
