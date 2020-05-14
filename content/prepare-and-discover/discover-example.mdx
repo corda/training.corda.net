@@ -605,13 +605,15 @@ Flows are **asynchronous** processes. However, they are written as synchronous c
 
 </HighlightBox>
 
+A typical reason for flow suspension is when it expects to receive something. At this point, it is suspended, and will be resumed when there is something to receive indeed.
+
 Since a flow can be suspended, there is a mechanism that lets observers know at what stage the flow is. That is the role of the [`progressTracker`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L72-L75). [Before](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L109) and [after](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L116) checkpoints, or [any](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L87) [other](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L99) [point](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L104) really, it can be updated with a descriptive state.
 
-When a flow is suspended, it frees the _thread_ on which it was running. This available thread can be used by a brand new flow, or a suspended one whose _revival conditions_, have been met such that it can now continue. If not, the thread remains unused until such case arises.
+When a flow is suspended, it frees the _thread_ on which it was running. This available thread can be used by a brand new flow, or a suspended one whose _revival conditions_, have been met such that it can now continue. If not, the thread remains unused until such case arises. This should remind you again of co-routines, which <del>pop in and out of threads</del> are suspended and resumed on the same or another thread.
 
 <HighlightBox type="warn">
 
-From the outside, it looks like flows are running concurrently, with all the opportunities for race conditions and deadlock this entails. You, the developer, have to be mindful of this when you establish process dependencies between flows, in particular with regards to the vault's database.
+From the outside, it therefore looks like flows are running concurrently, with all the opportunities for race conditions and deadlocks this entails. You, the developer, have to be mindful of this when you establish process dependencies between flows, in particular with regards to the vault's database.
 
 </HighlightBox>
 
