@@ -576,7 +576,9 @@ Finally the `Contract` interface, it too has some available implementations:
 
 ### Flow
 
-You have learned that flows encapsulate the business process. They create valid transactions agreed between parties. Here there are 2 parties, the lender and the borrower, and they both need to sign off, a.k.a. agree, on the transaction proposal. They want to arrive at a consensus and achieve this state evolution:
+You have learned that flows encapsulate a piece of the business process. They can be used to create valid transactions agreed between parties. Note the wording in the previous sentence: _can be used_. Indeed, although a flow encapsulates a piece of the business process, creating a signed transaction is only one of the business processes an organisation implements. Admittedly an important one.
+
+In the process of our example, there are 2 parties, the lender and the borrower, and they both need to sign off, a.k.a. agree, on the transaction proposal. They want to arrive at a consensus and achieve this state evolution:
 
 ![IOU State Evolution View](images/cdl_iou_state_evolution.png)
 
@@ -597,13 +599,17 @@ In other flow examples you will often see this _initiator_ / _responder_ naming 
 
 Both classes could be in their own file, and it was again a design decision to encapsulate both as `static` classes inside a class for Java, or in a singleton `object` for Kotlin. Also, it is not immediately apparent that it is the lender that needs to initiate the process, this detail reveals itself in the code.
 
-Flows are pseudo-synchronous processes. They are written as synchronous code which, with the help of [`quasar`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/build.gradle#L4), can be _frozen_ and saved to disk, a.k.a. checkpointed; and they can be _revived_ later when necessary. Such _checkpointable_ functions are annotated with [`@Suspendable`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L80). And you see that both `Initiator` and `Acceptor` have this `call()` function that is suspendable.
+<HighlightBox type="info">
+
+Flows are **asynchronous** processes. However, they are written as synchronous code. With the help of [Quasar](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/build.gradle#L4), a flow's context and execution step can be _frozen_ and saved to disk, a.k.a. checkpointed; and they can be _revived_ later when necessary. This mechanism dispenses with constructs like callbacks or `await` that should be familiar to you. To indicate to Quasar that a given function's body can be checkpointed mid-flight, the function's declaration needs to be annotated with [`@Suspendable`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L80). And you see that both `Initiator` and `Acceptor` have this `call()` function that is suspendable.
+
+</HighlightBox>
 
 Since a flow can be suspended, there is a mechanism that lets observers know what stage the flow is at. That is the role of the [`progressTracker`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L72-L75). [Before](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L109) and [after](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L116) checkpoints, or [any](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L87) [other](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L99) [point](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L104) really, it can be updated with a descriptive state.
 
 The `Initiator` is annotated with `@InitiatingFlow` and the`Acceptor` is annotated with `@InitiatedBy(Initiator.class)`. This means that once the `Initiator` flow has made its first contact with a peer node, the `Acceptor` flow is automatically instantiated on the peer node:
 
-* At this point, the 2 flow instances are connected to each other by a [session id](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L127) identifying the 1-to-1 link.
+* At this point, the 2 flow instances are connected to each other by a [`FlowSession`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L127), akin to a _session id_ identifying the 1-to-1 link.
 * If the initiator makes contact with more than 1 peer node, then there are as many 1-to-1 sessions as there are peer nodes, with 1 responder flow instance per peer node.
 * Additionally, if the `Initiator` ever needs to ask more than one piece of information from the `Acceptor` flow, it can keep asking for those pieces on the same session. The `Acceptor` flow would, of course, need to be coded so that it also receives and sends the information in accordance with the **choreography** coded in the `Initiator`.
 * Even while 2 peer nodes are linked by a session between 1 instance of an initiator flow and 1 instance of a responder flow, nothing prevents the same 2 peer nodes from creating a new session between 2 flow instances of the same type or of different types.
@@ -611,7 +617,7 @@ The `Initiator` is annotated with `@InitiatingFlow` and the`Acceptor` is annotat
 For the avoidance of doubt, know that **not** all flows come in pairs. Indeed, you may create a so called unary flow to make a calculation, query and return local data or query an external API. Additionally, even if flows come in pairs, there are 2 types of pairs:
 
 * **Auto-initiated session pair**, as seen above, whereby the flows have been annotated with `@InitiatingFlow` and `@InitiatedBy(XX.class)`.
-* **Inlined** or **free-riding pair**, whereby the _responder_ is not necessarily automatically awoken by the _initiator_, but instead it is the responsibility of the encapsulating flows to both launch the initiator and the responder at the right point in the choreography, as you'll see with `CollectSignaturesFlow`. Inlined flows always take at least one flow session among their constructor parameters.
+* **Inlined** or **free-riding pair**, whereby the _responder_ is not automatically awoken by the _initiator_, but instead it is the responsibility of the encapsulating flows to both launch the initiator and the responder at the right point in the choreography, as you'll see with `CollectSignaturesFlow`. Inlined flows always take at least one flow session among their constructor parameters.
 
 A productive way to look at flows is as small pieces of a workflow that can be composed or chained together in order to achieve a larger orchestration.
 
