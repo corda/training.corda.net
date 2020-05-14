@@ -152,6 +152,17 @@ Flows are light-weight processes that coordinate multi-step business processes t
 
 ![Example of simple flow](images/simple-flow.png)
 
+In computer science terms, flows are continuations. They are instantiated objects that encapsulate a discrete chunk of a whole process. The swim-lane diagram above describes the sequence of steps necessary to go from the state where there are $$n$$ IOUs between Alice and Bob to the state where there are $$(n + 1)$$ IOUs between them. Two or more _small_ flows can be composed together to make a _large_ flow that represents a process larger than any of its components. As instantiated objects, flows can be passed around as arguments. Just like building blocks are small objects that can be composed to build a larger object, flows are instantiated objects that can be composed to build a larger process. This larger process can then be _launched_ at an opportune time.
+
+In fact, in the same diagram above, the following pairs of steps are small flows in their own right:
+
+* "Could you send me $10?" and "Yes, here are their references".
+* "Care to sign?" and "Here is my signature".
+* "Notary, please finalise" and "Ok, here is the notary signature".
+* "Here is my IOU" and silent reception and recording.
+
+Belabouring the point, if the following term is preferred in your vocabulary, a flow is a co-routine. A co-routine is a function that can be suspended and resumed at arbitrary points throughout its execution.
+
 ## Consensus
 
 Consensus is the process by which all parties achieve certainty about the shared states. Corda applies two types of consensus:
@@ -231,8 +242,10 @@ A Corda ledger is a set of facts shared unevenly between network peers on a need
 
 <ExpansionPanel title="Optional reading list">
 
-- [Corda Introductory Whitepaper](https://docs.corda.net/_static/corda-introductory-whitepaper.pdf)
-- [Corda Technical Whitepaper](https://docs.corda.net/_static/corda-technical-whitepaper.pdf)
-- [Kotlin, a massive leap forward](https://proandroiddev.com/kotlin-a-massive-leap-forward-78251531f616)
+- [Corda Introductory Whitepaper](https://docs.corda.net/_static/corda-introductory-whitepaper.pdf).
+- [Corda Technical Whitepaper](https://docs.corda.net/_static/corda-technical-whitepaper.pdf).
+- [Kotlin, a massive leap forward](https://proandroiddev.com/kotlin-a-massive-leap-forward-78251531f616).
+- [Continuations](https://en.wikipedia.org/wiki/Continuation) on Wikipedia.
+- [An essay on Javascript and continuation style programming](https://2ality.com/2012/06/continuation-passing-style.html).
 
 </ExpansionPanel>
