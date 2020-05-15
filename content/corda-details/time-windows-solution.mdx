@@ -14,9 +14,9 @@ import {
 
 So, you worked on the exercise on your own before landing here and looking at this example solution. This solution does not add any new files but it touches them all:
 
-* `SalesProposal` state found [here](TODO-link).
-* `SalesProposalContract` contract, with changes for all 3 commands `Offer`, `Reject` and `Accept`, found [here](TODO-link).
-* The 3 flow pairs found [here](TODO-link):
+* `SalesProposal` state found [here](https://github.com/corda/corda-training-code/blob/master/060-time-window/contracts/src/main/java/com/template/proposal/state/SalesProposal.java).
+* `SalesProposalContract` contract, with changes for all 3 commands `Offer`, `Reject` and `Accept`, found [here](https://github.com/corda/corda-training-code/blob/master/060-time-window/contracts/src/main/java/com/template/proposal/state/SalesProposalContract.java).
+* The 3 flow pairs found [here](https://github.com/corda/corda-training-code/tree/master/060-time-window/workflows/src/main/java/com/template/proposal/flow):
     * `SalesProposalOfferFlows`
     * `SalesProposalRejectFlows`
     * `SalesProposalAcceptFlows`
@@ -50,7 +50,7 @@ When making an offer, the contract only needs to make sure that the expiration i
 * There needs to be a time-window with a non-null `untilTime`.
 * And the `untilTime` needs to be before the expiration date.
 
-Therefore, the only addition is, found [here](TODO-link):
+Therefore, the only addition is, found [here](https://github.com/corda/corda-training-code/blob/master/060-time-window/contracts/src/main/java/com/template/proposal/state/SalesProposalContract.java#L52-L57):
 
 ```java
 req.using("There should be a future-bounded time window",
@@ -82,7 +82,7 @@ Here, the goal is to enforce the fact that this transaction happened before the 
 * There needs to be a time-window with a non-null `untilTime`.
 * And the `untilTime` needs to be before the expiration date.
 
-It looks already familiar:
+It looks [already familiar](https://github.com/corda/corda-training-code/blob/master/060-time-window/contracts/src/main/java/com/template/proposal/state/SalesProposalContract.java#L86-L91):
 
 ```java
 req.using("There should be a future-bounded time window",
@@ -102,7 +102,7 @@ Now, switching gears, the goal is to constrain the seller only, and let them rej
 * Otherwise, there needs to be a time-window with a non-null `fromTime`.
 * And the `fromTime` needs to be after the expiration date.
 
-So, in terms of code:
+So, in [terms of code](https://github.com/corda/corda-training-code/blob/master/060-time-window/contracts/src/main/java/com/template/proposal/state/SalesProposalContract.java#L101-L109):
 
 ```java
 if (command.getSigners().contains(proposal.getSeller().getOwningKey())) {
@@ -122,7 +122,7 @@ Most of the existing tests need to add a time-window that passes. Then, there ne
 
 Time to move to the flows.
 
-## The offer flows
+## [The offer flows](https://github.com/corda/corda-training-code/blob/master/060-time-window/workflows/src/main/java/com/template/proposal/flow/SalesProposalOfferFlows.java)
 
 When the transaction is being built, all that has to be done is to add a time-window that will let the notary accept it. Something like this would probably work:
 
@@ -136,7 +136,7 @@ builder.setTimeWindow(TimeWindow.untilOnly(expirationDate.minus(Duration.ofSecon
 ```
 That's right. The time-window extends up to the expiration date. If this doesn't work then it really was too late.
 
-As for tests, it only needs an additional test with a sales proposal that has an expiration in the past:
+As for [tests](https://github.com/corda/corda-training-code/blob/master/060-time-window/workflows/src/test/java/com/template/proposal/flow/SalesProposalOfferFlowsTests.java), it only needs an additional test with a sales proposal that has an expiration [in the past](https://github.com/corda/corda-training-code/blob/master/060-time-window/workflows/src/test/java/com/template/proposal/flow/SalesProposalOfferFlowsTests.java#L336-L337):
 
 ```java
 final OfferFlowInitiating offerFlow = new OfferFlowInitiating(bmw1, buyerParty,
@@ -159,14 +159,14 @@ Is a notary exception:
 @Test(expected = NotaryException.class)
 ```
 
-## The accept flows
+## [The accept flows](https://github.com/corda/corda-training-code/blob/master/060-time-window/workflows/src/main/java/com/template/proposal/flow/SalesProposalAcceptFlows.java)
 
 Here too, in transaction building, it just needs a time-window that makes it easy to pass:
 
 ```java
 builder.setTimeWindow(TimeWindow.untilOnly(proposal.getExpirationDate().minus(Duration.ofSeconds(1))))
 ```
-And the additional test confirms that the buyer cannot accept after expiration, first by making a short-lived offer:
+And the [additional test](https://github.com/corda/corda-training-code/blob/master/060-time-window/workflows/src/test/java/com/template/proposal/flow/SalesProposalAcceptFlowsTests.java#L352-L353) confirms that the buyer cannot accept after expiration, first by making a short-lived offer:
 
 ```java
 final OfferSimpleFlow offerFlow = new OfferSimpleFlow(
@@ -183,7 +183,7 @@ And, similarly, check that the cause is a `NotaryException`.
 
 ![Updated Atomic Car Buy BPMN](images/update_atomic_car_buy_bpmn.png)
 
-## The reject flows
+## [The reject flows](https://github.com/corda/corda-training-code/blob/master/060-time-window/workflows/src/main/java/com/template/proposal/flow/SalesProposalRejectFlows.java)
 
 This time, the time-window needs to be added only when the seller rejects:
 
@@ -193,7 +193,7 @@ if (proposalState.getSeller().equals(rejecter)) {
             proposalState.getExpirationDate().plus(Duration.ofSeconds(1))));
 }
 ```
-And, 2 new tests for either side of the expiration date. First, when the seller waits long enough. A short-lived proposal:
+And, [2 new tests](https://github.com/corda/corda-training-code/blob/master/060-time-window/workflows/src/test/java/com/template/proposal/flow/SalesProposalRejectFlowsTests.java#L239-L328) for either side of the expiration date. First, when the seller waits long enough. A short-lived proposal:
 
 ```java
 final OfferSimpleFlow offerFlow = new OfferSimpleFlow(

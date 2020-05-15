@@ -104,21 +104,19 @@ Among them, this type of model did not become dominant because of IBM’s prefer
 
 Examples of a network model are the Integrated Data Store (IDS), Integrated Database Management System (IDMS) and Raima Database Manager.
 
-## A Comparison: Differences between Hierarchical Databases and Network Models
+## Comparing Hierarchical Databases and Network Models
 
-Hierarchical models follow a simple structure, but this makes them also inflexible.
+Hierarchical models follow a simple structure, but this also makes them inflexible.
 They are not suited for large amounts of relationships because of the navigational constraints and tree-like schema.
 In addition, the implementation is quite complex and they are difficult to manage. A lack of structural independence and standards can be observed.
 
-Network models have a more natural manner of modelling relations between entities and thus more flexible, but create a complex system, which is difficult to design and to maintain.
+Network models have a more natural manner of modelling relations between entities and are thus more flexible, but they create complex systems which are difficult to design and to maintain.
 As hierarchical models, they lack structural independence.
 
 ![Model Comparison](images/datatable.png)
 
-This makes them differently fitting for networks.
-
-In the beginning 1980s, low-level navigational interfaces based on hierarchical and network models were used for large-scale applications due to their benefits in performance.
-With hardware evolving, relational models provided more productivity and flexibility.
+In the early 1980s, low-level navigational interfaces based on hierarchical and network models were used for large-scale applications for performance reasons.
+With improved hardware performance, relational models provided more productivity and flexibility.
 In the end, relational models made them more and more obsolete, especially in the context of networks for corporate enterprises.
 
 ## Relational Databases
@@ -152,12 +150,12 @@ NoSQL databases, which are non-relational, introduced key-value stores and docum
 These new type of databases are resource intensive and confront database admins (DBA) and maintainers with new issues, unknown in the context of relational databases.
 NoSQL databases are often differentiated as:
 
-* document-oriented databases with strong query engines and index controls, such as MongoDB, Amazon Dynamo DB;
-* column stores that store data as portions of columns and not rows, for example Cassandra or Cloudera;
-* key-value stores, like Redis, Berkeley DB or Aerospike;
-* graph data stores based on graph theory, e.g. Neo4j, GraphBase, Titan.
+* Document-oriented databases with strong query engines and index controls, such as MongoDB, Amazon Dynamo DB.
+* Column stores that store data as portions of columns and not rows, for example Cassandra or Cloudera.
+* Key-value stores, like Redis, Berkeley DB or Aerospike.
+* Graph data stores based on graph theory, e.g. Neo4j, GraphBase, Titan.
 
-While all of this development was taking place, networking between computers was developed and improved. We will cover this in the next section.
+While all of this development was taking place, networking between computers was developed and improved. More on this in the next section.
 
 ## Data Transfer
 
@@ -198,10 +196,9 @@ Blockchain is effectively a non-hierarchical approach to mitigate these issues b
 
 ## Protocols & Fault Tolerance
 
-Before we dive into how these issues are approached with blockchain technology, let us re-visit how protocols in networking solve problems inherent to a hierarchy-free, fault-prone environment.
+Before diving into how these issues are approached with blockchain technology, reconsider how protocols in networking solve problems inherent to a hierarchy-free, fault-prone environment.
 
-The term computer networking covers both the hardware side, as well as the software protocols used to transmit data and let computers communicate with one another.
-Because networks have a physical aspect, the interaction between software and hardware is especially interesting in a blockchain context.
+The term computer networking covers both the hardware side, as well as the software protocols used to transmit data and let computers communicate with one another. Because networks have a physical aspect, the interaction between software and hardware is especially interesting in a blockchain context.
 
 Imagine a cable connection between two computers. Traditionally a coaxial cable would have been used to carry a signal.
 Cables can be subject to interference from a broad range of things, so there is no guarantee that the signal originating at point A will be received by point B.
@@ -263,13 +260,13 @@ Forks describe cases when a blockchain could continue on two different transacti
 A more recent block points to the block that came right before itself.
 It does so by storing the hash of its immediately preceding block.
 Thus, it is possible for 2 different blocks to claim to be the successor of a given block.
-In this case, we say that there is a fork. The protocol provides a mechanism to eventually focus on a single branch of the fork automatically, if the user does not explicitly instruct its client to follow a specific fork.
+In this case, there is a fork. The protocol provides a mechanism to eventually focus on a single branch of the fork automatically, if the user does not explicitly instruct its client to follow a specific fork.
 
 ![Fork Example](images/blockchain_forking.png)
 
 ### Eventual consensus
 
-The CAP theorem states that in a distributed system, you can at most pick 2 out of the 3:
+The CAP theorem states that in a distributed system, you can, at most, pick 2 out of these 3 properties:
 
 - Consistency
 - Availability
@@ -277,7 +274,7 @@ The CAP theorem states that in a distributed system, you can at most pick 2 out 
 
 Blockchain aims for perfect availability and reaches eventual consistency by making partitions economically uninteresting.
 The consensus is eventual. Indeed, two, or more, nodes may win the mining puzzle at the same time. Other nodes then receive competing claims. However individual nodes are unlikely to receive both claims simultaneously. The protocol provides for that. The block with the most transactions or with the most complex puzzle solved is selected.
-If undecided, then we have a fork, i.e. two competing truths. As further blocks are added to each side of the fork, nodes will reevaluate for length and complexity and eventually decide which side of the fork to keep working with. As time moves on, it becomes less and less likely that both sides of the fork will have identical lengths and complexities.
+If undecided, then it is a fork, i.e. two competing truths. As further blocks are added to each side of the fork, nodes will reevaluate for length and complexity and eventually decide which side of the fork to keep working with. As time moves on, it becomes less and less likely that both sides of the fork will have identical lengths and complexities.
 The probable preference of other nodes becomes increasingly clear to all nodes. The nodes adjust their own preference accordingly.
 Hence, the eventual consensus.
 

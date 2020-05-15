@@ -1,6 +1,6 @@
 ---
 title: Make a car sale
-description: How would you create a flow to sell a car?
+description: Create a flow to sell a car
 slug: libraries/create-car-sale
 ---
 
@@ -25,7 +25,7 @@ Don't do that, this is only for your own edification.
 
 </HighlightBox>
 
-Observe an untested example flow [here](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/bad/NonAtomicSale.java).
+Observe an untested example flow [here](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/bad/NonAtomicSale.java).
 
 1. The Initiator / seller proposes selling:
 
@@ -125,12 +125,12 @@ You can dig on your own inside the high-level flows of the SDK to find out thing
 
 What are the things that such an atomic sale flow has to resolve?
 
-* one party, the initiator, has to create the transaction, while the other party, the responder, verifies and signs it. Whether the initiator is the seller or the buyer, or either, has to be decided at some point. If may be useful to think of a signed offer that is open to acceptance, and acceptance that finalises the sale.
-* the seller has to provide the car's `StateAndRef<NonFungibleToken>`.
-* the buyer has to verify that the provided `NonFungibleToken` indeed describes the desired car. Otherwise the seller could bait and switch and pass something else entirely.
-* the buyer has to provide a list of `StateAndRef<FungibleToken>` to cover the price in the agreed issued currency.
-* the seller has to verify that the provided `FungibleToken`s are of the right type and amount to cover the price. Because trust but verify...
-* the responder has to verify that the transaction that it is asked to sign is indeed the transaction that is expected with the states that were mentioned earlier. Otherwise the initiator could bait and switch too, by asking for states information and asking to sign a different transaction.
+* One party, the initiator, has to create the transaction, while the other party, the responder, verifies and signs it. Whether the initiator is the seller or the buyer, or either, has to be decided at some point. If may be useful to think of a signed offer that is open to acceptance, and acceptance that finalises the sale.
+* The seller has to provide the car's `StateAndRef<NonFungibleToken>`.
+* The buyer has to verify that the provided `NonFungibleToken` indeed describes the desired car. Otherwise the seller could bait and switch and pass something else entirely.
+* The buyer has to provide a list of `StateAndRef<FungibleToken>` to cover the price in the agreed issued currency.
+* The seller has to verify that the provided `FungibleToken`s are of the right type and amount to cover the price. Because trust but verify...
+* The responder has to verify that the transaction that it is asked to sign is indeed the transaction that is expected with the states that were mentioned earlier. Otherwise the initiator could bait and switch too, by asking for states information and asking to sign a different transaction.
 
 This is information enough for you to try your hand at creating an atomic sale. Go!
 

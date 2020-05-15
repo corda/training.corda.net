@@ -10,7 +10,7 @@ import {
   ExpansionPanel,
   ExpansionPanelList,
   ExpansionPanelListItem
-} from 'gatsby-theme-apollo-docs'; 
+} from 'gatsby-theme-apollo-docs';
 
 In the previous chapter, you worked on your project to make sure that your CorDapp is account-safe and account-aware. Now, compare your work to an example solution.
 
@@ -54,7 +54,7 @@ bob = network.createNode();
 
 ### Passing public keys around
 
-Since you want to make your flows account-safe only, you do not expect them to request keys around. Instead, you need to prepopulate them with the keys that will be used when calling the flows. That is the purpose of this [`inform`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/account/AccountTokenCourseExercise.java#L87) function that uses `SyncKeyMappingInitiator`:
+Since you want to make your flows account-safe only, you do not expect them to request keys around. Instead, you need to prepopulate them with the keys that will be used when calling the flows. That is the purpose of this [`inform`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/account/AccountTokenCourseExercise.java#L87) function that uses `SyncKeyMappingInitiator`:
 
 ```java
 private void inform(
@@ -81,9 +81,9 @@ private void inform(
 
 Now it is time to look at the unit tests that confirm our flows are safe:
 
-* Confirm that the node needs to know about keys beforehand: [`accountNeedsToBeKnownToHoldCar`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/account/AccountTokenCourseExercise.java#L147).
-* Confirm that the node can issue a car to an anonymous holder: [`accountDanCanHoldCar`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/account/AccountTokenCourseExercise.java#L163).
-* Confirm that the node can move a car from one anonymous holder to another: [`accountDanCanGiveCarAwayToEmma`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/account/AccountTokenCourseExercise.java#L180).
+* Confirm that the node needs to know about keys beforehand: [`accountNeedsToBeKnownToHoldCar`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/account/AccountTokenCourseExercise.java#L147).
+* Confirm that the node can issue a car to an anonymous holder: [`accountDanCanHoldCar`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/account/AccountTokenCourseExercise.java#L163).
+* Confirm that the node can move a car from one anonymous holder to another: [`accountDanCanGiveCarAwayToEmma`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/account/AccountTokenCourseExercise.java#L180).
 
 ## Fix the `AtomicSale`
 
@@ -155,7 +155,7 @@ So, how does the seller flow identify the future holder of the car token? It has
     @NotNull
     abstract protected FlowLogic<AbstractParty> getSyncBuyerPartyHandlerFlow();
     ```
-    
+
 Do you notice the naming symmetry? It hints at the fact that these 2 functions should return inlined flows that are compatible with each. For instance:
 
 * A `.send` here and a `.receive` there.
@@ -372,15 +372,15 @@ This query formula is taken from the old `AtomicSale` where `getOurIdentity()` i
 
 The tests confirm that:
 
-* It works with well-known parties, see [`partiesCanDoAtomicSaleAccountsSafe`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L145).
-*  It works with account keys as well, see [`accountsCanDoAtomicSaleAccountsSafe`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L145). Notice how:
-    * the dealer is [informed about Dan the car holder](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L206) beforehand:
-    
+* It works with well-known parties, see [`partiesCanDoAtomicSaleAccountsSafe`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L147).
+*  It works with account keys as well, see [`accountsCanDoAtomicSaleAccountsSafe`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L201). Notice how:
+    * the dealer is [informed about Dan the car holder](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L208) beforehand:
+
     ```java
     inform(alice, danParty.getOwningKey(), Collections.singletonList(bmwDealer));
     ```
-    * the seller's host and the mint are [informed about Emma the buyer](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L213) beforehand:
-    
+    * the seller's host and the mint are [informed about Emma the buyer](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L215) beforehand:
+
     ```java
     inform(bob, emmaParty.getOwningKey(), Arrays.asList(alice, usMint));
     ```
@@ -515,24 +515,24 @@ Using `ProvideKeyFlow` as expected, and overriding the query criteria to use the
 
 #### Tests
 
-The only test confirms that it works with accounts, see [`accountsCanDoAtomicSaleAccounts`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsTests.java#L162). Notice how:
+The only test confirms that it works with accounts, see [`accountsCanDoAtomicSaleAccounts`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsTests.java#L162). Notice how:
 
-* the dealer is [informed about Dan the car holder](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsTests.java#L169), beforehand, but only about the public key:
-    
+* The dealer is [informed about Dan the car holder](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsTests.java#L169), beforehand, but only about the public key:
+
   ```java
   informKeys(alice,
           Collections.singletonList(danParty.getOwningKey()),
           Collections.singletonList(bmwDealer));
   ```
-* Emma the buyer has 2 tokens:
+* Emma, the buyer, has 2 tokens:
     * These tokens cover the price of the car only together (2 * 15,000 > 25,000):
-    
+
     ```java
     final Amount<IssuedTokenType> amountOfUsd = AmountUtilitiesKt
             .amount(15_000L, usMintUsd);
     ```
     * Each token is held by a different public key:
-    
+
     ```java
     final FungibleToken usdTokenEmma1 = new FungibleToken(
             amountOfUsd, emmaParty1, null);
@@ -542,7 +542,7 @@ The only test confirms that it works with accounts, see [`accountsCanDoAtomicSal
             Arrays.asList(usdTokenBob, usdTokenEmma1, usdTokenEmma2),
             Collections.emptyList());
     ```
-* the mint is [informed about Emma the buyer](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L213), but only on her **public keys**, beforehand:
+* The mint is [informed about Emma the buyer](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsSafeTests.java#L215), but only on her **public keys**, beforehand:
 
   ```java
   informKeys(bob,
@@ -550,7 +550,7 @@ The only test confirms that it works with accounts, see [`accountsCanDoAtomicSal
           Collections.singletonList(usMint));
   ```
   The mint needs to know too so it can send the minted dollars to the buyer's host.
-* The seller is [informed about Emma the buyer](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/040-accounts-lib/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsTests.java#L183), but only about **her account**:
+* The seller is [informed about Emma the buyer](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/car/flow/AtomicSaleAccountsTests.java#L183), but only about **her account**:
 
   ```java
   informAccounts(bob, Collections.singletonList(emma),

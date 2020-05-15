@@ -12,17 +12,19 @@ import {
   ExpansionPanelListItem
 } from 'gatsby-theme-apollo-docs';
 
-This is an example solution to the simplified project exercise of the previous chapter. By no means should you interpret this implementation as the only possible one. Just one of many valid ones. 
+This is an example solution to the simplified project exercise of the previous chapter. By no means should you interpret this implementation as the only possible one -- just one of many valid ones.
 
 ## Design decisions
 
-The decision was taken to not alter the existing `SalesProposal` and contract, and leave them as they are. Adding complexity to something that works well is always fraught. The DMV's _lien_ oracle will be handled by other, new, elements.
+The decision was taken to not alter the existing `SalesProposal` and contract, and leave them as they are. Adding complexity to something that works well is always risky. The DMV's _lien_ oracle will be handled by other, new, elements.
 
-Another decision taken is that the buyer could singlehandedly decide to have a verification done at the time of purchase, or involve the seller in it as well. Also, the ledger constraints are designed to allow purchases even if there are liens. The control of the desired situation is left to flows. It is a business decision.
+Another decision is that the buyer could singlehandedly decide to have a verification done at the time of purchase, or involve the seller in it as well. Also, the ledger constraints are designed to allow purchases even if there are liens. The control of the desired situation is left to flows. It is a business decision.
 
 Because there needs to be some enforcement nonetheless, and the `SalesProposalContract` is left intact, there needs to be a new state to require this contract.
 
-## [`DueDiligence`](TODO-link)
+## [`DueDiligence`](https://github.com/corda/corda-training-code/blob/master/080-oracle/contracts/src/main/java/com/template/diligence/state/DueDiligence.java)
+
+![CDL of DueDiligence state](images/due_diligence_state.png)
 
 This is the new state. It is a `LinearState` created by its participants and it lists the vehicle id and the lien oracle:
 
@@ -37,7 +39,7 @@ public class DueDiligence implements LinearState {
     private final AbstractParty oracle;
     @NotNull
     private final List<AbstractParty> participants;
-    
+
     // Plus constructor, getters, equals and hashCode.
     [...]
 ```
@@ -46,7 +48,9 @@ The idea is that it is created independently, and then added to the purchase `Ac
 
 Which brings us to the contract that controls it:
 
-## [`DueDiligenceContract`](TODO-link)
+## [`DueDiligenceContract`](https://github.com/corda/corda-training-code/blob/master/080-oracle/contracts/src/main/java/com/template/diligence/state/DueDiligenceContract.java)
+
+![CDL of DueDiligence contract](images/due_diligence_state_machine.png)
 
 It defines 3 commands:
 
@@ -71,7 +75,7 @@ public interface Commands extends CommandData {
 ```
 `Prepare` is used to simply create the instance in the first place, `Drop` is used to simply consume, i.e. take the state out of the ledger, and `Certify` is used to ask confirmation from the oracle, consuming the state at the same time.
 
-Evidently, `Status` needs to be defined:
+`Status` needs to be defined:
 
 ```java
 @CordaSerializable
@@ -81,7 +85,7 @@ public enum Status {
 ```
 A simple response from the oracle, boolean-like. So the `Certify` command is there for the oracle to confirm the status of the given vehicle id.
 
-As for the [contract constraints](TODO-link), beside the classic ones, they are:
+As for the [contract constraints](https://github.com/corda/corda-training-code/blob/master/080-oracle/contracts/src/main/java/com/template/diligence/state/DueDiligenceContract.java#L29-L66), beside the classic ones, they are:
 
 * All participants need to sign on `Prepare` and `Drop`.
 * Only the oracle needs to sign on `Certify`.
@@ -89,16 +93,16 @@ As for the [contract constraints](TODO-link), beside the classic ones, they are:
 
 Not overly restrictive.
 
-The [tests](TODO-link) test these few constraints in turn.
+The [tests](https://github.com/corda/corda-training-code/tree/master/080-oracle/contracts/src/test/java/com/template/diligence/state) test these few constraints in turn.
 
-## [DiligenceOracleUtilities](TODO-link)
+## [`DiligenceOracleUtilities`](https://github.com/corda/corda-training-code/blob/master/080-oracle/contracts/src/main/java/com/template/diligence/state/DiligenceOracleUtilities.java)
 
-Defining those early on can clear some future mental load. When the oracle informs about a status, it has a certain validity period:
+Defining those early on can minimise future mental overhead. When the oracle informs about a status, the information returned has a certain validity period:
 
 ```java
 public static final Duration VALID_DURATION = Duration.ofMinutes(10);
 ```
-Yes, it means that the oracle will check the time-window, which leads to the way transactions will be filtered:
+Yes, it means that, at signing, the oracle will check the time-window, which leads to the way transactions will be filtered:
 
 ```java
 @NotNull
@@ -114,11 +118,11 @@ public static FilteredTransaction filter(
     });
 }
 ```
-Note how the predicate selects the `TimeWindow`.
+Note how the predicate selects the `TimeWindow` too.
 
 Time to move to the oracle proper.
 
-## [`DiligenceOracle`](TODO-link)
+## [`DiligenceOracle`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DiligenceOracle.java)
 
 Let's start with the obvious:
 
@@ -134,7 +138,18 @@ Then it will sign with a certain key. Let's not assume this is the default key o
     @Nullable
     private PublicKey oracleKey;
 ```
-And for simplicity's sake, we assume that it keeps a mapping in memory:
+
+<HighlightBox type="info">
+
+Why not assume that the oracle will use the node's `Party`'s key? It would make sense to assume so since an oracle is a source of authority, and a clearly identifiable track back to an identity assists in backing this authority. However, all that is needed by the oracle to sign is the identification of the `PublicKey` to use. This is what is expressed here.
+
+Let's stay on this topic. Further down, you will see that the oracle will be associated to an `AnonymousParty` indeed. Although one that has to be disclosed to any party that wants to query and obtain a signature. If you want to create your own oracle in the future, it is probably overkill, and you could stick to having it identified as a `Party`. Part of the rationale in this example is to use an account, where the oracle is a mere tenant in a node. And potentially one of many oracles hosted on the same node. If your oracle is a temperature oracle for your home town, then the use case is small and your town likely shares a node with neighbouring towns. In this case _partitioning_ makes sense. On the other hand, if your oracle use case is for a large corporation, the name of the corporation is on the line so it night make sense to use a `Party`.
+
+In either situation, letting the oracle know only about the `PublicKey` gets the job done.
+
+</HighlightBox>
+
+Moving on. For simplicity's sake, assume that it keeps a mapping in memory:
 
 ```java
     private final Map<UniqueIdentifier, Status> freeAndClears = new HashMap<>(10);
@@ -148,7 +163,7 @@ public Status query(@NotNull final UniqueIdentifier tokenId) {
     return status == null ? Status.Clear : status;
 }
 ```
-Where it assumes that absence is proof of absence, the perks of being a centralised authority. What about the sign function?
+Where it assumes that absence (`status == null`) is proof of absence (`Status.Clear`), the perks of being a centralised authority. What about the sign function?
 
 ```java
     @NotNull
@@ -163,7 +178,7 @@ Where it assumes that absence is proof of absence, the perks of being a centrali
         return serviceHub.createSignature(ftx, oracleKey);
     }
 ```
-Looks like a copy-pasta of what you learned, with the additional check that the key needs to have been set. What is this `isCommandWithCorrectParameters`:
+Looks like a copy-paste of what you learned, with the additional check that the key needs to have been set. What is this `isCommandWithCorrectParameters`:
 
 ```java
 private boolean isCommandWithCorrectParameters(@NotNull final Object elem) {
@@ -185,11 +200,11 @@ private boolean isCommandWithCorrectParameters(@NotNull final Object elem) {
     return false;
 }
 ```
-It must look familiar to you. It accepts a `Certify` command with valid parameters:
+It must look familiar to you. It accepts a `Certify` command with valid parameters, i.e. where the status passed in the command matches the status in the oracle:
 
 > `cmdData.getStatus().equals(query(cmdData.getTokenId()))`
 
-Here you can see that it can certify either that the vehicle is clear or that it is linked. Oh and it checks, via the time-window, that the transaction will be notarised before the status expires.
+Here you can see that it can certify either that the vehicle is clear or that it is linked. And it checks, via the time-window, that the transaction will be notarised before the status expires.
 
 <ExpansionPanel title="The other functions are example boilerplate">
 
@@ -213,9 +228,9 @@ public PublicKey getOracleKey() {
 
 </ExpansionPanel>
 
-## [`DiligenceOracleInternalFlows`](TODO-link)
+## [`DiligenceOracleInternalFlows`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DiligenceOracleInternalFlows.java)
 
-To assist in controlling the state of the oracle, a couple internal flows were created. They are meant to run on the same node of the oracle and do not have handling counterpart:
+To assist in controlling the state of the oracle, a couple of internal flows were created. They are meant to run on the same node of the oracle and do not have handling counterpart:
 
 ```java
 class SetOracleKeyFlow extends FlowLogic<Void> {
@@ -233,7 +248,7 @@ class SetStatus extends FlowLogic<Void> {
 ```
 Do as their names suggest.
 
-## `DueDiligenceOracleFlows`
+## [`DueDiligenceOracleFlows`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java)
 
 This big flows container is itself sub-divided into:
 
@@ -257,7 +272,7 @@ public interface DueDiligenceOracleFlows {
 }
 ```
 
-## [`Query` flows](TODO-link)
+## [`Query` flows](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L35)
 
 As expected, and learned earlier, it just passes data from the requester, for instance the buyer's node:
 
@@ -275,7 +290,7 @@ final Status status = getServiceHub().cordaService(DiligenceOracle.class)
 requesterSession.send(status);
 ```
 
-## [`Prepare` flows](TODO-link)
+## [`Prepare` flows](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L93)
 
 These allow any party to `Prepare`, i.e. create, a new `DueDiligence` state:
 
@@ -297,7 +312,7 @@ It collects the signatures of all participants when applicable. Its handler is a
 @InitiatedBy(PrepareFlow.class)
 class PrepareHandlerFlow extends FlowLogic<StateAndRef<DueDiligence>> {
 ```
-It only accepts to sign as a participant if it can find that it owns a token with a matching id:
+It only signs as a participant if it can find that it owns a token with a matching id:
 
 ```java
 final QueryCriteria idCriteria = new QueryCriteria.LinearStateQueryCriteria()
@@ -313,15 +328,15 @@ final boolean myKey = getServiceHub().getKeyManagementService()
         .hasNext();
 if (!myKey) throw new FlowException("The underlying NonFungibleToken is not held by me");
 ```
-That should ward off spam.
+That should ward off spam. It could also be made to check if there is a `SalesProposal` offered by this responder.
 
-## [`Drop` flows](TODO-link)
+## [`Drop` flows](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L266)
 
-Yes, you need to go through all the basic stuff before munching on the interesting bits. These flows are the mirror image of the `Prepare` flows. Expectedly, the handler checks that it is a participant in the input `DueDiligence`. That's a strong check, because you have to sign to become a participant in the first place.
+Yes, you need to go through all the basic stuff before munching on the interesting bits. These `Drop` flows are the mirror image of the `Prepare` flows. Expectedly, the handler checks that it is a participant in the input `DueDiligence`. That's a strong check, because you have to sign to become a participant in the first place.
 
-## [`Certify` flows](TODO-link)
+## [`Certify` flows](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L410)
 
-### The `Request` / `Answer` pair
+### The [`Request`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L528) / [`Answer`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L564) pair
 
 This one is the simple data passing of a signature that you saw in the learning chapter:
 
@@ -333,16 +348,17 @@ class Request extends FlowLogic<TransactionSignature> {
     @NotNull
     private final WireTransaction tx;
 ```
-What it does is:
+Again, keeping the oracle generic, where it can be either a `Party` or an `AnonymousParty`. What it does is:
 
 * Resolve the oracle's host.
-* Filter the transaction (this runs on the requester's host).
+* Filter the transaction. This runs on the requester's host, this is an important detail, as it would defeat the purpose to ask the oracle's node to filter the transaction.
 * Send it over the wire.
 * Get a signature.
 * Verify and return it.
 
 ```java
-final Party oracleHost = getServiceHub().getIdentityService().requireWellKnownPartyFromAnonymous(oracle);
+final Party oracleHost = getServiceHub().getIdentityService()
+        .requireWellKnownPartyFromAnonymous(oracle);
 return initiateFlow(oracleHost)
         .sendAndReceive(TransactionSignature.class, DiligenceOracleUtilities.filter(tx, oracle))
         .unwrap(sig -> {
@@ -368,17 +384,17 @@ try {
 requesterSession.send(sig);
 ```
 
-### The `RequestStraight` / `FinaliseStraight` pair
+### The [`RequestStraight`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L416) / [`FinaliseStraight`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/diligence/flow/DueDiligenceOracleFlows.java#L505) pair
 
-Ok so far, if you are meticulous, you will notice that there has been no flows that does a proper `Certify` transaction, one where the oracle's opinion is used for real. So far it has all been data passed around.
+Ok so far, if you are meticulous, you will notice that there has been no flow that does a proper `Certify` transaction, one where the oracle's opinion is used materially. So far, it has all been data passed around.
 
-The role of this flow is to demonstrate how a simple transaction can be built where a `DueDiligence` is consumed. There is no vehicle sale just yet, it's coming in a bit.
+The role of this flow is to demonstrate how a simple transaction can be built where a `DueDiligence` is consumed. There is no vehicle sale just yet. It's coming in a bit.
 
 ```java
 @InitiatingFlow
 class RequestStraight extends FlowLogic<SignedTransaction> {
 ```
-And it takes what is needed for resolution:
+And, it takes what is needed for resolution:
 
 ```java
 @NotNull
@@ -386,7 +402,7 @@ private final StateAndRef<DueDiligence> dueDilRef;
 @NotNull
 private final Status status;
 ```
-You will recall that a `DueDiligence` contains a `tokenId` and an `oracle. With this information, the flow goes straight to business, creating the transaction:
+You will recall that a `DueDiligence` contains a `tokenId` and an `oracle`. With this information, the flow goes straight to business, creating the transaction:
 
 ```java
 final DueDiligence dueDil = dueDilRef.getState().getData();
@@ -397,20 +413,20 @@ final TransactionBuilder builder = new TransactionBuilder(dueDilRef.getState().g
         .setTimeWindow(TimeWindow.untilOnly(
                 Instant.now().plus(VALID_DURATION).minus(Duration.ofSeconds(1))));
 ```
-Note that the token id and oracle key are taken from the `DueDiligence` instance, and that the time-window is taking the maximum possible. After all, supposing this node and the oracle's node have the same time, given delays in communication, when the oracle checks validity, it should pass. On the other hand, if this node runs fast (in terms of time), then the time-window should be adjusted to less aggressively so close to the validation limit.
+Note that the token id and oracle key are taken from the `DueDiligence` instance, and that the time-window is taking the maximum possible. After all, supposing this node and the oracle's node have the same time, given delays in communication, when the oracle checks validity, it should pass. On the other hand, if this node runs fast (in terms of time), then the time-window should be adjusted to be less aggressive, i.e. less close to the validation limit.
 
-Then time comes to ask for a signature:
+Then, the time comes to ask for a signature:
 
 ```java
 final WireTransaction wtx = builder.toWireTransaction(getServiceHub());
 final TransactionSignature oracleSig = subFlow(new Request(dueDil.getOracle(), wtx));
 ```
-Glad that the `Request` flow exists to chip away at the boilerplate that would otherwise be here. Then, it is time to add the signature to the transaction:
+The `Request` flow helps chip away at the boilerplate that would otherwise be here. Then, it is time to add the signature to the transaction:
 
 ```java
 final SignedTransaction signed = new SignedTransaction(wtx, Collections.singletonList(oracleSig));
 ```
-That's right, this node does not need to sign. Only the oracle signature is required, so you might as well built your `SignedTransaction` out of its elements...
+That's right. This node does not need to sign. Only the oracle signature is required, so you might as well build your `SignedTransaction` out of its constituents...
 
 <ExpansionPanel title="Then it is just a matter of sending it to participants">
 
@@ -429,19 +445,21 @@ return subFlow(new FinalityFlow(signed, sessions));
 
 Its handler, `FinaliseStraight` just does a finalisation.
 
-Check out the [tests](TODO-link) too.
+Check out the [tests](https://github.com/corda/corda-training-code/tree/master/080-oracle/workflows/src/test/java/com/template/diligence/flow) as well.
 
-Ok, this flow demonstrates the interaction of a `DueDiligence` and an oracle in a single transaction. But what about a `SalesProposal`, a buyer and all those things that this work was intended to improve?
+Ok, this flow demonstrates the interaction of a `DueDiligence` and an oracle in a single transaction. But, what about a `SalesProposal`, a buyer and all those things that this work was intended to improve?
 
 <HighlightBox type="tip">
 
-Remember that the `SalesProposal` state and contract were not modified to facilitate this `DueDiligence` thingy. They are 2 separate entities and have no knowledge of each other. This separation of concern at the ledger level in no way forces you to a symmetrical separation of concern at the business layer, i.e. flows.
+Remember that the `SalesProposal` state and contract were not modified to address this `DueDiligence` concern. They are 2 separate entities and they have no knowledge of each other. This separation of concerns at the ledger level in no way forces you to a symmetrical separation of concerns at the business layer, i.e. flows.
 
 </HighlightBox>
 
 You are free to keep your existing `SalesProposalAcceptFlows` as they are and add other sales proposal accept flows that require a `DueDiligence` in their process. The decision taken here is to modify the existing accept flow and make it take an optional `DueDiligence`.
 
-## [Modified `SalesProposalAcceptFlows`](TODO-link)
+## [Modified `SalesProposalAcceptFlows`](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/proposal/flow/SalesProposalAcceptFlows.java)
+
+![Modified SalesProposalAcceptFlow](images/oracle_atomic_car_buy_bpmn.png)
 
 In fact, the initiator takes additionally:
 
@@ -451,7 +469,7 @@ private final StateAndRef<DueDiligence> dueDiligenceRef;
 @Nullable
 private final Status diligenceStatus;
 ```
-With the additional constraint that if `dueDiligenceId == null`, then `diligenceStatus` is not even looked at. This loose coupling is somewhat expressed through public constructors that take both of them, or none of them.
+With the additional constraint that if `dueDiligenceId == null`, then `diligenceStatus` is not even looked at. This loose coupling is somewhat expressed through public constructors that [take both](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/proposal/flow/SalesProposalAcceptFlows.java#L100-L101) of them, or [none](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/main/java/com/template/proposal/flow/SalesProposalAcceptFlows.java#L94) of them.
 
 So how is it modified? When building the transaction, it adds it:
 
@@ -473,8 +491,8 @@ if (dueDiligenceRef != null) {
 ```
 You will recognise the same additions as those seen in `RequestStraight`, with the following difference:
 
-* The match between the token id and the asset id is done here, in the flow.
-* The time-window is made more restrictive if necessary. There is a single time-window, as expressed by the name `setTimeWindow`, so the code conditionally overwrites.
+* The match between the token id and the asset id is done here, in the flow. This flow is started by the buyer, so this check expresses the intent of the buyer to have the due diligence run on the purchased vehicle.
+* The time-window is made more restrictive if necessary. There is a single time-window, as expressed by the name `setTimeWindow`, so the code conditionally overwrites it.
 
 Further down, when it is time to inform the seller about the dollar states, the due diligence is added to it, just in case:
 
@@ -494,7 +512,7 @@ if (dueDil != null) {
 }
 subFlow(new SyncKeyMappingFlow(sellerSession, allKeys));
 ```
-And when it's time to sign with our keys:
+And when it's time to sign with the private keys:
 
 ```java
 if (dueDil != null) {
@@ -546,7 +564,7 @@ if (!certifyCommands.isEmpty()) {
 ```
 Other than that, the handler is unchanged.
 
-Check out the [new test file](TODO-link) for the case when there is a `DueDiligence`.
+Check out the [new test file](https://github.com/corda/corda-training-code/blob/master/080-oracle/workflows/src/test/java/com/template/proposal/flow/SalesProposalAcceptDueDiligenceFlowsTests.java) for the case when there is a `DueDiligence`.
 
 ## Conclusion
 

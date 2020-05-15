@@ -14,9 +14,9 @@ import {
 
 So, you worked on the exercise on your own before landing here and looking at this example solution, right? This solution comprises the following parts:
 
-* A new `SalesProposal` state found [here](TODO-link).
-* A new `SalesProposalContract` contract with 3 commands `Offer`, `Reject` and `Accept`, found [here](TODO-link).
-* 3 new flow pairs found [here](TODO-link):
+* A new `SalesProposal` state found [here](https://github.com/corda/corda-training-code/blob/master/050-ref-state/contracts/src/main/java/com/template/proposal/state/SalesProposal.java).
+* A new `SalesProposalContract` contract with 3 commands `Offer`, `Reject` and `Accept`, found [here](https://github.com/corda/corda-training-code/blob/master/050-ref-state/contracts/src/main/java/com/template/proposal/state/SalesProposalContract.java).
+* 3 new flow pairs found [here](https://github.com/corda/corda-training-code/tree/master/050-ref-state/workflows/src/main/java/com/template/proposal/flow):
     * `SalesProposalOfferFlows`
     * `SalesProposalRejectFlows`
     * `SalesProposalAcceptFlows`
@@ -142,11 +142,11 @@ req.using("There should be a single sales proposal output on offer",
     req.using("The reference token should match the sales proposal output asset",
             proposal.isSameAsset(refToken));
     ```
-    It is here that the **benefit** of reference states is delivered. We are sure that:
+    It is here that the **benefit** of reference states is delivered. You are sure that:
 
-    * the asset exists, for real.
-    * the seller owns the token.
-    * the asset is not sold yet. It is unconsumed.
+    * The asset exists, for real.
+    * The seller owns the token.
+    * The asset is not sold yet. It is unconsumed.
 
 <ExpansionPanel title="More run of the mill Offer stuff">
 <ExpansionPanelList>
@@ -174,7 +174,7 @@ req.using("The seller should be the only signer on the offer",
 </ExpansionPanelListItem>
 <ExpansionPanelListItem number="5">
 
-Note that we already have assurance that the seller is the holder of the `asset` as per the `SalesProposal` constructor.
+Note that you already have assurance that the seller is the holder of the `asset` as per the `SalesProposal` constructor.
 
 </ExpansionPanelListItem>
 </ExpansionPanelList>
@@ -280,7 +280,7 @@ req.using("The buyer should be the only signer on the offer",
     req.using("The asset should be an input on accept", candidates.size() == 1);
     ```
     As an important side node, this means that if the seller had created 2 proposals for the same asset, then only 1 proposal can be accepted. Also, because the asset would have changed hands, so the seller would not be able to sign the asset off.
-* the buyer should own the asset on output:
+* The buyer should own the asset on output:
 
     ```java
     final List<NonFungibleToken> boughtAsset = outNFTokens.stream()
@@ -318,7 +318,7 @@ This is to say that here there is some leeway as to what you decide to include i
 
 </HighlightBox>
 
-### Tests
+### [Tests](https://github.com/corda/corda-training-code/tree/master/050-ref-state/contracts/src/test/java/com/template/proposal/state)
 
 Once more, there is 1 test file per command, and each failure point is tested. `.tweak` is used to make explicit which point is the failure point.
 
@@ -328,7 +328,7 @@ Time to move on to flows.
 
 This is launched by the seller. The fact that the seller decides to initiate a run of this flow indicates intent to sell the asset. From there, the presence of a `SalesProposal` state is proof enough of the original intent.
 
-There are actually 2 flow pairs in the `SalesProposalOfferFlows` set, as can be seen [here](TODO-link):
+There are actually 2 flow pairs in the `SalesProposalOfferFlows` set, as can be seen [here](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/main/java/com/template/proposal/flow/SalesProposalOfferFlows.java):
 
 * `OfferFlow`, an inlined flow that expects perfect information and executes the mechanical parts of the flow to issue a sales proposal.
     * And its handler `OfferHandlerFlow`, an inlined flow.
@@ -482,9 +482,9 @@ With the handler simply being a child class of `OfferFlowHandler`:
 class OfferSimpleHandlerFlow extends OfferHandlerFlow {
 ```
 
-### Tests
+### [Offer tests](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/test/java/com/template/proposal/flow/SalesProposalOfferFlowsTests.java)
 
-In the tests there are 2 happy paths and 1 failed path. Take some time to look at [the failed path](TODO-link). Here is what happens in it:
+In the tests there are 2 happy paths and 1 failed path. Take some time to look at [the failed path](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/test/java/com/template/proposal/flow/SalesProposalOfferFlowsTests.java#L226). Here is what happens in it:
 
 1. The car is issued to its owner.
 2. The DMV changes the mileage on the car but fails to inform anyone.
@@ -492,18 +492,18 @@ In the tests there are 2 happy paths and 1 failed path. Take some time to look a
 
 That's because the `StateAndRef<CarTokenType` has changed, and been recorded so by the notary. The host alice only has the old version in her vault. This is a side-effect of the fact that the state pointers are resolved when a state is added as a reference.
 
-The [second happy path](TODO-link) confirms that the seller can create a sales proposal if it has been informed of the new car state.
+The [second happy path](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/test/java/com/template/proposal/flow/SalesProposalOfferFlowsTests.java#L259) confirms that the seller can create a sales proposal if it has been informed of the new car state.
 
 ## The `SalesProposal` reject flows
 
 This is launched by either the seller or the buyer. The one starting the flow is called the _rejecter_, the other, the _rejectee_.
 
-In fact there are 2 flow pairs which can be found [here](TODO-link):
+In fact there are 2 flow pairs which can be found [here](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/main/java/com/template/proposal/flow/SalesProposalRejectFlows.java):
 
-* `RejectFlow`, an inlined flow that expects perfect information and executes the mechanical parts of the flow to reject a sales proposal.
-    * And its handler `RejectHandlerFlow`, an inlined flow.
-* `RejectSimpleFlow`, an initiating flow that takes easy information before passing on to `RejectFlow`.
-    * And its automatic handler `RejectSimpleHandlerFlow`.
+* [`RejectFlow`](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/main/java/com/template/proposal/flow/SalesProposalRejectFlows.java#L92), an inlined flow that expects perfect information and executes the mechanical parts of the flow to reject a sales proposal.
+    * And its handler [`RejectHandlerFlow`](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/main/java/com/template/proposal/flow/SalesProposalRejectFlows.java#L189), an inlined flow.
+* [`RejectSimpleFlow`](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/main/java/com/template/proposal/flow/SalesProposalRejectFlows.java#L28), an initiating flow that takes easy information before passing on to `RejectFlow`.
+    * And its automatic handler [`RejectSimpleHandlerFlow`](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/main/java/com/template/proposal/flow/SalesProposalRejectFlows.java#L178).
 
 ### `RejectFlow`
 
@@ -643,16 +643,20 @@ final StateAndRef<SalesProposal> proposal = proposals.get(0);
 </ExpansionPanelList>
 </ExpansionPanel>
 
-## The `SalesAccept` offer flows
+### [Reject tests](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/test/java/com/template/proposal/flow/SalesProposalRejectFlowsTests.java)
+
+They naturally check that either party can reject, which should inform the other.
+
+## The `SalesProposal` accept flows
 
 This is launched by the buyer. The fact that the buyer decides to initiate a run of this flow indicates intent to buy the asset.
 
-There are actually 2 flow pairs in the `SalesProposalAccepFlows` set, as can be seen here:
+There are actually 2 flow pairs in the `SalesProposalAccepFlows` set, as can be seen [here](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/main/java/com/template/proposal/flow/SalesProposalAcceptFlows.java):
 
-* `AcceptFlow`, an `abstract` inlined flow that expects perfect information and executes the mechanical parts of the flow to accept the sales proposal and affect the sale.
-    * And its handler `AcceptHandlerFlow`, an inlined flow.
-* `AcceptSimpleFlow`, an initiating flow that takes easy information before passing on to `AcceptFlow`.
-    * And its automatic handler `AcceptSimpleHandlerFlow`.
+* [`AcceptFlow`](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/main/java/com/template/proposal/flow/SalesProposalAcceptFlows.java#L114), an `abstract` inlined flow that expects perfect information and executes the mechanical parts of the flow to accept the sales proposal and affect the sale.
+    * And its handler [`AcceptHandlerFlow`](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/main/java/com/template/proposal/flow/SalesProposalAcceptFlows.java#L268), an inlined flow.
+* [`AcceptSimpleFlow`](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/main/java/com/template/proposal/flow/SalesProposalAcceptFlows.java#L47), an initiating flow that takes easy information before passing on to `AcceptFlow`.
+    * And its automatic handler [`AcceptSimpleHandlerFlow`](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/main/java/com/template/proposal/flow/SalesProposalAcceptFlows.java#L258).
 
 ![Accept: Atomic Car Buy BPMN](images/atomic_car_buy_bpmn.png)
 
@@ -957,12 +961,20 @@ On the other end, `AcceptSimpleHandlerFlow` is just a child class of `AcceptHand
 class AcceptSimpleHandlerFlow extends AcceptHandlerFlow {
 ```
 
+### [Accept tests](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/test/java/com/template/proposal/flow/SalesProposalAcceptFlowsTests.java)
+
+They test:
+
+    * That a [sale is possible](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/test/java/com/template/proposal/flow/SalesProposalAcceptFlowsTests.java#L159) when all conditions are present.
+    * That a sale is not possible if the token type has changed [without informing the buyer](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/test/java/com/template/proposal/flow/SalesProposalAcceptFlowsTests.java#L241).
+    * That a sale is not possible if the buyer [does not have enough dollars](https://github.com/corda/corda-training-code/blob/master/050-ref-state/workflows/src/test/java/com/template/proposal/flow/SalesProposalAcceptFlowsTests.java#L291).
+
 ## Conclusion
 
 As you have seen, the intent of selling and buying is split into 2 transactions. The `SalesProposal`, by its very existence, proves the intent of the seller with regards to asset, price and currency. Therefore, the `AcceptHandlerFlow` on the seller side can recognise its own intent, and is satisfied with classic mechanical verifications against fraud.
 
 It was a design decision to keep a lot of verifications in the contract on accept, but a lighter version is also possible, where the fraud verifications are shifted to the flows. In this case, the `SalesProposal` serves only as the repository for the seller's intent.
 
-As an additional note, now that we have a safe atomic sale mechanism, which expresses a desired price, the time has come to remove the `price` from `CarTokenType`.
+As an additional note, now that you have a safe atomic sale mechanism, which expresses a desired price, the time has come to remove the `price` from `CarTokenType`.
 
-In the next exercise, we will look at how we can protect the buyer from having the _door shut_ too early by the seller. This assures the buyer that the offer is indeed open to acceptance.
+In the next exercise, you will look at how you can protect the buyer from having the _door shut_ too early by the seller. This assures the buyer that the offer is indeed open to acceptance.

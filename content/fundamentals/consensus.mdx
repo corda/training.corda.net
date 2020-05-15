@@ -1,6 +1,6 @@
 ---
 title: Consensus
-description: What is it, and which are they
+description: Purpose and types
 slug: fundamentals/consensus
 ---
 
@@ -87,7 +87,7 @@ The idea here is to solve the “rich man gets richer” problem, which arises i
 
 ## Practical Byzantine Fault Tolerance (PBFT)
 
-PBFT was published in 1999 and arose from academia. It is a three-phase protocol in which the client sends a request to a so called primary. In the first phase, the primary broadcasts to the replicas. Then, the replicas agree that it is properly signed, properly formed, and otherwise acceptable. When a threshold of required endorsements is achieved, the message is verified and replicas agree on the overall order of endorsed transactions within a view. This canonical transaction order is forwarded to clients. This of course is very simplified. You can access the paper by Miguel Castro and Barabara Liskov [here](http://pmg.csail.mit.edu/papers/osdi99.pdf). But there is also a very understandble [presentation](http://www.comp.nus.edu.sg/~rahul/allfiles/cs6234-16-pbft.pdf).
+PBFT was published in 1999 and arose from academia. It is a three-phase protocol in which the client sends a request to a so called primary. In the first phase, the primary broadcasts to the replicas. Then, the replicas agree that it is properly signed, properly formed, and otherwise acceptable. When a threshold of required endorsements is achieved, the message is verified and replicas agree on the overall order of endorsed transactions within a view. This canonical transaction order is forwarded to clients. This of course is very simplified. You can access the paper by Miguel Castro and Barabara Liskov [here](http://pmg.csail.mit.edu/papers/osdi99.pdf). But there is also a very understandable [presentation](http://www.comp.nus.edu.sg/~rahul/allfiles/cs6234-16-pbft.pdf).
 
 ## Proof-of-Activity (PoA)
 
@@ -110,4 +110,4 @@ PoET elects a leader via a lottery algorithm. The key point is the lottery must 
 - [Proof of Authority: consensus model with Identity at Stake](https://medium.com/oracles-network/proof-of-authority-consensus-model-with-identity-at-stake-d5bd15463256)
 - [Tendermint](http://tendermint.com/docs/tendermint.pdf) is a decentralised consensus engine that runs its own public blockchain and also supports decentralised computing. It differs from Ethereum on its consensus protocol, which uses the concept of validators who need to bind funds to validate and who validate blocks over the course of a certain number of rounds.
 - [Counterparty](http://counterparty.io/platform/) aims to extend the Bitcoin blockchain and allows for a limited degree of smart contract execution. They also created their initial coins in an innovative way, by [_proof-of-burn_](http://counterparty.io/news/why-proof-of-burn/) of Bitcoins.
-- [Stellar](https://www.stellar.org/developers/learn/get-started/get-started.html) was originally forked from Ripple, has now completely diverged from it, and introduced what they called a "Federated Byzantine Agreement", whereby consensus is reached by quorum slices.
+- [Stellar](https://www.stellar.org/developers/learn/get-started) was originally forked from Ripple, has now completely diverged from it, and introduced what they called a "Federated Byzantine Agreement", whereby consensus is reached by quorum slices.

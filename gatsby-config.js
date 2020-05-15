@@ -1,10 +1,10 @@
 /*  Gatsby config for the Corda Training app
-    
+
     Changing this file in dev mode will require a server restart
-    
+
     - Theme options are retrieved from theme-options.js
     - Sidebar content is loaded from structure.js in the contentFolder
-    
+
     You can enable the disableImageProcessing flag to speed up dev builds.
 
     This configuration modifies the Theme's remark pipeline (mdx renderer), based on gatsby-transformer-remark.
@@ -43,7 +43,7 @@ const getSidebarConfig = () => {
       'index',
     ]
   };
-  
+
   return sidebarCategories = {...sidebarDefaults, ...sidebarContent};
 }
 
@@ -110,7 +110,7 @@ const apolloDocsOptions = {
 /*  WORKAROUND: To configure the remark plugin configuration, we need to touch the gatsby-plugin-mdx config which is inside the theme
     and can not be configured directly. This should be possible in the future with a onPluginOptions hook (https://github.com/gatsbyjs/gatsby/issues/16697).
     Until this is implemented, we can write our own configuration, merging it with the theme's config (credit to https://github.com/gatsbyjs/gatsby/issues/16593#issuecomment-580037645).
-    
+
     Config structure:
     gatsby-theme-apollo-docs/gatsby-config.js
     ├─gatsby-plugin-mdx
