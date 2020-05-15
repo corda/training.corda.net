@@ -33,7 +33,7 @@ Additionally:
 * The library will not physically divide your node’s vault. The node operator can see all states, regardless of which account they belong to. Which leads to the next point…
 * Data access restrictions, i.e. restricting users to interact only with states that they own, is the **CorDapp** developer's **responsibility** as implementing them is outside of Corda’s scope.
 * `AccountInfo`s are states hosted on nodes, and they are shared like any other state on a need-to-know basis. The library provides several flows to achieve that, namely: `RequestAccountInfo`, `ShareAccountInfo`, and `ShareStateAndSyncAccounts`.
-* Even though `AccountInfo` is of type `LinearState`, it has only one command: `Create`. For context, when the library was first introduced, the `AccountInfo` state had a `status` attribute, without any expected `Update` command, so the attribute was useless and subsequently removed from the state.
+* Even though `AccountInfo` is of type `LinearState`, it has only one command: `Create`.
 * Unlike nodes, accounts don’t come with a default public key. More on that later.
 * The public keys associated to an account rely on the [confidential identities](https://docs.corda.net/docs/corda-os/4.3/api-identity.html#confidential-identities) library.
 
