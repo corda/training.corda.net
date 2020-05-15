@@ -193,6 +193,9 @@ if (!isValidSiderbarConfig) {
 /* Gatsby config export */
 module.exports = {
   pathPrefix: pathPrefix,
+  siteMetadata: {
+    siteUrl: `https://training.corda.net`,
+  },
   plugins: [
     {
       resolve: 'gatsby-theme-apollo-docs',
@@ -227,6 +230,9 @@ module.exports = {
         head: false,
         cookieDomain: "corda.net",
       },
+    },
+    {
+      resolve: `gatsby-plugin-sitemap`,
     }
   ]
 };
