@@ -10,7 +10,7 @@ export default function SEO(props) {
       <meta property="og:title" content={title} />
       <meta property="og:site_name" content={siteName} />
       <meta property="og:description" content={description} />
-      <meta name="twitter:card" content={twitterCard} />
+      <meta name="twitter:card" content="https://www.r3.com/wp-content/uploads/2019/08/R3_Master-Logo-White.jpg" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <link rel="icon" href={favicon} />

@@ -143,7 +143,7 @@ let remarkPluginConfig = [
       // Add any KaTeX options from https://github.com/KaTeX/KaTeX/blob/master/docs/options.md here
       strict: `ignore`
     }
-  }
+  },
 ]
 
 if (!disableImageProcessing) {
@@ -201,7 +201,7 @@ module.exports = {
     {
       resolve: 'gatsby-transformer-remark',
       options: {
-        plugins: remarkPluginConfig.concat(apolloGatsbyRemarkPlugins)
+        plugins: remarkPluginConfig.concat(apolloGatsbyRemarkPlugins, ['gatsby-remark-autolink-headers', 'gatsby-remark-check-links'])
       }
     },
     {
