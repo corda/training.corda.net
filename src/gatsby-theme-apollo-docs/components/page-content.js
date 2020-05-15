@@ -205,7 +205,7 @@ export default function PageContent(props, {data} ) {
   const supportLink = (
     <AsideLinkWrapper >
       <AsideLinkInner href={supportLinkTarget} >
-        <IconSupport />Get Paid Support
+        <IconSupport />Get paid support
       </AsideLinkInner>
     </AsideLinkWrapper>
   );

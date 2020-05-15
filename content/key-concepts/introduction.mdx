@@ -159,12 +159,6 @@ Corda networks are designed to scale. As you will see, the transaction finalisat
 
 The system uses AMQP (Advanced Message Queuing Protocol) over TLS (Transport Layer Security) which provides resilient routing and queuing even in the case that nodes are restarted. AMQP is asynchronous, performs well under load, provides guarantees about message delivery and persistence and operates without assumptions about continuous connectivity. When recipients are offline, messages queue up and retry until delivered.
 
-## Legal Prose
-
-In enterprise settings, reliance on courts of law in the case of conflict is a key requirement. Legal Prose is a property of contracts that define states. It is generally expected that a contract in Corda acquires form and effect from a traditional contract and the Legal Prose of that contract is usually a property of the software-based implementation. In Corda, a "contract" is a representation of a legally binding agreement.
-
-This is quite different from virtual machine platforms that host "smart contracts" that are less like legal agreements and more like persistent, stateful, deterministic application protocols that are described with software.
-
 ## UTXO
 
 Corda uses an Unspent Transaction Output model, a.k.a. UTXO. This is conceptually similar to Bitcoin's approach. Each transaction consumes zero or more states that previously existed and outputs zero or more new states. As a very simple example, consider a simple IOU. Alice will borrow &#36;100 from Bob. The contract is the IOU agreement. Its purpose, in summary, is to describe the state of the loan, meaning who is in debt, to whom is that debt owed, the currency of the debt, the current balance, payment terms, deadlines, etc. The description will include the Legal Prose, signatures of both Alice and Bob, terms, and so on. Given the Legal Prose and the signatures, it should be enforceable in a court of law.
