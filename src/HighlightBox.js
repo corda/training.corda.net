@@ -1,20 +1,23 @@
 import React from 'react';
 import styled from '@emotion/styled';
-//import {breakpoints} from 'gatsby-theme-apollo-core';
+import {breakpoints} from 'gatsby-theme-apollo-core';
 import IconInfo from "./assets/hi-info.svg"
 import IconTip from "./assets/hi-tip.svg"
 import IconWarn from "./assets/hi-warn.svg"
 import IconSupport from "./assets/hi-support.svg"
 
-const HighlightBoxWrapper = styled.div`
-  background: #EDEDED;
-  display: grid;
-  width: 100%;
-  grid-template-columns: 120px auto;
-  align-items: center;
-  margin: 1.5em 0px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-`;
+const HighlightBoxWrapper = styled.div({
+  background: "#EDEDED",
+  display: "grid",
+  [breakpoints.sm]: {
+    display: "block"
+  },
+  width: "100%",
+  "grid-template-columns": "120px auto",
+  "align-items": "center",
+  margin: "1.5em 0px",
+  "box-shadow": "0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)"
+});
 
 const HighlightBoxIcon = styled.div`
   padding: 20px;
