@@ -27,7 +27,7 @@ As you know, when a transaction is created, a contract must be specified for eac
 * The contracts' role is to validate the state transitions that the transaction represents.
 * This validation needs to be deterministically reproducible, now and in the future, which requires the exact contracts that were used during the initial finalisation.
 
-It is, therefore, to facilitate reproduceability that contract jars are attached to transactions. So when a responding node calls `ReceiveFinalityFlow` to finalise the received transaction, it in turn executes the **pre-uploaded** contracts found in the relevant jar files.
+It is, therefore, to facilitate reproduceability that contract jars are attached to transactions. So when a responding node calls `ReceiveFinalityFlow` to finalize the received transaction, it in turn executes the **pre-uploaded** contracts found in the relevant jar files.
 
 Indeed, given the risk of mischief, contracts are _pre-uploaded_ and not downloaded automatically to the node. You got a taste of that when you removed a jar file from one of the nodes and then ran the IOU CorDapp.
 

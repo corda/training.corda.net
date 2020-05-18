@@ -339,7 +339,7 @@ There are actually 2 flow pairs in the `SalesProposalOfferFlows` set, as can be 
 
 ### `OfferFlow`
 
-This inlined flow handles the mechanical parts to issue an offer. It is started by the seller, and the potential buyer only has to finalise a complete transaction to receive the `SalesProposal`.
+This inlined flow handles the mechanical parts to issue an offer. It is started by the seller, and the potential buyer only has to finalize a complete transaction to receive the `SalesProposal`.
 
 <ExpansionPanel title="It does what you would expect of a flow">
 <ExpansionPanelList>
@@ -457,7 +457,7 @@ public OfferSimpleFlow(@NotNull final UniqueIdentifier assetId,
                        @NotNull final Party issuer,
                        @NotNull final ProgressTracker progressTracker) {
 ```
-You will recognise how these fields will be combined. First, the asset needs to be fetched from the vault:
+You will recognize how these fields will be combined. First, the asset needs to be fetched from the vault:
 
 ```java
 final QueryCriteria assetCriteria = new QueryCriteria.LinearStateQueryCriteria()
@@ -902,7 +902,7 @@ if (!myInMonies.isEmpty())
 ```
 Note that the checks that the seller got paid is taken care of by the contract.
 
-<ExpansionPanel title="Then finalises">
+<ExpansionPanel title="Then finalizes">
 <ExpansionPanelList>
 <ExpansionPanelListItem number="2">
 
@@ -971,7 +971,7 @@ They test:
 
 ## Conclusion
 
-As you have seen, the intent of selling and buying is split into 2 transactions. The `SalesProposal`, by its very existence, proves the intent of the seller with regards to asset, price and currency. Therefore, the `AcceptHandlerFlow` on the seller side can recognise its own intent, and is satisfied with classic mechanical verifications against fraud.
+As you have seen, the intent of selling and buying is split into 2 transactions. The `SalesProposal`, by its very existence, proves the intent of the seller with regards to asset, price and currency. Therefore, the `AcceptHandlerFlow` on the seller side can recognize its own intent, and is satisfied with classic mechanical verifications against fraud.
 
 It was a design decision to keep a lot of verifications in the contract on accept, but a lighter version is also possible, where the fraud verifications are shifted to the flows. In this case, the `SalesProposal` serves only as the repository for the seller's intent.
 

@@ -76,7 +76,7 @@ Instead, a transaction references existing input states and future output states
 
 Let’s return to the cash example. Suppose Alice will send all &#36;10 to Bob. A transaction can reference an input state "Alice has &#36;10," and an output state "Bob has &#36;10". The transaction consumed "Alice has &#36;10" so that becomes a historical state. It is part of the past and it explains the history of Alice's account. It is gone because Alice sent it to Bob. The layman's description of the transaction is that cash has changed hands.
 
-<!-- TODO Reinstate when it is redone with R3 colours ![Transaction animation](images/utxo_transaction.gif) -->
+<!-- TODO Reinstate when it is redone with R3 colors ![Transaction animation](images/utxo_transaction.gif) -->
 
 ![Static version of transaction](images/utxo_transaction.png)
 
@@ -104,7 +104,7 @@ For practicality in more complex settings, the Corda team created the concept of
 
 Using the cash example, if "Alice creates &#36;10" out of thin air (let us suppose she is entitled to), you would call this "minting" or "issuance." If you consumed this state and output "Bob has &#36;10", you would call this "paying" or "moving." If you had no output state, you would call this "burning", "retiring" or "redeeming."
 
-Commands signal the intention of a proposed state transition which helps the receiver classify received transactions and move on to considering the proposal. Smart contracts too, can branch their verification logic based on the command. More precisely, commands parameterise transactions by hinting at their intent, collecting the inputs, and specifying the list of required signers (by their public keys).
+Commands signal the intention of a proposed state transition which helps the receiver classify received transactions and move on to considering the proposal. Smart contracts too, can branch their verification logic based on the command. More precisely, commands parameterize transactions by hinting at their intent, collecting the inputs, and specifying the list of required signers (by their public keys).
 
 ![A Swap Command](images/command.png)
 
@@ -161,7 +161,7 @@ In fact, in the same diagram above, the following pairs of steps are small flows
 * "Notary, please finalize" and "Ok, here is the notary signature".
 * "Here is my IOU" and silent reception and recording.
 
-Belabouring the point, if the following term is preferred in your vocabulary, a flow is a co-routine. A co-routine is a function that can be suspended and resumed at arbitrary points throughout its execution.
+Belaboring the point, if the following term is preferred in your vocabulary, a flow is a co-routine. A co-routine is a function that can be suspended and resumed at arbitrary points throughout its execution.
 
 ## Consensus
 

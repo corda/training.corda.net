@@ -34,7 +34,7 @@ Let's review the important terms and their meaning in this context. Correct unde
 
 There is no place for anonymous actors in enterprise networks entrusted with sensitive information. Anonymous, and likely unaccountable, users pose a security threat to networks, either by compromising confidentiality or by interfering in the correct operation of the system. If such users have no business being there, then they should probably not be there. Further, regulated enterprises are subject to strict security requirements, so anonymous users *must not* be there.
 
-In Corda, there is a precise network admission process. An actor on a Corda network is represented by a node. Nodes are known to each other, and the system is designed to reject unauthorised nodes. Consequently, there is an expectation of accountability rather than anonymity.
+In Corda, there is a precise network admission process. An actor on a Corda network is represented by a node. Nodes are known to each other, and the system is designed to reject unauthorized nodes. Consequently, there is an expectation of accountability rather than anonymity.
 
 Corda networks include nodes with specific roles. Chief among these are the Notaries. Notaries perform a special function in Corda's transaction finalisation process. A Corda network topology will generally include at least one node for each participating organisation as well as at least one Notary Service. The Notary (or Notaries) is conceived as a trustworthy neutral party and is implemented as a fault-tolerant service.
 
@@ -143,7 +143,7 @@ Corda nodes do not share an all-encompassing view of the world. Alice and Bob sh
 
 Physically, a Corda network is a fully connected graph, and all nodes can potentially send a message to any other node. A network map service informs nodes about the topology.
 
-Corda networks are designed to scale. As you will see, the transaction finalisation process is designed to run as fast as the network and underlying hardware will permit. The finalisation process isn't logically constrained by a pacing mechanism or the need to gather widespread agreement as is found in blockchain networks reaching for consensus. If Alice and Bob agree that the transaction is finalized and various processes finalise it, then it's final.
+Corda networks are designed to scale. As you will see, the transaction finalisation process is designed to run as fast as the network and underlying hardware will permit. The finalisation process isn't logically constrained by a pacing mechanism or the need to gather widespread agreement as is found in blockchain networks reaching for consensus. If Alice and Bob agree that the transaction is finalized and various processes finalize it, then it's final.
 
 ## Message Queues
 
@@ -151,7 +151,7 @@ The system uses AMQP (Advanced Message Queuing Protocol) over TLS (Transport Lay
 
 ## UTXO
 
-Corda uses an Unspent Transaction Output model, a.k.a. UTXO. This is conceptually similar to Bitcoin's approach. Each transaction consumes zero or more states that previously existed and outputs zero or more new states. As a very simple example, consider a simple IOU. Alice will borrow &#36;100 from Bob. The contract is the IOU agreement. Its purpose, in summary, is to describe the state of the loan, meaning who is in debt, to whom is that debt owed, the currency of the debt, the current balance, payment terms, deadlines, etc. 
+Corda uses an Unspent Transaction Output model, a.k.a. UTXO. This is conceptually similar to Bitcoin's approach. Each transaction consumes zero or more states that previously existed and outputs zero or more new states. As a very simple example, consider a simple IOU. Alice will borrow &#36;100 from Bob. The contract is the IOU agreement. Its purpose, in summary, is to describe the state of the loan, meaning who is in debt, to whom is that debt owed, the currency of the debt, the current balance, payment terms, deadlines, etc.
 
 The transaction that produces this IOU contract will consume &#36;100 of Bob's money (the old state). Suppose Bob begins with &#36;1,000. In simplified form, the transaction will consume the old state (Bob no longer has exactly &#36;1,000 dollars), and produce three new states: Bob now has &#36;900, Alice has &#36;100, and there is a new loan contract in which Alice has agreed to repay &#36;100. Indeed, in proposing such an agreement, Alice is, in effect, proposing that this should be the new state.
 
@@ -165,7 +165,7 @@ Unlike deterministic platforms that rely on each participant having a copy of th
 
 In case this isn't clear, let's return to the simple IOU. This will help illustrate the processes and the meaning of important terms.
 
-Consider a blank loan application. There is no lender, borrower or amount yet, but the form of the agreement is essentially defined as boilerplate. When Alice completes the application, a certain amount of validation can unfold immediately. This would confirm that the application is complete and valid. Submitting the loan application is a proposal to change the state of the ledger. Alice’s state transition proposal will reference the IOU template (think `.class`) which will verify that Alice’s proposed IOU contract would be valid. 
+Consider a blank loan application. There is no lender, borrower or amount yet, but the form of the agreement is essentially defined as boilerplate. When Alice completes the application, a certain amount of validation can unfold immediately. This would confirm that the application is complete and valid. Submitting the loan application is a proposal to change the state of the ledger. Alice’s state transition proposal will reference the IOU template (think `.class`) which will verify that Alice’s proposed IOU contract would be valid.
 
 In simplified terms, Alice may sign a proposal to amend the ledger such that &#36;100 would appear in her account and, simultaneously, an IOU contract she proposes would also exist. Her proposal describes the effect of the trade she wishes to commence with Bob.
 
@@ -215,7 +215,7 @@ https://blockchain-fabric.blogspot.com/2018/03/qualitative-comparison-of-hyperle
 
 ## Differentiating Corda, Blockchains, "Contracts" and "Smart Contracts"
 
-Blockchain network designs guide participating nodes toward consensus about the state of the entire network or sub-networks (channels in Hyperledger and distribution lists implemented with `privateFor` in Quorum). By extension, such consensus implies consensus about the state of a virtual machine. Corda does not aim for consensus about the overall world state. Instead, Corda aims for consensus between two or more parties to an agreement. The consensus sought is concerned only with the state of that agreement and it is achieved one deal at a time. While blockchains serialise transactions into a consensus order of events, Corda does not require a globally ordered transition log. Unrelated state transitions are finalized in parallel.
+Blockchain network designs guide participating nodes toward consensus about the state of the entire network or sub-networks (channels in Hyperledger and distribution lists implemented with `privateFor` in Quorum). By extension, such consensus implies consensus about the state of a virtual machine. Corda does not aim for consensus about the overall world state. Instead, Corda aims for consensus between two or more parties to an agreement. The consensus sought is concerned only with the state of that agreement and it is achieved one deal at a time. While blockchains serialize transactions into a consensus order of events, Corda does not require a globally ordered transition log. Unrelated state transitions are finalized in parallel.
 
 The term "smart contracts" as it applies to the blockchain space conjures up misleading assumptions about their true nature. They are not "smart" in the sense of subjective judgment. It is quite the opposite. They are mechanistic and deterministic and therefore, in theory, they are completely predictable. They describe application-level, stateful protocols with little resemblance to legal agreements. Thus, they are less like legal "contracts" and more like reliable, stateful, software-defined protocols.
 

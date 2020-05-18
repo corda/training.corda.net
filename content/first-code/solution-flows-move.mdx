@@ -200,7 +200,7 @@ Now, for the inputs, you have to admit that the type of the field is adequate:
 ```java
 inputTokens.forEach(txBuilder::addInputState);
 ```
-And for the outputs, you should recognise it from the `IssueFlows`:
+And for the outputs, you should recognize it from the `IssueFlows`:
 
 ```java
 outputTokens.forEach(it -> txBuilder.addOutputState(it, TokenContract.TOKEN_CONTRACT_ID));
@@ -307,7 +307,7 @@ You will recall that the `Initiator` did 3 actions that require responding to:
 
 1. Sent the role.
 2. Asked for signature, optionally.
-3. Finalised.
+3. Finalized.
 
 Because of this _optionally_, the responder needs to branch depending on its role.
 
@@ -349,7 +349,7 @@ relevant = stx.toLedgerTransaction(getServiceHub(), false)
 
 ### Finalising
 
-Now that it is back into the main branch, the responder can finalise as per usual, using the expected transaction id that it, perhaps, just signed:
+Now that it is back into the main branch, the responder can finalize as per usual, using the expected transaction id that it, perhaps, just signed:
 
 ```java
 return subFlow(new ReceiveFinalityFlow(counterpartySession, txId));

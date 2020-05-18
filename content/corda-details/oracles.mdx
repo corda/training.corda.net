@@ -42,7 +42,7 @@ You have broad latitude when it comes to implementing your oracle. However, it h
 * **Query:** which lets other nodes learn about valid values. For instance, a node that can expect payment when a temperature gets high will poll, or query, the temperature oracle at regular intervals to see if time has come to be paid.
 * **Sign:** which provides a way for nodes to have their transactions signed by the oracle, or rather those the oracle deems worthy of its imprimatur.
 
-Just like flows, this service piggybacks on the peer-to-peer network of Corda in order to organise a business workflow.
+Just like flows, this service piggybacks on the peer-to-peer network of Corda in order to organize a business workflow.
 
 Oh, if you ask the oracle to sign your transaction, will the oracle not learn about your private dealings?
 
@@ -66,7 +66,7 @@ The leaves are not individual commands or inputs, but component groups. You see:
 
 For absolute reproducibility, the order in which component groups are added as leaves to the Merkle tree is crucial and therefore [clearly codified](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/ComponentGroupEnum.kt). By the way, you can infer from their position in the list that _references_ came late, in fact in Corda v4, same for _parameters_. Putting new groups at the end ensures a fair degree of backward hash compatibility.
 
-As it happens, each component group is itself organised as a Merkle tree. So by convention, there is one so called top-Merkle tree, and one so called sub-Merkle tree per component group, whose roots are violet in the diagram above. Unsurprisingly, the leaves of each sub-Merkle tree are the individual objects of interest: inputs, outputs, etc., plus nonces to thwart brute-force guessing.
+As it happens, each component group is itself organized as a Merkle tree. So by convention, there is one so called top-Merkle tree, and one so called sub-Merkle tree per component group, whose roots are violet in the diagram above. Unsurprisingly, the leaves of each sub-Merkle tree are the individual objects of interest: inputs, outputs, etc., plus nonces to thwart brute-force guessing.
 
 Given the properties of Merkle trees that you learned in the first module, you see that you could selectively remove the inputs, or the outputs, or any other component group that you do not want to disclose to the oracle. If you give only the component group hashes, the oracle is still able to reach certainty that the hash is a transaction Merkle root. Such a truncated transaction is called a [filtered transaction](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/transactions/MerkleTransaction.kt#L87-L90). With removed parts blacked out, this is how it could look:
 
@@ -82,7 +82,7 @@ With all this, the question is, is it safe for the oracle to sign a transaction 
 
 * When you sign, you sign the whole transaction. Its Merkle root hash to be more precise.
 * And, the contract checks that the proper signers are marked as required by the commands. It is easy for someone to add the oracle to the `Move` command signers.
-* Finally, the Corda nodes will finalise this transaction if all required signers have signed. It does not matter on how many commands the same signer is required to sign, a single signature is sufficient.
+* Finally, the Corda nodes will finalize this transaction if all required signers have signed. It does not matter on how many commands the same signer is required to sign, a single signature is sufficient.
 
 How can you solve that very real issue?
 
@@ -362,7 +362,7 @@ Before moving on to the oracle proper, it is worthwhile to have a CDL for a typi
 
 ![Flow With Oracle](images/flow_with_oracle_bpmn.png)
 
-If your business requires that you query the oracle, scrutinise the returned value, then decide whether to move on to a signed transaction, then, by all means, make 2 flows, a la `SalesProposal` offer and accept.
+If your business requires that you query the oracle, scrutinize the returned value, then decide whether to move on to a signed transaction, then, by all means, make 2 flows, a la `SalesProposal` offer and accept.
 
 ## Example oracle
 

@@ -41,7 +41,7 @@ annotation class BelongsToContract(val value: KClass<out Contract>)
 ```
 The `BelongsToContract` annotation carries over at runtime, which allows the Corda system to cross-check whether it is instructed to use the expected contract when verifying a transaction.
 
-Dig in to [`ContractState`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/ContractState.kt#L16-L17) and see that this class is `@CordaSerializable`. Indeed, it is expected that a state needs to be serialised and transmitted over the wire to the relevant parties. It is thus important that all your fields are marked as serialisable as well.
+Dig in to [`ContractState`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/ContractState.kt#L16-L17) and see that this class is `@CordaSerializable`. Indeed, it is expected that a state needs to be serialized and transmitted over the wire to the relevant parties. It is thus important that all your fields are marked as serialisable as well.
 
 ## The fields
 

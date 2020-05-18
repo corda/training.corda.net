@@ -84,9 +84,9 @@ class Initiator extends FlowLogic<SignedTransaction> {
 
 No, a flow can return any type of data, [including `Void`](https://github.com/corda/samples-java/blob/a61e2cc9910d7d5de83122bf7d36fd071796a7c3/Basic/flow-database-access/workflows-java/src/main/java/net/corda/samples/flowdb/AddTokenValueFlow.java#L17). If you create a flow that piggybacks on the Corda network only to do instant messaging, then your flow would return a [message type](https://github.com/cordacademy/cordacademy-ping/blob/0d7dbf514def1ea7c35864abb3c32f9d80d70732/cordacademy-ping-workflow/src/main/kotlin/io/cordacademy/ping/workflow/PingFlow.kt#L27). Your flow could also encapsulate a complex [vault query](https://github.com/corda/samples/blob/e0052bfc491b9133110618a3f6046498a6f25cbb/flow-db/src/main/kotlin/com/flowdb/Flows.kt#L52-L60) or calls to [third-party APIs](https://github.com/corda/samples/blob/f6d9e6a5e8f9d38e597be9f661725610020dd666/flow-http/workflows-java/src/main/java/com/flowhttp/HttpCallFlow.java#L27-L28), and return the data type fetched.
 
-> Will my transaction be finalised if the flow does not return it?
+> Will my transaction be finalized if the flow does not return it?
 
-If you called `FinalityFlow` in your flow, then your transaction is finalised. The return type of your flow has no relevance to finality.
+If you called `FinalityFlow` in your flow, then your transaction is finalized. The return type of your flow has no relevance to finality.
 
 </HighlightBox>
 
@@ -128,7 +128,7 @@ public Initiator(@NotNull final List<Pair<Party, Long>> heldQuantities) {
     this.progressTracker = tracker();
 }
 ```
-You should recognise that the same decisions were taken here as with the contract, with regards to `final`, `@NotNull`, `NPE`, and `ImmutableList`. It was also decided to fail early when it is known that the values passed will be rejected at the contract level.
+You should recognize that the same decisions were taken here as with the contract, with regards to `final`, `@NotNull`, `NPE`, and `ImmutableList`. It was also decided to fail early when it is known that the values passed will be rejected at the contract level.
 
 Why would it not create the list of `TokenState`s here right away, by collecting the identity of the node and saving it in the `issuer`? Well, the identity of the node is not known at construction. An instantiated flow is not much more than a plain Java object. Sure it can run on a node, but this is a separate step. Those 2 separate steps were run sequentially with the single shell command `flow start ExampleFlow$Initiator iouValue: 20, otherParty: "O=PartyC, L=Paris, C=FR"`, which might give the wrong impression. On the other hand, in the tests, `a.startFlow(flow)` makes clear that the flow is first instantiated, then the node is picked to run it.
 
