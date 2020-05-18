@@ -96,7 +96,7 @@ With states, transactions and contracts, Corda has the basic elements of data an
 
 ## Commands
 
-You've seen how contracts lay out rules about allowable state transitions and transactions propose state transitions. You have seen that the necessary signatures are collected to prepare to finalise a transaction which will consume the input states and create new output states. You could say that the purpose of a transaction is *implied*.
+You've seen how contracts lay out rules about allowable state transitions and transactions propose state transitions. You have seen that the necessary signatures are collected to prepare to finalize a transaction which will consume the input states and create new output states. You could say that the purpose of a transaction is *implied*.
 
 In case this isn't clear, consider that Alice proposes to adjust her IOU down by &#36;10 while giving &#36;10 to Bob. *Implicitly* she is offering to make a payment and she is informing Bob about her opinion of what that means. State transition proposals are technically sufficient to model transactions, but it becomes confusing as complexity and the variety of possible transaction types increases. What if Bob has difficulty understanding Alice's intent?
 
@@ -144,7 +144,7 @@ Flows can be created in order to be widely reused or created ad hoc. Nothing pre
 
 Flows can be more complex and can include more than two parties. For example, if regulatory oversight is required, then the flow would indicate a third step to inform the regulator. Separately, if the flow is started from Alice's side, she would first have to ask Bob to find and aggregate enough cash states before proceeding to signing a transaction.
 
-When thinking about flows, it might be helpful to consider more complex and well-known transactions such as transferring ownership of an asset like a house or vehicle. Such transactions usually begin with 1) an offer, and 2) acceptance. They conclude with a finalised transaction that results in a state transition, called completion in some contexts.
+When thinking about flows, it might be helpful to consider more complex and well-known transactions such as transferring ownership of an asset like a house or vehicle. Such transactions usually begin with 1) an offer, and 2) acceptance. They conclude with a finalized transaction that results in a state transition, called completion in some contexts.
 
 Such transactions involve the buyer and seller, obviously, but completion also involves participating lenders, escrow agents, insurance companies and registries. Much of what happens involves gathering the necessary assurances at each step before proceeding to the next step. Finalising, or executing the transaction involves the actual transfer of ownership, the exchange of funds, notifying the registry and so on. Both the buyer and seller should want the transaction to complete entirely or not at all because cases where the asset and the funds are not exchanged simultaneously invariably lead to disputes.
 
@@ -158,7 +158,7 @@ In fact, in the same diagram above, the following pairs of steps are small flows
 
 * "Could you send me $10?" and "Yes, here are their references".
 * "Care to sign?" and "Here is my signature".
-* "Notary, please finalise" and "Ok, here is the notary signature".
+* "Notary, please finalize" and "Ok, here is the notary signature".
 * "Here is my IOU" and silent reception and recording.
 
 Belabouring the point, if the following term is preferred in your vocabulary, a flow is a co-routine. A co-routine is a function that can be suspended and resumed at arbitrary points throughout its execution.
@@ -187,7 +187,7 @@ Notaries help confirm uniqueness.
 
 Notaries are comparable to traditional Notary Public services that provide reliable witness to events. In simple terms, Notaries maintain a key map of input states and the transactions that consumed them. They need not know the content of states and transactions; they only need a reliable way to uniquely identify them.
 
-In Corda, every transaction is Notarised along with the peer that requested Notarisation and the transaction that marked the input state as historic.
+In Corda, every transaction is Notarized along with the peer that requested Notarisation and the transaction that marked the input state as historic.
 
 In the simplest implementation, the Notary Service is implemented as a fault-tolerant service and all the peers will use the same Notary for every transaction.
 
@@ -203,7 +203,7 @@ To protect themselves against a potential DoS attack, whereby an attacker submit
 
 Oracles provide authoritative information about the external world. For example, consider a currency swap. We'll say Alice wishes to trade with Bob 15 Euros for 18 Dollars. Is that fair?
 
-The parties can agree to use a third party quote to establish a rate of exchange. This third party is known as an Oracle. The Oracle would provide the rate of exchange to Alice, then Alice would use the "swap" command to parameterise a transaction proposing that she sends 15 Euros to Bob, Bob sends 18 Dollars to Alice, *and* the current rate is 1:1.2. Alice, Bob *and the Oracle* are listed as required signers in the swap command.
+The parties can agree to use a third party quote to establish a rate of exchange. This third party is known as an Oracle. The Oracle would provide the rate of exchange to Alice, then Alice would use the "swap" command to parameterize a transaction proposing that she sends 15 Euros to Bob, Bob sends 18 Dollars to Alice, *and* the current rate is 1:1.2. Alice, Bob *and the Oracle* are listed as required signers in the swap command.
 
 In effect, the oracle, through its signature, vouches for the information that is included in the transaction. It may also provide valid information on demand, such that a node has an easier time building a transaction that the oracle will approve. Additionally, with a goal of additional privacy, it is possible, via the use of a Merkle tree and of a Merkle proof, to send only the minimum required information to the oracle. In Corda, this is referred to as a "transaction tear-off."
 

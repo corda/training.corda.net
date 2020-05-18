@@ -232,7 +232,7 @@ In `TokenContract`, quantity `0` is prevented in all situations. However, the To
 
 ### Redeem with outputs?
 
-Here too the specifications have changed, and tests need to reflect that: [`@Test redeemTransactionMustHaveLessInOutputs()`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/contracts/src/test/java/com/template/contracts/TokenContractRedeemTests.java#L63). The outputs are understood as the _change_ (as in "Do you have _change_ for a &#36;20 bill?") given when redeeming states with a quantity larger than desired. Remember the `RedeemFlows.SimpleInitiator`? It did a move transaction, in order to reorganise the states, before a redeem if the collected quantity was too high. Here, with the _change_ mechanism, the Tokens SDK allows for a single redeem transaction. This requires some attention but is on the whole more elegant.
+Here too the specifications have changed, and tests need to reflect that: [`@Test redeemTransactionMustHaveLessInOutputs()`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/contracts/src/test/java/com/template/contracts/TokenContractRedeemTests.java#L63). The outputs are understood as the _change_ (as in "Do you have _change_ for a &#36;20 bill?") given when redeeming states with a quantity larger than desired. Remember the `RedeemFlows.SimpleInitiator`? It did a move transaction, in order to reorganize the states, before a redeem if the collected quantity was too high. Here, with the _change_ mechanism, the Tokens SDK allows for a single redeem transaction. This requires some attention but is on the whole more elegant.
 
 ## The [flows](https://github.com/corda/corda-training-code/tree/master/030-tokens-sdk/workflows/src/main/java/com/template/flows)
 

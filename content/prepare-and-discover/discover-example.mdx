@@ -27,7 +27,7 @@ In this section, you will do the following:
 
 This section is all about IOUs. That's what the [cordapp-example](https://github.com/corda/samples-java/tree/master/Basic/cordapp-example) does. It creates IOUs. That's all. This may sound limited but there is plenty to get acquainted with and it is best to avoid the mental overhead of a complex application.
 
-You will use this project and follow its guidelines, and get pointers on what's happening in the code. In order to keep your experience synchronised with this documentation, you will rely on a specific commit.
+You will use this project and follow its guidelines, and get pointers on what's happening in the code. In order to keep your experience synchronized with this documentation, you will rely on a specific commit.
 
 ```git
 commit: cf21fb3dbf9972d61eb9b543e6fe79698f843110
@@ -265,7 +265,7 @@ Let us take a quick look at the parties.
 
 Back to `IOUState`.
 
-Little is said about `value` other than it is an `Integer`. What is not said is noteworthy. It is not limited to positive values. This constraint will be found elsewhere. This was a design decision on the part of the Corda team, in order to organise constraints in one place rather than having them scattered across various constructors.
+Little is said about `value` other than it is an `Integer`. What is not said is noteworthy. It is not limited to positive values. This constraint will be found elsewhere. This was a design decision on the part of the Corda team, in order to organize constraints in one place rather than having them scattered across various constructors.
 
 #### Linear Id
 
@@ -307,7 +307,7 @@ In this example, the team chose [`interface LinearState`](https://github.com/cor
 
 States can be persisted in node vaults by various methods:
 
-1. Embedded in a known transaction. This is unavoidable if the node receives a signed transaction and saves it to transaction storage. An output state is part of the serialised blob of the transaction in any case. For this reason, when a node receives a transaction you can consider that its output states have been _disclosed_.
+1. Embedded in a known transaction. This is unavoidable if the node receives a signed transaction and saves it to transaction storage. An output state is part of the serialized blob of the transaction in any case. For this reason, when a node receives a transaction you can consider that its output states have been _disclosed_.
 2. Stored as a discrete state. This is automatically done by the node when it receives a transaction that mentions one of its public keys as a participant. Presumably, the node, its owners or its customers are meant to retrieve and use it.
 3. Stored as a row in a custom SQL table in the node's vault. This is done explicitly by the CorDapp's developer. Doing so enables the option of running complex queries on known states.
 
@@ -345,7 +345,7 @@ and the necessary implementation:
                 this.value,
                 this.linearId.getId());
     } else {
-        throw new IllegalArgumentException("Unrecognised schema $schema");
+        throw new IllegalArgumentException("Unrecognized schema $schema");
     }
 }
 ```
@@ -359,7 +359,7 @@ override fun generateMappedObject(schema: MappedSchema): PersistentState {
                 this.value,
                 this.linearId.id
         )
-        else -> throw IllegalArgumentException("Unrecognised schema $schema")
+        else -> throw IllegalArgumentException("Unrecognized schema $schema")
     }
 }
 ```
@@ -406,7 +406,7 @@ val ID = IOUContract::class.qualifiedName!!
 
 #### Command
 
-Remember that commands define intent. The only command available in this project is [`Create`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/contracts-java/src/main/java/com/example/contract/IOUContract.java#L61). It could have been defined anywhere. The design decision was to encapsulate it inside `IOUContract`. Once more, if you <kbd>Command-Click</kbd> to [`CommandData`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/Structures.kt#L196-L197), notice how it is `@CordaSerializable` as this will also be serialised as part of the transaction.
+Remember that commands define intent. The only command available in this project is [`Create`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/contracts-java/src/main/java/com/example/contract/IOUContract.java#L61). It could have been defined anywhere. The design decision was to encapsulate it inside `IOUContract`. Once more, if you <kbd>Command-Click</kbd> to [`CommandData`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/Structures.kt#L196-L197), notice how it is `@CordaSerializable` as this will also be serialized as part of the transaction.
 
 <MultiCodeBlock>
 
@@ -647,13 +647,13 @@ Here, the initiator flow creates the full transaction proposal and then only sen
         borrower = otherParty)
     ```
 * [Creates a command](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L91-L93) with the required signers.
-* [Associates](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L95) the `IOUState` with the `IOUContract`. This is where the state is actually _pointing_ to the contract that will verify the transaction on its behalf. In fact, the [`BelongsToContract`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java#L22) annotation allows the compiler to add cross-checks in order to minimise mistakes. There is the [`StateAndContract`](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/contracts/Structures.kt#L342) class that you could use too in order [to achieve the same](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/transactions/TransactionBuilder.kt#L120).
+* [Associates](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L95) the `IOUState` with the `IOUContract`. This is where the state is actually _pointing_ to the contract that will verify the transaction on its behalf. In fact, the [`BelongsToContract`](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java#L22) annotation allows the compiler to add cross-checks in order to minimize mistakes. There is the [`StateAndContract`](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/contracts/Structures.kt#L342) class that you could use too in order [to achieve the same](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/transactions/TransactionBuilder.kt#L120).
 * [Verifies locally](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L101) that the transaction is valid. Do you remember that the contract does not check for the presence of signatures, only of expected signers? Here the contract accepts the transaction before it has been signed.
 * [Signs it](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L106) with the lender's signature.
 * [Opens a peer-to-peer session](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L111) with the borrower, [without sending](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/flows/FlowLogic.kt#L144-L149) anything yet. The remote peer will be notified only when an actual request is made.
 * [Asks for signatures](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L112-L113) from the borrower. This triggers a checkpoint on the initiating peer as the initiating peer awaits a fully signed transaction.
 * At some point it receives the fully signed transaction and carries on.
-* [Finalises](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L118), without communicating with the notary in this case because there are no input states, by sending the transaction to the borrower. You could choose to send it to more than the `participants`, for instance to a regulator or observer.
+* [Finalizes](https://github.com/corda/samples-java/blob/cf21fb3dbf9972d61eb9b543e6fe79698f843110/Basic/cordapp-example/workflows-java/src/main/java/com/example/flow/ExampleFlow.java#L118), without communicating with the notary in this case because there are no input states, by sending the transaction to the borrower. You could choose to send it to more than the `participants`, for instance to a regulator or observer.
 
 There are quite a number of steps although they should make sense. Notice how, when asking for signatures, it specifically calls [`CollectSignaturesFlow`](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/flows/CollectSignaturesFlow.kt#L67), which is an inlined flow, not a `@InitiatingFlow`. This means that the `Acceptor` flow will have to respond with the responder [`SignTransactionFlow`](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/core/src/main/kotlin/net/corda/core/flows/CollectSignaturesFlow.kt#L261) at the appropriate position in the choreographed sequence.
 
