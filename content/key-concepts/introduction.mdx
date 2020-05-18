@@ -14,19 +14,9 @@ This module introduces you to the concepts behind the Corda platform in detail. 
 
 In this section, you will learn about the most important aspects of the Corda platform:
 
-- The basics of the Corda platform.
-- Permissions in Corda.
-- Corda as a distributed ledger technology.
-- Corda's enterprise capabilities.
-- The execution logic of Corda.
-- The problems that Corda has solved, and can solve.
+- The problems that Corda has solved, and how it solves them.
 - How Corda balances concerns.
-- Peer-to-peer communication.
-- Message queues in Corda.
-- Corda's use of the Unspent Transaction Output model.
-- Transactions in Corda as proposed state changes.
 - How Corda reuses existing technology and JVM.
-- The Flexibility of Corda.
 - Applied use cases of Corda.
 - Differentiating Corda, Blockchains, "Contracts" and "Smart Contracts".
 
@@ -82,7 +72,7 @@ Corda is different in that it focuses from the beginning on legal language, busi
 
 ## Execution Logic
 
-Corda is not a virtual machine. Corda is purpose-built for recording, managing and synchronising facts shared by participants. CorDapps, which are the applications that can be built on Corda, closely model business processes that begin with the existence of binding agrements. In Corda, "Legal Prose" is a property of "contracts," and contracts implement legal agreements. Corda helps execute contracts by easily implementing business processes such as collecting the necessary approvals and signatures that will create, execute and transact binding agreements.
+Corda is not a virtual machine. Corda is purpose-built for recording, managing and synchronising facts shared by participants. CorDapps, which are the applications that can be built on Corda, closely model business processes that begin with the existence of binding agrements. In Corda, contracts implement legal agreements. Corda helps execute contracts by easily implementing business processes such as collecting the necessary approvals and signatures that will create, execute and transact binding agreements.
 
 ## What does Corda Solve?
 
@@ -161,7 +151,7 @@ The system uses AMQP (Advanced Message Queuing Protocol) over TLS (Transport Lay
 
 ## UTXO
 
-Corda uses an Unspent Transaction Output model, a.k.a. UTXO. This is conceptually similar to Bitcoin's approach. Each transaction consumes zero or more states that previously existed and outputs zero or more new states. As a very simple example, consider a simple IOU. Alice will borrow &#36;100 from Bob. The contract is the IOU agreement. Its purpose, in summary, is to describe the state of the loan, meaning who is in debt, to whom is that debt owed, the currency of the debt, the current balance, payment terms, deadlines, etc. The description will include the Legal Prose, signatures of both Alice and Bob, terms, and so on. Given the Legal Prose and the signatures, it should be enforceable in a court of law.
+Corda uses an Unspent Transaction Output model, a.k.a. UTXO. This is conceptually similar to Bitcoin's approach. Each transaction consumes zero or more states that previously existed and outputs zero or more new states. As a very simple example, consider a simple IOU. Alice will borrow &#36;100 from Bob. The contract is the IOU agreement. Its purpose, in summary, is to describe the state of the loan, meaning who is in debt, to whom is that debt owed, the currency of the debt, the current balance, payment terms, deadlines, etc. 
 
 The transaction that produces this IOU contract will consume &#36;100 of Bob's money (the old state). Suppose Bob begins with &#36;1,000. In simplified form, the transaction will consume the old state (Bob no longer has exactly &#36;1,000 dollars), and produce three new states: Bob now has &#36;900, Alice has &#36;100, and there is a new loan contract in which Alice has agreed to repay &#36;100. Indeed, in proposing such an agreement, Alice is, in effect, proposing that this should be the new state.
 
@@ -175,7 +165,7 @@ Unlike deterministic platforms that rely on each participant having a copy of th
 
 In case this isn't clear, let's return to the simple IOU. This will help illustrate the processes and the meaning of important terms.
 
-Consider a blank loan application. There is no lender, borrower or amount yet, but the form of the agreement is essentially defined as boilerplate. When Alice completes the application, a certain amount of validation can unfold immediately. This would confirm that the application is complete and valid. Submitting the loan application is a proposal to change the state of the ledger. Alice’s state transition proposal will reference the IOU template (think `.class`) which will verify that Alice’s proposed IOU contract would be valid. The proposed contract also includes the Legal Prose of the IOU agreement Alice wishes to instantiate.
+Consider a blank loan application. There is no lender, borrower or amount yet, but the form of the agreement is essentially defined as boilerplate. When Alice completes the application, a certain amount of validation can unfold immediately. This would confirm that the application is complete and valid. Submitting the loan application is a proposal to change the state of the ledger. Alice’s state transition proposal will reference the IOU template (think `.class`) which will verify that Alice’s proposed IOU contract would be valid. 
 
 In simplified terms, Alice may sign a proposal to amend the ledger such that &#36;100 would appear in her account and, simultaneously, an IOU contract she proposes would also exist. Her proposal describes the effect of the trade she wishes to commence with Bob.
 
@@ -243,7 +233,7 @@ In this training, the term "contracts" describes contracts in Corda and the term
 
 Corda is similar to blockchain platforms in that it enables a group of participants to form a network with strong assurances about a shared set of facts. It does so without reliance on a chain of transaction blocks. Corda balances various concerns such as transaction finality, confidentiality, availability and performance and it provides flexibility at the level of the consensus mechanism applied to individual transactions.
 
-In Corda, contracts are modeled after traditional legal contracts and they usually include Legal Prose. Parties rely ultimately on courts of law rather than consensus mechanisms. The network is concerned with the shared states of agreements, their histories, and with choreographing the workflows of the parties involved.
+In Corda, contracts are modeled after traditional legal contracts. Parties rely ultimately on courts of law rather than consensus mechanisms. The network is concerned with the shared states of agreements, their histories, and with choreographing the workflows of the parties involved.
 
 ## Further Reading
 
