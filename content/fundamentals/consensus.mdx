@@ -55,13 +55,13 @@ The control mechanism for the amount of work is called "difficulty" and it guara
 
 <!-- ![](images/pos.png) -->
 
-Proof-of-Stake (PoS) is another method of selecting the authoritative node for a given block. PoS is based on the assumption that those with the most to lose are the most incentivised to safeguard network integrity.
+Proof-of-Stake (PoS) is another method of selecting the authoritative node for a given block. PoS is based on the assumption that those with the most to lose are the most incentivized to safeguard network integrity.
 
-A successful Proof-of-Stake system must address the problem of "nothing at stake." That is, randomly-selected validators must face a disincentive for bad behaviour as well as a high probability that bad behaviour will be detected. The burden of detection usually falls on the rest of the network that can either accept or reject the validator's opinion. A solution to the disincentive aspect is to extract a penalty for emitting opinions that are ultimately rejected by the network.
+A successful Proof-of-Stake system must address the problem of "nothing at stake." That is, randomly-selected validators must face a disincentive for bad behavior as well as a high probability that bad behavior will be detected. The burden of detection usually falls on the rest of the network that can either accept or reject the validator's opinion. A solution to the disincentive aspect is to extract a penalty for emitting opinions that are ultimately rejected by the network.
 
 Validators place funds at risk (the stake). For any given block, a validator is selected in pseudo-random fashion with preference to validators with the largest stake. While PoS systems generally do not reward validators with new coins, validators receive transaction fees in return for generating blocks the rest of the network accepts. Validators face economic penalties in the case that they generate blocks that are rejected by sizable numbers of the other nodes.
 
-A validator is thus incentivised to generate blocks that are likely to be accepted by the network and faces financial punishment in the case that it fails to do so.
+A validator is thus incentivized to generate blocks that are likely to be accepted by the network and faces financial punishment in the case that it fails to do so.
 
 The planned PoS protocol for Ethereum is called “CASPER”. PoS is already used in Nxt. PoS solves the energy-consumption problem of PoW (due to its work-heavy process) and is often faster than PoW's steady block times because it doesn't rely on difficulty itself.
 
@@ -77,7 +77,7 @@ An extension of proof-of-stake algorithms is called delegated-proof-of-stake (DP
 
 The term “burn” in this context refers to the mechanism of sending coins to a “burn” address, which are so called because the block creators believe nobody knows the private key. The coins on the “burn” address cannot be spent due to the absence of a private key. Money that cannot be spent is approximately the same as destroyed, or burned.
 
-To be considered for block creation one can participate in a lottery and will get rewarded by it, when chosen. Because of the coins’ worth, the same underlying philosophy as in the case of proof-of-work is utilised, but furthermore the energy problem and the “nothing at stake problem” are solved.
+To be considered for block creation one can participate in a lottery and will get rewarded by it, when chosen. Because of the coins’ worth, the same underlying philosophy as in the case of proof-of-work is utilized, but furthermore the energy problem and the “nothing at stake problem” are solved.
 
 ## Proof-of-Importance
 
@@ -97,17 +97,17 @@ PoA is a combination of PoW and PoS. The miner creates a template with the nonce
 
 <!--  ![](images/poc.png) -->
 
-PoC uses the memory or HDD of a user to reach consensus. It creates hashes and stores these. Then it selects parts of the data, taking into account the last block header in the blockchain. The selected data is hashed and must fulfill a given difficulty. PoC is utilised in order to be fairer, because memory access times do not vary as much as CPU power.
+PoC uses the memory or HDD of a user to reach consensus. It creates hashes and stores these. Then it selects parts of the data, taking into account the last block header in the blockchain. The selected data is hashed and must fulfill a given difficulty. PoC is utilized in order to be fairer, because memory access times do not vary as much as CPU power.
 
 ## Proof-of-elapsed-time (PoET)
 
 <!--  ![](images/poet.png) -->
 
-PoET elects a leader via a lottery algorithm. The key point is the lottery must be performed in a trusted execution environment (TEE). For this purpose, Intel offers Software Guard Extensions (SGX). The lottery provides every validator with a randomised wait time. The validator with the shortest time becomes the leader. The leader is eligible to create a block after the allotted time. The underlying idea is the same as Bitcoin in that the first node to announce a valid block wins. Rather than compute-intensive proof-of-work, the tamper-resistant TEE is relied upon for randomness/fairness. PoET is used in Intel’s Hyperledger Sawtooth Lake project. The new block must be accepted (BFT) by the rest of the network.
+PoET elects a leader via a lottery algorithm. The key point is the lottery must be performed in a trusted execution environment (TEE). For this purpose, Intel offers Software Guard Extensions (SGX). The lottery provides every validator with a randomized wait time. The validator with the shortest time becomes the leader. The leader is eligible to create a block after the allotted time. The underlying idea is the same as Bitcoin in that the first node to announce a valid block wins. Rather than compute-intensive proof-of-work, the tamper-resistant TEE is relied upon for randomness/fairness. PoET is used in Intel’s Hyperledger Sawtooth Lake project. The new block must be accepted (BFT) by the rest of the network.
 
 ## Further Reading
 
 - [Proof of Authority: consensus model with Identity at Stake](https://medium.com/oracles-network/proof-of-authority-consensus-model-with-identity-at-stake-d5bd15463256)
-- [Tendermint](http://tendermint.com/docs/tendermint.pdf) is a decentralised consensus engine that runs its own public blockchain and also supports decentralised computing. It differs from Ethereum on its consensus protocol, which uses the concept of validators who need to bind funds to validate and who validate blocks over the course of a certain number of rounds.
+- [Tendermint](http://tendermint.com/docs/tendermint.pdf) is a decentralized consensus engine that runs its own public blockchain and also supports decentralized computing. It differs from Ethereum on its consensus protocol, which uses the concept of validators who need to bind funds to validate and who validate blocks over the course of a certain number of rounds.
 - [Counterparty](http://counterparty.io/platform/) aims to extend the Bitcoin blockchain and allows for a limited degree of smart contract execution. They also created their initial coins in an innovative way, by [_proof-of-burn_](http://counterparty.io/news/why-proof-of-burn/) of Bitcoins.
 - [Stellar](https://www.stellar.org/developers/learn/get-started) was originally forked from Ripple, has now completely diverged from it, and introduced what they called a "Federated Byzantine Agreement", whereby consensus is reached by quorum slices.

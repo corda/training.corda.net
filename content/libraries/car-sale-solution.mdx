@@ -14,7 +14,7 @@ Some important decisions were made:
 * The seller creates the transaction and signs it first.
 * The buyer verifies then signs the transaction after.
 
-The code can be found [here](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/AtomicSale.java).
+The code can be found [here](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/AtomicSale.java), and tests [here](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/AtomicSaleTests.java).
 
 ## Walkthrough
 
@@ -41,20 +41,20 @@ Examine the steps of this flow:
     ```java
     final StateAndRef<CarTokenType> carInfo = car.getPointer().resolve(getServiceHub());
     ```
-* The seller immediately sending that to the buyer, so that it can spawn:
+* The seller immediately sends that to the buyer, so that it can spawn:
 
     ```java
     final FlowSession buyerSession = initiateFlow(buyer);
     subFlow(new SendStateAndRefFlow(buyerSession, Collections.singletonList(carInfo)));
     ```
     Despite its name, this step is more involved than a simple non-blocking `.send`.
-* The seller continues assembling information, the price we will expect:
+* The seller continues assembling information, the price they will expect:
 
     ```java
     final long price = carInfo.getState().getData().getPrice();
     ```
-    The buyer will be able to the same on their side since they received the `carInfo`. There is no need to send the price on its own.
-* And a proof that we own the car:
+    The buyer will be able to do the same on their side since they received the `carInfo`. There is no need to send the price on its own.
+* And a proof that the seller owns the car:
 
     ```java
     final QueryCriteria tokenCriteria = heldTokenCriteria(car);
@@ -95,7 +95,7 @@ Examine the steps of this flow:
     ```java
     final List<StateAndRef<FungibleToken>> currencyInputs = subFlow(new ReceiveStateAndRefFlow<>(buyerSession));
     ```
-* Switching to the buyer, examine what it did during this time. As expected, following the choreography, it started by receiving the car info:
+* Switching to the buyer, examine what it did during this time. As expected, following the choreography, it starts by receiving the car info:
 
     ```java
     final List<StateAndRef<CarTokenType>> carInfos = subFlow(new ReceiveStateAndRefFlow<>(sellerSession));
@@ -119,7 +119,7 @@ Examine the steps of this flow:
             .equals(carInfo.getState().getData().getLinearId()))
         throw new FlowException("The owned car does not correspond to the earlier car info.");
     ```
-* But is it really the car that the buyer wants to buy? Here, there is a missing piece of the puzzle. You cannot fix this in an automatic way just yet, but you will address it later.
+* But is it really the car that the buyer wants to buy? Here, there is a missing piece of the puzzle. You cannot fix this in an automatic way just yet, but you will address it in a later chapter.
 
     ```java
     // TODO have an internal check that this is indeed the car we intend to buy.
@@ -129,12 +129,12 @@ Examine the steps of this flow:
     ```java
     final IssuedTokenType issuedCurrency = sellerSession.receive(IssuedTokenType.class).unwrap(it -> it);
     ```
-* But is it really the currency we agreed to buy it with? Same here. Address it later:
+* But is it really the currency they agreed to buy it with? Same here. You address it later:
 
     ```java
     // TODO have an internal check that this is indeed the currency we decided to use in the sale.
     ```
-* Now that the buyer has enough information, collect the _dollar states_:
+* Now that the buyer has enough information to collect the _dollar states_:
 
     ```java
     final QueryCriteria heldByMe = QueryUtilitiesKt.heldTokenAmountCriteria(
@@ -293,16 +293,22 @@ Examine the steps of this flow:
         throw new FlowException("There are not the 2 expected move commands");
     ```
     Other malformations on the commands will be caught by the contract. This closes the long checks performed by the buyer before signing the transaction.
-* Back to the seller, which received the buyer's signature, it is time to inform the relevant parties about the change in ownership:
+* Back to the seller, which received the buyer's signature, it is time to notarize the transaction:
 
     ```java
-    subFlow(new UpdateDistributionListFlow(fullySignedTx));
+    final SignedTransaction notarised = subFlow(new FinalityFlow(
+            fullySignedTx, Collections.singletonList(buyerSession)));
+    ```
+* Before informing the relevant parties about the concluded change in ownership:
+
+    ```java
+    subFlow(new UpdateDistributionListFlow(notarised));
     ```
     `UpdateDistributionListFlow` is an `@InitiatingFlow`, so there is no need to call its counterparty from the buyer's flow.
-* And, to finalise the transaction, include asking the notary:
+* And, to conclude by returning the required object:
 
     ```java
-    return subFlow(new FinalityFlow(fullySignedTx, Collections.singletonList(buyerSession)));
+    return notarised;
     ```
 * Which is why, back in the buyer's flow, we finish off with:
 
@@ -314,18 +320,18 @@ Examine the steps of this flow:
 
 This is a seriously long flow with a lot of back and forth, and a thorough list of checks that demonstrate a degree of adversarial thinking, and limited trust in what is coming from the other side.
 
-The tests we included are limited. In particular, they do not check for the many error conditions. To be able to test them all, the flow could, for instance, split the logic into separate `protected` functions. Then, bespoke child classes would wrongly modify these logic pieces in order to trigger an error point.
+The tests included are limited. In particular, they do not check for the many error conditions. To be able to test them all, the flow could, for instance, split the logic into separate `protected` functions. Then, bespoke child classes would wrongly modify these logic pieces in order to trigger an error point.
 
-As always, there is no single truth, and it is in fact possible to imagine a flow that, while creating an identical transaction, unfolds a little bit differently, and is left here as an optional exercise. In our example above, the seller is always "in control", meaning:
+As always, there is no single truth, and it is in fact possible to imagine a flow that, while creating an identical transaction, unfolds a little bit differently, and is left here as an optional exercise. In the example above, the seller is always "in control", meaning:
 
 * The seller initiates.
-* The seller send the car and currency information to the buyer.
+* The seller sends the car and currency information to the buyer.
 * The seller asks information from the buyer in return.
 * The seller creates the transaction.
 * The seller asks for a signature from the buyer.
-* And then the seller finalises.
+* And then the seller finalizes.
 
-How about we flip it mid-way:
+How about you flip it mid-way:
 
 * The seller initiates.
 * The seller sends the car and currency information to the buyer.
@@ -334,11 +340,11 @@ How about we flip it mid-way:
 * The buyer asks for a signature from the seller.
 * The seller checks the transaction, similarly to what the buyer was previously doing.
 * The seller signs the transaction and sends it back to the buyer.
-* The buyer finalises.
+* The buyer finalizes.
 
 You see that the buyer does not send back the _dollar states_ but instead uses them right away. Interestingly, the `CollectSignaturesFlow` is triggered from the buyer's end, i.e. from the responder end.
 
-In the end, this _flipped_ flow does not solve our 2 pending safety checks, namely:
+In the end, this _flipped_ flow does not solve the 2 pending safety checks anyway, namely:
 
 * Is the car received by the buyer, the car the buyer intended to buy?
-* Is the issued currency type received by the buyer, the one intended?
+* Is the issued currency type received by the buyer, the one intended by the buyer?

@@ -59,7 +59,7 @@ Observe an untested example flow [here](https://github.com/corda/corda-training-
     buyerSession.send(issuedCurrency);
 
     // For simplicity we assume that the seller sends back the transaction that paid the seller.
-    // Receive the payment tx. ReceiveTransactionFlow is the responder flow of a specialised DataVendingFlow
+    // Receive the payment tx. ReceiveTransactionFlow is the responder flow of a specialized DataVendingFlow
     // that sends a transaction and its history.
     final SignedTransaction payTx = subFlow(new ReceiveTransactionFlow(buyerSession));
     // TODO check we were paid indeed.
@@ -95,7 +95,7 @@ Observe an untested example flow [here](https://github.com/corda/corda-training-
             properlyIssued.and(heldByMe),
             getOurIdentity()));
 
-    // Inform seller. SendTransactionFlow is a specialised DataVendingFlow that sends a transaction and
+    // Inform seller. SendTransactionFlow is a specialized DataVendingFlow that sends a transaction and
     // its history.
     subFlow(new SendTransactionFlow(sellerSession, payTx));
 
@@ -113,7 +113,7 @@ Remember not to use the code above that is presented as an example of what _not_
 
 ## An atomic sale
 
-Hello? IAEA? That must be a wrong number.
+Hello? [IAEA](https://www.iaea.org/)? No, not _that_ kind of atomic sale.
 
 Due to the shortcomings of a non-atomic sale, and the fact that the high-level flows are not extensible, in cases like this we have to use the utility functions that are provided by the Tokens SDK, in order to assemble a single transaction that contains both sides of the trade.
 
@@ -125,7 +125,7 @@ You can dig on your own inside the high-level flows of the SDK to find out thing
 
 What are the things that such an atomic sale flow has to resolve?
 
-* One party, the initiator, has to create the transaction, while the other party, the responder, verifies and signs it. Whether the initiator is the seller or the buyer, or either, has to be decided at some point. If may be useful to think of a signed offer that is open to acceptance, and acceptance that finalises the sale.
+* One party, the initiator, has to create the transaction, while the other party, the responder, verifies and signs it. Whether the initiator is the seller or the buyer, or either, has to be decided at some point. If may be useful to think of a signed offer that is open to acceptance, and acceptance that finalizes the sale.
 * The seller has to provide the car's `StateAndRef<NonFungibleToken>`.
 * The buyer has to verify that the provided `NonFungibleToken` indeed describes the desired car. Otherwise the seller could bait and switch and pass something else entirely.
 * The buyer has to provide a list of `StateAndRef<FungibleToken>` to cover the price in the agreed issued currency.

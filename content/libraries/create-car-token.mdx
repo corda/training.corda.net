@@ -34,7 +34,7 @@ You are going to advance step by step as per this list:
 
 Ideally, you worked on your own before following along here.
 
-Following the theory from the previous chapter, what parameters would you put in your `CarTokenType`? Feel free to add the ones you want. If you chose to work with Kotlin and made it a `data class`, well played. It will be more concise. Otherwise, here is the chosen fields, in Java:
+Following the theory from the previous chapter, what parameters would you put in your [`CarTokenType`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/contracts/src/main/java/com/template/car/CarTokenType.java)? Feel free to add the ones you want. If you chose to work with Kotlin and made it a `data class`, well played. It will be more concise. Otherwise, here is the chosen fields, in Java:
 
 ```java
 @BelongsToContract(CarTokenContract.class)
@@ -129,7 +129,7 @@ public class CarTokenType extends EvolvableTokenType {
 ```
 Why add `price` to it? After all, the price is not intrinsic to the car, it is instead an agreement between 2 parties making a trade. Later, when you are more at ease with Corda, you will take the price out of the car state. For now, let us imagine that the DMV wants to know the price of a car for tax reasons.
 
-### Evolvable `CarTokenContract`
+### Evolvable [`CarTokenContract`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/contracts/src/main/java/com/template/car/CarTokenContract.java)
 
 Notice `BelongsToContract` above, so you need to create it. Before you look below, create it yourself and think about additional checks. It is good to know that the parent `EvolvableTokenContract` has already checked that there is a [single output](https://github.com/corda/token-sdk/blob/5f189fbf54c400343729155a856b99ed91d40da8/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/EvolvableTokenContract.kt#L47), and, when updating, a [single input](https://github.com/corda/token-sdk/blob/5f189fbf54c400343729155a856b99ed91d40da8/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/EvolvableTokenContract.kt#L72) too.
 
@@ -168,6 +168,7 @@ public class CarTokenContract extends EvolvableTokenContract implements Contract
     }
 }
 ```
+The above should be self-explanatory.
 
 ### Instantiate a BMW
 
@@ -194,7 +195,7 @@ The code above is rootless, and in effect split into 3 parts. To see it in conte
 2. Its usage with specific values and nodes in the unit test class: [`createNewBmw()`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L61-L71).
 3. Its output confirmation in the unit test proper: [`@Test isCreated()`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L110-L117).
 
-You must think that the `IssueCarTokenTypeFlow` flow is not particularly useful, and that would be right as it really just does minimal actions prior to launching [`CreateEvolvableTokens`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/IssueCarTokenTypeFlow.java#L49) proper. It provides a sense of what to expect when working with meaningful flows.
+You must think that the `IssueCarTokenTypeFlow` flow is not particularly useful, and that would be right as it really just does minimal actions prior to launching [`CreateEvolvableTokens`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/IssueCarTokenTypeFlow.java#L49) proper. Although, it provides a sense of what to expect when working with meaningful flows.
 
 ### Issue the BMW to Alice as the holder
 
@@ -291,7 +292,7 @@ Whether this is for an `issue`, `move`, or `redeem` flow, it would likely look l
 
 All the flows that come with the SDK accept a list of observer nodes.
 
-Observer nodes are parties which are not participants in the state but want to be aware of what's happening in your network (e.g. auditors or regulators that require read-only access); so when the transaction gets finalised, it gets recorded in the participants and the observer nodes. The SDK also provides `ObserverAwareFinalityFlow` for the same purpose.
+Observer nodes are parties which are not participants in the state but want to be aware of what's happening in your network (e.g. auditors or regulators that require read-only access); so when the transaction gets finalized, it gets recorded in the participants and the observer nodes. The SDK also provides `ObserverAwareFinalityFlow` for the same purpose.
 
 The examples above use the observer nodes facility where it is deemed necessary, in the case of:
 
@@ -309,7 +310,7 @@ This flow is `@InitiatingFlow`, so it is fire-and-forget. In the future, there w
 
 ## Some Tips
 
-1. When you extend `TokenType` or `EvolvableTokenType`, you **must** override the `equals()` method. If you don't, you get a `There is a token group with no assigned command` exception. That's because the SDK flows attempt to group the tokens (i.e. transaction inputs / outputs) by `IssuedTokenType` in order to assign the correct command to each token group, which in turn allows running the correct validation contract. You must also override `hashCode()`, [see here why](https://stackoverflow.com/questions/2265503/why-do-i-need-to-override-the-equals-and-hashcode-methods-in-java). By the way, IntelliJ can generate both methods for you from the menu: <kbd>Code</kbd> -> <kbd>Generate…</kbd> -> <kbd>equals() and hashCode()</kbd>.
+1. When you extend `TokenType` or `EvolvableTokenType`, you **must** override the `equals()` method. If you don't, you get a [`There is a token group with no assigned command`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/AbstractTokenContract.kt#L119) exception. That's because the SDK flows attempt to group the tokens (i.e. transaction inputs / outputs) by `IssuedTokenType` in order to assign the correct command to each token group, which in turn allows running the correct validation contract. You must also override `hashCode()`, [see here why](https://stackoverflow.com/questions/2265503/why-do-i-need-to-override-the-equals-and-hashcode-methods-in-java). By the way, IntelliJ can generate both methods for you from the menu: <kbd>Code</kbd> -> <kbd>Generate…</kbd> -> <kbd>equals() and hashCode()</kbd>.
 
 2. Quantities inside tokens are in the smallest denomination. For instance, the USD token type has 2 fraction digits (i.e. 0.01 -which is one cent- is usually the smallest denomination). So, if you create a `FungibleToken` of type USD and quantity 100, that 100 is considered (by the SDK) in the smallest denomination (i.e. the cent). So you’re issuing 100 cents not 100 dollars!
 
@@ -344,7 +345,7 @@ This flow is `@InitiatingFlow`, so it is fire-and-forget. In the future, there w
 
 5. If you are querying the vault to calculate a balance, remember that the returned quantity is in the smallest denomination. So if the returned total is 10,000 (taking using USD token type as an example), then the actual balance is 100&#36;.
 
-6. Remember when you query for a balance to always filter by token type and by issuer, because as mentioned earlier, tokens with the same token type but different issuers are considered different. [`QueryUtilities`](https://github.com/corda/token-sdk/blob/master/workflows/src/main/kotlin/com/r3/corda/lib/tokens/workflows/utilities/QueryUtilities.kt) has a lot of useful functions that will make your life easier, including a function to calculate the balance for a certain token type and issuer: `VaultService.tokenBalanceForIssuer`:
+6. Remember when you query for a balance to always filter by token type and by issuer, because as mentioned earlier, tokens with the same token type but different issuers (remember airlines?) are considered different. [`QueryUtilities`](https://github.com/corda/token-sdk/blob/master/workflows/src/main/kotlin/com/r3/corda/lib/tokens/workflows/utilities/QueryUtilities.kt) has a lot of useful functions that will make your life easier, including a function to calculate the balance for a certain token type and issuer: `VaultService.tokenBalanceForIssuer`:
 
     ```java
     final QueryCriteria queryCriteria = QueryUtilitiesKt

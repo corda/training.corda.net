@@ -14,7 +14,7 @@ When linking to the code, this document will link to Java code, but you will als
 
 You will notice that, as much as possible, variables are marked `final` and `private`, and annotated as `@NotNull`, lists are made immutable, and so on. The goal here is to introduce strictness and let the compiler warn as early as possible when the developer doing something untoward.
 
-Find the `TokenContract` code [here](https://github.com/corda/corda-training-code/blob/master/020-first-token/contracts/src/main/java/com/template/contracts/TokenContract.java).
+Find the `TokenContract` code [in Java](https://github.com/corda/corda-training-code/blob/master/020-first-token/contracts/src/main/java/com/template/contracts/TokenContract.java) and [Kotlin](https://github.com/corda/corda-training-code/blob/master/020-first-token/contracts/src/main/kotlin/com/template/contracts/TokenContractK.kt).
 
 <HighlightBox type="warn">
 
@@ -37,9 +37,9 @@ If you want your `TokenContract ` to be used as contract in Corda, it has to imp
 The class was made `final`, not because it has to be, but because:
 
 * You need to make a conscious decision as to whether you want to extend it, or let it be extended. So remove `final` if that is the case.
-* Kotlin makes classes `final` by default, and this behaviour is copied here.
+* Kotlin makes classes `final` by default, and this behavior is copied here.
 
-The `TOKEN_CONTRACT_ID` string will be used by the transaction builder to identify which contract to attach to a state by way of pseudo-reference. In fact, it is also cross-checked with the `@BelongsToContract` annotation on the state. Unlike a state, a contract is stateless and not serialised, nor is it transmitted over the wire to the relevant peers. Instead, any contract class is installed, by an administrator, on a node, as part of a packaged _contract CorDapp_ JAR file. Details of this will become clear in later modules.
+The `TOKEN_CONTRACT_ID` string will be used by the transaction builder to identify which contract to attach to a state by way of pseudo-reference. In fact, it is also cross-checked with the `@BelongsToContract` annotation on the state. Unlike a state, a contract is stateless and not serialized, nor is it transmitted over the wire to the relevant peers. Instead, any contract class is installed, by an administrator, on a node, as part of a packaged _contract CorDapp_ JAR file. Details of this will become clear in later modules.
 
 ## The commands
 

@@ -153,7 +153,7 @@ You will recall that a state is uniquely identified by the transaction that crea
 
 Open 2 other tabs to your H2 console and connect to PartyB and PartyC. You can confirm that:
 
-* PartyB has the same `IOU_STATE` and almost the same `VAULT_STATES`. The `VAULT_STATES` of PartyB may be a second behind PartyA. The reason for this is that it is PartyA that controls the initiating flow and it was finalised on PartyA first.
+* PartyB has the same `IOU_STATE` and almost the same `VAULT_STATES`. The `VAULT_STATES` of PartyB may be a second behind PartyA. The reason for this is that it is PartyA that controls the initiating flow and it was finalized on PartyA first.
 * PartyC has no `IOU_STATE` and no `VAULT_STATES`. It was not a party to this IOU so it has no knowledge of it.
 
 ### Digging deeper in the DB

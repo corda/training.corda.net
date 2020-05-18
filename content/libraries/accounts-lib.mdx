@@ -16,6 +16,8 @@ Prior to Corda 4.3, the only available data type for state participants was `Abs
 
 The Accounts Library solves that problem and provides a means of splitting the vault into logical sub-sets where each sub-set belongs to a certain account.
 
+To follow along the guided exercise of this chapter in IntelliJ, you need to import the [`040-accounts-lib`](https://github.com/corda/corda-training-code/tree/master/040-accounts-lib) folder, and look at [`AccountCourseExercise.java`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/src/test/java/com/template/account/AccountCourseExercise.java) in particular.
+
 ## Design
 
 At the heart of the library is a new state called [`AccountInfo`](https://github.com/corda/accounts/blob/release/1.0/contracts/src/main/kotlin/com/r3/corda/lib/accounts/contracts/states/AccountInfo.kt) which has the following attributes:
@@ -47,7 +49,7 @@ Here, you are going to see in sequence:
 * How to request a new public key for it.
 * What are the considerations behind this key.
 * How to proceed when signing transactions on behalf of an account.
-* How to finalise transactions.
+* How to finalize transactions.
 * How to search for states in the vault in an account-aware manner.
 * How you can proceed to make your CorDapp aware of accounts, or safe for them.
 * How to pass public keys around, on a need-to-know basis.
@@ -56,7 +58,7 @@ Here, you are going to see in sequence:
 
 To able to work, you need both libraries: confidential identities and accounts.
 
-1. Add the release group and version inside your project's root `build.gradle` under `buildscript.ext`:
+1. Add the [release group and version](https://github.com/corda/corda-training-code/blob/master/constants.properties#L18-L23) inside your project's root `build.gradle` under [`buildscript.ext`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/build.gradle#L24-L27):
 
     ```groovy
     accounts_release_version = '1.0'
@@ -64,7 +66,7 @@ To able to work, you need both libraries: confidential identities and accounts.
     confidential_id_release_group = "com.r3.corda.lib.ci"
     confidential_id_release_version = "1.0"
     ```
-2. Add to the `repositories` inside the root `build.gradle`:
+2. Add to the [`repositories`](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/build.gradle#L57-L58) inside the root `build.gradle`:
 
     ```groovy
     repositories {
@@ -72,7 +74,7 @@ To able to work, you need both libraries: confidential identities and accounts.
         maven { url 'http://ci-artifactory.corda.r3cev.com/artifactory/corda-lib' }
     }
     ```
-3. Add the dependencies in the respective modules' `build.gradle` files:
+3. Add the dependencies in the [respective](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/contracts/build.gradle#L49) [modules](https://github.com/corda/corda-training-code/blob/master/040-accounts-lib/workflows/build.gradle#L69-L72)' `build.gradle` files:
 
     ```groovy
     // For the "contracts" module.
@@ -102,7 +104,7 @@ Your state should be _account-enabled_. Which means that if your state has an at
             get() = listOfNotNull(owningAccount).map { AnonymousParty(it) }
     }
     ```
-* `AbstractParty`, which can be seen in action in the [FungibleToken](https://github.com/corda/token-sdk/blob/master/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/states/FungibleToken.kt) state we saw in the Tokens SDK:
+* `AbstractParty`, which can be seen in action in the [FungibleToken](https://github.com/corda/token-sdk/blob/master/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/states/FungibleToken.kt) state you saw in the Tokens SDK chapter:
 
     ```java
     @BelongsToContract(FungibleTokenContract::class)
@@ -118,7 +120,7 @@ If you don't know which to choose just yet, no problem, you will get a better un
 
 ### Create accounts
 
-Now that you’re ready to use an account in our project state, create your first `AccountInfo` by calling the [`CreateAccount`](https://github.com/corda/accounts/blob/release/1.0/workflows/src/main/kotlin/com/r3/corda/lib/accounts/workflows/flows/CreateAccount.kt) flow:
+Now that you’re ready to use an account in the project state, create your first `AccountInfo` by calling the [`CreateAccount`](https://github.com/corda/accounts/blob/release/1.0/workflows/src/main/kotlin/com/r3/corda/lib/accounts/workflows/flows/CreateAccount.kt) flow:
 
 ```java
 // From inside your flow.
@@ -158,7 +160,7 @@ Notice how `RequestKeyForAccount` returns an `AnonymousParty`. Why is that? It's
 1. [`Party`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/identity/Party.kt#L38) is the pair of a `CordaX500Name` and a public key. In essence, it represents a well-identified node of the network.
 2. On the other hand, [`AnonymousParty`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/identity/AnonymousParty.kt#L21) only carries a public key. It doesn’t have any X500 name. Therefore it may represent a node, the account that’s tied to that public key, or even be the brand-new public key created by a node willing to operate discreetly.
 
-By using `AbstractParty` or `PublicKey` for your data type, you can represent nodes, well-known parties, anonymised nodes or accounts.
+By using `AbstractParty` or `PublicKey` for your data type, you can represent nodes, well-known parties, anonymized nodes or accounts.
 
 ### Who is behind this key?
 
@@ -202,7 +204,7 @@ It is possible that your flows will work correctly if you take care of necessiti
 
 Accounts are primarily here to provide the ability to sign on behalf of others. It is worth repeating that only the hosting node can sign, as it is the only entity with the private keys. So how does it look?
 
-1. When affixing the first _account_ signature locally, via the transaction builder, it is a simple call to `signInitialTransaction`, with the proper key:
+1. When affixing the first _account_ signature locally, via the transaction builder, it is a simple call to `signInitialTransaction`, with the proper key(s):
 
     ```java
     // accountKey is reused or is brand new.
@@ -216,7 +218,7 @@ Accounts are primarily here to provide the ability to sign on behalf of others. 
     // We want remoteAccountKey to sign too.
     // Either you already have the hosting Party or
     final Party host = getServiceHub().getIdentityService()
-            . partyFromKey(remoteAccountKey);
+            .partyFromKey(remoteAccountKey);
     final FlowSession remoteAccountSession = initiateFlow(host);
     ```
     Note that for `partyFromKey` or `requireWellKnownPartyFromAnonymous` to succeed, the current node needs to have been informed separately about `remoteAccountKey`'s existence, or it just happens to have requested this key from the remote host itself. Either way, knowledge of which node hosts which key is on a need-to-know basis. From there, the sub-flow call is:
@@ -250,7 +252,7 @@ return subFlow(new FinalityFlow(
 
 If the vault is not account-aware, how do you query the vault by account? Thankfully, Corda 4.3 added the possibility to [map any public key](https://docs.corda.net/docs/corda-os/4.3/api-vault-query.html#mapping-owning-keys-to-external-ids) to an [external id](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/node/src/main/kotlin/net/corda/node/services/keys/BasicHSMKeyManagementService.kt#L113) of type `UUID`. The Accounts library judiciously uses this feature to map an account's [key to the account's id](https://github.com/corda/accounts/blob/900fe9c2ebf4ad8ecda1f494c03f747ef1579746/workflows/src/main/kotlin/com/r3/corda/lib/accounts/workflows/internal/flows/ConfidentialIdentityUtils.kt#L17).
 
-This _external ids_ facility can be used when querying. A caveat is that, because it works across the whole system, for all contract states, it works only on public-key-based properties shared by all contract states, namely, the **participants**. Yes, that's a limitation. If your account is mentioned in the participants, then you can retrieve your _account's states_. If not, then you will have to retrieve your account's states by means other than this `.withExternalIds`:
+This _external ids_ vault facility can be used when querying. A caveat is that, because it works across the whole vault system, for all contract states, it works only on public-key-based properties shared by all contract states, namely, the **participants**. Yes, that's a limitation. If your account's key is mentioned in the participants, then you can retrieve your _account's states_. If not, then you will have to retrieve your account's states by means other than this `.withExternalIds`:
 
 ```java
 final QueryCriteria participatingAccountCriteria = new QueryCriteria.VaultQueryCriteria()
@@ -301,7 +303,7 @@ The same `confidential-id` library, also provides a [`RequestKey`](https://githu
 
 ## Conclusion
 
-You have just learned about the Accounts library, how to use it, how to pass accounts around, how it can be dangerous for the unaware developer and what needs to be done to fetch from the vault. There are a bunch of unit tests to familiarise yourself with the actions surrounding accounts [here](https://github.com/corda/corda-training-code/tree/master/040-accounts-lib/workflows/src/test/java/com/template/account).
+You have just learned about the Accounts library, how to use it, how to pass accounts around, how it can be dangerous for the unaware developer and what needs to be done to fetch from the vault. There are a bunch of unit tests to familiarize yourself with the actions surrounding accounts [here](https://github.com/corda/corda-training-code/tree/master/040-accounts-lib/workflows/src/test/java/com/template/account).
 
 In the next chapter you are going to use the Accounts library to adjust the project.
 
