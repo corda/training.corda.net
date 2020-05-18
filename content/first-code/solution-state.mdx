@@ -12,7 +12,7 @@ This document will link to Java code, but you will also find the Kotlin implemen
 
 You will notice that, as much as possible, variables are marked `final` and `private`, and annotated as `@NotNull`, lists are made immutable, and so on. The goal here is to introduce strictness and let the compiler warn as early as possible when the developer is doing something untoward.
 
-Find the `TokenState` code in [Java](https://github.com/corda/corda-training-code/blob/master/020-first-token/contracts/src/main/java/com/template/states/TokenState.java) and [Kotlin](https://github.com/corda/corda-training-code/blob/master/020-first-token/contracts/src/main/kotlin/com/template/states/TokenStateK.kt).
+Find the `TokenState` code in [Java](https://github.com/corda/corda-training-code/blob/master/020-first-token/contracts/src/main/java/com/template/states/TokenState.java) and [Kotlin](https://github.com/corda/corda-training-code/blob/master/020-first-token/contracts/src/main/kotlin/com/template/states/TokenStateK.kt). In IntelliJ, you will need to import the [`020-first-token`](https://github.com/corda/corda-training-code/tree/master/020-first-token) project folder.
 
 Let's review the work that was achieved here, and the rationales behind certain decisions. But first, a summary diagram of the `TokenState`:
 
@@ -20,7 +20,7 @@ Let's review the work that was achieved here, and the rationales behind certain 
 
 ## The class declaration
 
-<!-- TODO replace these pieces of code with the links and remote fetch components -->
+<!-- TODO replace these pieces of code with the remote fetch components -->
 
 ```java
 @BelongsToContract(TokenContract.class)

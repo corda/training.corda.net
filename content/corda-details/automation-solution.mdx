@@ -12,6 +12,8 @@ import {
 
 In the previous chapter, you learned about schedulable events and services, each with an exercise for you to complete. Make sure you have worked on your own before looking below for a solution.
 
+To follow along with IntelliJ, you need to open the [`070-services`](https://github.com/corda/corda-training-code/tree/master/070-services) folder as a project.
+
 ## Schedulable event
 
 The point of the exercise was to inform the vault that the seller wants to reject the proposal as soon as it expires. There are a couple flows to reject a proposal. The decision was made to use the one that takes a `SalesProposal` id and the rejecter:
@@ -46,7 +48,7 @@ Where the name of the flow is:
 ```
 The reason why the flow has to be called by name is because it is defined in the _workflow_ module, which is unknown from this _contract_ module.
 
-This means that both the seller's and the buyer's vaults would attempt to reject, but only the seller's vault has the seller's key. Therefore the flow had to be adjusted:
+This also means that both the seller's and the buyer's vaults would attempt to reject, but only the seller's vault has the seller's key. Therefore the flow had to be adjusted:
 
 ```java
 if (!getServiceHub().getKeyManagementService().filterMyKeys(
@@ -123,7 +125,7 @@ if (!getServiceHub().getKeyManagementService()
         .filterMyKeys(Collections.singletonList(buyer.getOwningKey())).iterator().hasNext())
     throw new FlowException("This buyer is not hosted here");
 ```
-What `filterMyKeys` does is return only the keys whose private key can be found. If it is empty, it means that no key could be resolved. Next, it is time to receive the transaction proper:
+What `filterMyKeys` does is return only the keys whose private key can be found. If it is empty, it means that no key could be resolved, i.e. that the buyer is not hosted on this node. Next, it is time to receive the transaction proper:
 
 ```java
 final SignedTransaction tx = subFlow(new ReceiveTransactionFlow(sellerSession));
@@ -180,7 +182,7 @@ sellerSession.send("Ok");
 ```
 When satisfied, it is time to record and send an "Ok". The state is forced to be recorded because it is not a participant to the transaction. Otherwise it would have received it in the first place, after all. With this final "Ok" sent, the flow session can finally be closed.
 
-## How to keep track
+## How to monitor
 
 This is where the service comes into play. It has to be declared:
 
@@ -510,19 +512,19 @@ And, there you have it. The service that keeps buyers informed, informs only tho
 
 ## Tests
 
-1. `InformTokenBuyerFlowsTests` test:
+1. [`InformTokenBuyerFlowsTests`](https://github.com/corda/corda-training-code/blob/master/070-services/workflows/src/test/java/com/template/proposal/flow/InformTokenBuyerFlowsTests.java) test:
 
     * That the flow fails when given the wrong transaction.
     * That it stores the state on success.
-2. `SalesProposalServiceTests` test:
+2. [`SalesProposalServiceTests`](https://github.com/corda/corda-training-code/blob/master/070-services/workflows/src/test/java/com/template/proposal/service/SalesProposalServiceTests.java) test:
 
     * That the service does not track irrelevant data.
     * That it tracks relevant data.
     * That the the buyer is informed.
     * That it no longer tracks when the proposal is reject by the buyer.
-3. `SalesProposalServiceAndSchedulableTests` test:
+3. [`SalesProposalServiceAndSchedulableTests`](https://github.com/corda/corda-training-code/blob/master/070-services/workflows/src/test/java/com/template/proposal/service/SalesProposalServiceAndSchedulableTests.java) test:
 
-    * That the service no longer tracks when the proposal is automatically deleted by the seller's schedulable event.
+    * That the service no longer tracks when the proposal is automatically deleted by the seller's schedulable event. Talk about automation...
     * Here too, it has to use `network.waitQuiescent`.
 
 ## Conclusion

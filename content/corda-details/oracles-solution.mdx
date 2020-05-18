@@ -14,6 +14,8 @@ import {
 
 This is an example solution to the simplified project exercise of the previous chapter. By no means should you interpret this implementation as the only possible one -- just one of many valid ones.
 
+To follow along with IntelliJ, you need to open the [`080-oracle`](https://github.com/corda/corda-training-code/tree/master/080-oracle) folder as a project.
+
 ## Design decisions
 
 The decision was taken to not alter the existing `SalesProposal` and contract, and leave them as they are. Adding complexity to something that works well is always risky. The DMV's _lien_ oracle will be handled by other, new, elements.
@@ -43,10 +45,9 @@ public class DueDiligence implements LinearState {
     // Plus constructor, getters, equals and hashCode.
     [...]
 ```
+It may seem curious to you that its participants are directly added as an attribute. But this makes sense, after all this state is created to carry the idea that the participants come together to achieve a verification. The goal is that it is created independently, and then added to the purchase `Accept` transaction, where the desired status is enforced.
 
-The idea is that it is created independently, and then added to the purchase `Accept` transaction, where the desired status is enforced.
-
-Which brings us to the contract that controls it:
+Which leads the contract that controls it:
 
 ## [`DueDiligenceContract`](https://github.com/corda/corda-training-code/blob/master/080-oracle/contracts/src/main/java/com/template/diligence/state/DueDiligenceContract.java)
 
@@ -143,7 +144,7 @@ Then it will sign with a certain key. Let's not assume this is the default key o
 
 Why not assume that the oracle will use the node's `Party`'s key? It would make sense to assume so since an oracle is a source of authority, and a clearly identifiable track back to an identity assists in backing this authority. However, all that is needed by the oracle to sign is the identification of the `PublicKey` to use. This is what is expressed here.
 
-Let's stay on this topic. Further down, you will see that the oracle will be associated to an `AnonymousParty` indeed. Although one that has to be disclosed to any party that wants to query and obtain a signature. If you want to create your own oracle in the future, it is probably overkill, and you could stick to having it identified as a `Party`. Part of the rationale in this example is to use an account, where the oracle is a mere tenant in a node. And potentially one of many oracles hosted on the same node. If your oracle is a temperature oracle for your home town, then the use case is small and your town likely shares a node with neighbouring towns. In this case _partitioning_ makes sense. On the other hand, if your oracle use case is for a large corporation, the name of the corporation is on the line so it night make sense to use a `Party`.
+Let's stay on this topic. Further down, you will see that the oracle will be associated to an `AnonymousParty` indeed. Although one that has to be disclosed to any party that wants to query and obtain a signature. If you want to create your own oracle in the future, it is probably overkill, and you could stick to having it identified as a `Party`. Part of the rationale in this example is to use an account, where the oracle is a mere tenant in a node. And potentially one of many oracles hosted on the same node. If your oracle is a temperature oracle for your home town, then the use case is small and your town likely shares a node with neighbouring towns. In this case _partitioning_ makes sense. On the other hand, if your oracle use case is for a large corporation, the name of the corporation is on the line so it might make sense to use a `Party`.
 
 In either situation, letting the oracle know only about the `PublicKey` gets the job done.
 
