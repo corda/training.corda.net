@@ -149,7 +149,7 @@ If you poke around, you can see that there is an [`OnLedgerAsset`](https://githu
 ```kotlin
 abstract class OnLedgerAsset<T : Any, out C : CommandData, S : FungibleAsset<T>> : Contract
 ```
-that seems to achieve what your `TokenContract` achieved. Poring through its code is more involved than the quick examples above, but you can recognise helper functions in its `Companion` object:
+that seems to achieve what your `TokenContract` achieved. Poring through its code is more involved than the quick examples above, but you can recognize helper functions in its `Companion` object:
 
 * Issue: [`generateIssue`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/finance/contracts/src/main/kotlin/net/corda/finance/contracts/asset/OnLedgerAsset.kt#L296-L298)
 * Move: [`generateSpend `](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/finance/contracts/src/main/kotlin/net/corda/finance/contracts/asset/OnLedgerAsset.kt#L57-L63)

@@ -299,7 +299,7 @@ Examine the steps of this flow:
     subFlow(new UpdateDistributionListFlow(fullySignedTx));
     ```
     `UpdateDistributionListFlow` is an `@InitiatingFlow`, so there is no need to call its counterparty from the buyer's flow.
-* And, to finalise the transaction, include asking the notary:
+* And, to finalize the transaction, include asking the notary:
 
     ```java
     return subFlow(new FinalityFlow(fullySignedTx, Collections.singletonList(buyerSession)));
@@ -323,7 +323,7 @@ As always, there is no single truth, and it is in fact possible to imagine a flo
 * The seller asks information from the buyer in return.
 * The seller creates the transaction.
 * The seller asks for a signature from the buyer.
-* And then the seller finalises.
+* And then the seller finalizes.
 
 How about we flip it mid-way:
 
@@ -334,7 +334,7 @@ How about we flip it mid-way:
 * The buyer asks for a signature from the seller.
 * The seller checks the transaction, similarly to what the buyer was previously doing.
 * The seller signs the transaction and sends it back to the buyer.
-* The buyer finalises.
+* The buyer finalizes.
 
 You see that the buyer does not send back the _dollar states_ but instead uses them right away. Interestingly, the `CollectSignaturesFlow` is triggered from the buyer's end, i.e. from the responder end.
 

@@ -47,7 +47,7 @@ Here, you are going to see in sequence:
 * How to request a new public key for it.
 * What are the considerations behind this key.
 * How to proceed when signing transactions on behalf of an account.
-* How to finalise transactions.
+* How to finalize transactions.
 * How to search for states in the vault in an account-aware manner.
 * How you can proceed to make your CorDapp aware of accounts, or safe for them.
 * How to pass public keys around, on a need-to-know basis.
@@ -158,7 +158,7 @@ Notice how `RequestKeyForAccount` returns an `AnonymousParty`. Why is that? It's
 1. [`Party`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/identity/Party.kt#L38) is the pair of a `CordaX500Name` and a public key. In essence, it represents a well-identified node of the network.
 2. On the other hand, [`AnonymousParty`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/identity/AnonymousParty.kt#L21) only carries a public key. It doesn’t have any X500 name. Therefore it may represent a node, the account that’s tied to that public key, or even be the brand-new public key created by a node willing to operate discreetly.
 
-By using `AbstractParty` or `PublicKey` for your data type, you can represent nodes, well-known parties, anonymised nodes or accounts.
+By using `AbstractParty` or `PublicKey` for your data type, you can represent nodes, well-known parties, anonymized nodes or accounts.
 
 ### Who is behind this key?
 
@@ -301,7 +301,7 @@ The same `confidential-id` library, also provides a [`RequestKey`](https://githu
 
 ## Conclusion
 
-You have just learned about the Accounts library, how to use it, how to pass accounts around, how it can be dangerous for the unaware developer and what needs to be done to fetch from the vault. There are a bunch of unit tests to familiarise yourself with the actions surrounding accounts [here](https://github.com/corda/corda-training-code/tree/master/040-accounts-lib/workflows/src/test/java/com/template/account).
+You have just learned about the Accounts library, how to use it, how to pass accounts around, how it can be dangerous for the unaware developer and what needs to be done to fetch from the vault. There are a bunch of unit tests to familiarize yourself with the actions surrounding accounts [here](https://github.com/corda/corda-training-code/tree/master/040-accounts-lib/workflows/src/test/java/com/template/account).
 
 In the next chapter you are going to use the Accounts library to adjust the project.
 
