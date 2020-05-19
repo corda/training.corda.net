@@ -158,8 +158,9 @@ if (!disableImageProcessing) {
       }
     },
     {
-      resolve: "gatsby-remark-images-zoom",
+      resolve: "gatsby-remark-images-medium-zoom",
       options: {
+        excludedSelector: "no-zoom"
       }
     }
   ]);

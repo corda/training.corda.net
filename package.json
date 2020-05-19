@@ -16,7 +16,7 @@
     "gatsby-plugin-slug": "^1.0.1",
     "gatsby-remark-embed-video": "^2.0.1",
     "gatsby-remark-images": "^3.3.0",
-    "gatsby-remark-images-zoom": "^1.1.0",
+    "gatsby-remark-images-medium-zoom": "^1.7.0",
     "gatsby-remark-katex": "^3.3.1",
     "gatsby-source-graphql": "^2.5.1",
     "gatsby-theme-apollo-docs": "4.1.5",
