@@ -158,8 +158,9 @@ if (!disableImageProcessing) {
       }
     },
     {
-      resolve: "gatsby-remark-images-zoom",
+      resolve: "gatsby-remark-images-medium-zoom",
       options: {
+        excludedSelector: "no-zoom"
       }
     }
   ]);
@@ -220,9 +221,11 @@ module.exports = {
       resolve: `gatsby-plugin-sharp`,
       options: {
         useMozJpeg: false,
-        stripMetadata: true
+        stripMetadata: true,
+        srcSetBreakpoints: [ 200, 340, 520, 736, 1024, 1280 ]
       }
     },
+    "gatsby-plugin-material-ui",
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {
