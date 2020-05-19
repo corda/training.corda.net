@@ -1,6 +1,6 @@
 ---
 title: Tokens SDK
-description: Where you learn of a reusable SDK
+description: A reusable SDK for fungible assets
 slug: libraries/tokens-sdk
 ---
 
@@ -31,11 +31,11 @@ For example, the USD token-type has 2 fraction digits, that’s because the smal
 
 ![TokenType Instantiation](images/token_type.png)
 
-By the way, you can extend `TokenType` and add your own custom attributes. Be careful though, as those attributes may never change their values! For instance a `CryptoKitten` token-type would look like this:
+You can extend `TokenType` and add your own custom attributes. Be cautious with that because such attributes are unchangeable, by design. For example, a `CryptoKitten` token-type would specify a breed and such an attribute is not changeable, by nature, over the life of the cat. An implementation would look like this:
 
 ![Extended TokenType](images/cryptokitten.png)
 
-You would not expect a BengalCatType token-type to suddenly change to a Persian breed.
+Custom token attributes are unchangeable, by design, so use them for properties that should be immutable. 
 
 ### `EvolvableTokenType`
 
@@ -57,7 +57,7 @@ In the example, the DMV (Department of Motor Vehicles) is the `maintainer` of th
 
 ![Update EvolvableTokenType](images/update_evolvable_token_type.png)
 
-**Reminder:** A state in Corda is final; it cannot be updated, so how does one achieve the same effect? That's where [`LinearState`](https://docs.corda.net/api-states.html#linearstate)s come to the rescue. In order to update a `LinearState`, you consume the old version and create a new one which has the updated values **but** the same `UniqueIdentifier linearId`. So, in order to view all of the versions of a certain `LinearState`, you can simply query the vault by that state class and its `linearId`.
+**Reminder:** A state in Corda is final; it cannot be updated, only transformed from one version to another via a transaction. How does one achieve an effect that resembles an evolving state? That's where [`LinearState`](https://docs.corda.net/api-states.html#linearstate)s come to the rescue. In order to update a `LinearState`, you consume the old version and create a new one which has the updated values **but** the same `UniqueIdentifier linearId`. So, in order to view all of the versions of a certain `LinearState`, you can simply query the vault by that state class and its `linearId`.
 
 To avert a possible misunderstanding, the `EvolvableTokenType` class **does not** inherit from the `TokenType` class. You will see the mechanism shortly.
 
