@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import {breakpoints} from 'gatsby-theme-apollo-core';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -7,14 +8,21 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 
 
-const CardWrapper = styled.div`
-	display: flex;
-  justify-content: space-between;
-`
+const CardWrapper = styled.div({
+	display: "flex",
+  "justify-content": "space-between",
+  [breakpoints.md]: {
+    display: "block"
+  }
+})
 
 const useStyles = makeStyles({
   navcard: {
-    width: "32%"    
+    width: "32%",
+    [breakpoints.md]: {
+    	width: "100%",
+    	"margin-bottom": "10px"
+    }
   },
   areanormal: {
   	padding: "20px",
