@@ -3,9 +3,7 @@ import styled from '@emotion/styled';
 import {breakpoints} from 'gatsby-theme-apollo-core';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 
 
 const CardWrapper = styled.div({
