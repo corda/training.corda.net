@@ -20,7 +20,7 @@ const remarkTypescript = require('remark-typescript');
 
 const defaultExportPath = "/";        // Export path option passed to gatsby (deployment path prefix)
 const contentFolder = "./content/";   // Mdx source folder
-const disableImageProcessing = false; // Disable image processing for dev build
+const disableImageProcessing = true; // Disable image processing for dev build
 
 
 /*  Helper functions */
@@ -223,6 +223,7 @@ module.exports = {
         stripMetadata: true
       }
     },
+    "gatsby-plugin-material-ui",
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {
