@@ -21,6 +21,8 @@ So, you worked on the exercise on your own before landing here and looking at th
     * `SalesProposalRejectFlows`
     * `SalesProposalAcceptFlows`
 
+To follow along with IntelliJ, you need to open the [`060-time-window`](https://github.com/corda/corda-training-code/tree/master/060-time-window) folder as a project. Let's review these in order.
+
 ## `SalesProposal`
 
 As mentioned earlier, the only change needed here is to add an expiration date, preferrably in the same type used in `TimeWindow`:
@@ -218,7 +220,7 @@ require.using("Current date must be before proposal expiration date.",
 ```
 This is wrong, and it will lead to unpredictable (non-deterministic) results:
 
-1. In a distributed ledger where nodes have unsynchronised clocks, the outcome of the above contract is non-deterministic (some nodes will pass this verification, and some will not). Depending on what time it is on that node, `Instant.now()` will return a different value.
+1. In a distributed ledger where nodes have unsynchronized clocks, the outcome of the above contract is non-deterministic (some nodes will pass this verification, and some will not). Depending on what time it is on that node, `Instant.now()` will return a different value.
 2. Remember that the transaction will get verified in the future, when a node receives it because it's part of the chain of transactions that lead to a transaction that it's trying to receive and resolve. So, when the contract runs in the future, `Instant.now()` will return what time it is in the future and the verification will fail because the current time, i.e. the future, will be greater than the expiration date of the proposal!
 
 ### DJVM (Deterministic JVM)

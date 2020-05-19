@@ -7,19 +7,19 @@ slug: details/time-windows
 In the previous exercise, you created a CorDapp with a sales proposal. It was noted that the following annoyances are still present:
 
 * The seller can surreptitiously reject the proposal at any time without letting the buyer know.
-* The buyer has all the time in the world to scrutinise the offer.
+* The buyer has all the time in the world to scrutinize the offer.
 
 Would it not be good to put time limits on both? For instance:
 
 * The proposal has an expiration date.
 * The buyer can only accept before expiration.
-* The seller must honour the contract if the offer is accepted before expiration.
+* The seller must honor the contract if the offer is accepted before expiration.
 
 Yes, that would be an improvement. Is it enough to add this _expiration date_ as a field in the sales proposal? For information purposes only, sure. But how would you enforce it?
 
 ## Time in DLTs
 
-As you learned in the fundamentals module, time in Distributed Ledger Technologies (DLTs) has an unusual meaning. Recall that you have a collection of nodes with unsynchronised clocks. Which one do you consider the authoritative source of "correct time?"
+As you learned in the fundamentals module, time in Distributed Ledger Technologies (DLTs) has an unusual meaning. Recall that you have a collection of nodes with unsynchronized clocks. Which one do you consider the authoritative source of "correct time?"
 
 The short answer is, **none**!
 
@@ -38,7 +38,7 @@ So the notary does not provide time, it signs if its time falls inside the windo
 1. Open-ended when the transaction must happen before a certain time, or the transaction must happen after a certain time.
 2. Close-ended when the transaction must happen after a certain time **and** before a certain time.
 
-At the time of notarisation and in the future, a party looking at the historical trail of transactions will have the assurance that the transaction was notarised during the specified time-window.
+At the time of notarisation and in the future, a party looking at the historical trail of transactions will have the assurance that the transaction was notarized during the specified time-window.
 
 * The implementation of `TimeWindow` is done with [2 nullable `Instant` instances](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/TimeWindow.kt#L57-L60), which represent both ends of the window. There are some [utility functions](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/TimeWindow.kt#L27-L53) to facilitate their creation, such as:
     * `TimeWindow.untilOnly(someInstantInTheFuture)`

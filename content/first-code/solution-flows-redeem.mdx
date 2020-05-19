@@ -11,6 +11,8 @@ import {
   ExpansionPanelListItem
 } from 'gatsby-theme-apollo-docs';
 
+You looked at both solution examples for Issue and Move flows, and have worked on your own Redeem flow. Find the code in [Java](https://github.com/corda/corda-training-code/blob/master/020-first-token/workflows/src/main/java/com/template/flows/RedeemFlows.java) and [Kotlin](https://github.com/corda/corda-training-code/blob/master/020-first-token/workflows/src/main/kotlin/com/template/flows/RedeemFlowsK.kt).
+
 ## [`RedeemFlows`](https://github.com/corda/corda-training-code/blob/master/020-first-token/workflows/src/main/java/com/template/flows/RedeemFlows.java)
 
 First, let's have a diagram that sums up this flow:
@@ -49,7 +51,7 @@ The class declaration is unremarkable by now.
 
 ### The fields
 
-You will recognise them from `MoveFlows`:
+You will recognize them from `MoveFlows`:
 
 ```java
 @NotNull
@@ -63,7 +65,7 @@ With these fields, the 2 constructors will look familiar. The declaration of the
 
 ### Generating the transaction
 
-If you followed `MoveFlows`, you will recognise the same actions with regards to the notaries. Here too it then gather the distinct signers:
+If you followed `MoveFlows`, you will recognize the same actions with regards to the notaries. Here too it then gather the distinct signers:
 
 ```java
 final Set<Party> allSigners = inputTokens.stream()

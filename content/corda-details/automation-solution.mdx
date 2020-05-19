@@ -12,6 +12,8 @@ import {
 
 In the previous chapter, you learned about schedulable events and services, each with an exercise for you to complete. Make sure you have worked on your own before looking below for a solution.
 
+To follow along with IntelliJ, you need to open the [`070-services`](https://github.com/corda/corda-training-code/tree/master/070-services) folder as a project.
+
 ## Schedulable event
 
 The point of the exercise was to inform the vault that the seller wants to reject the proposal as soon as it expires. There are a couple flows to reject a proposal. The decision was made to use the one that takes a `SalesProposal` id and the rejecter:
@@ -46,7 +48,7 @@ Where the name of the flow is:
 ```
 The reason why the flow has to be called by name is because it is defined in the _workflow_ module, which is unknown from this _contract_ module.
 
-This means that both the seller's and the buyer's vaults would attempt to reject, but only the seller's vault has the seller's key. Therefore the flow had to be adjusted:
+This also means that both the seller's and the buyer's vaults would attempt to reject, but only the seller's vault has the seller's key. Therefore the flow had to be adjusted:
 
 ```java
 if (!getServiceHub().getKeyManagementService().filterMyKeys(
@@ -63,7 +65,7 @@ Why not have the `SalesProposal` itself filter, and return `null` on the buyer's
 The tests have also been modified. Actually, this gets a bit tricky. The reject flow tests have been split into 2 files, each with a different initialisation:
 
 * In the existing one, reject flows are tested as if there were no schedulable actions.
-* In the new one, the mock network is initialised:
+* In the new one, the mock network is initialized:
     * With an extra parameter: `.withThreadPerNode(true)`.
     * Every `network.runNetwork()` have been replaced by [`network.waitQuiescent()`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/testing/node-driver/src/main/kotlin/net/corda/testing/node/MockNetwork.kt#L389-L390).
 
@@ -77,7 +79,7 @@ The point of this exercise was to inform the potential buyer of a change in info
 
 ## How to inform
 
-The buyer needs to receive the new `CarTokenType` state, and save it to their vault. For that, the best choice is the `SignedTransaction`-flavoured `DataVendingFlow`: `SendTransactionFlow`.
+The buyer needs to receive the new `CarTokenType` state, and save it to their vault. For that, the best choice is the `SignedTransaction`-flavored `DataVendingFlow`: `SendTransactionFlow`.
 
 The `InformTokenBuyerFlows` flow pair has:
 
@@ -123,7 +125,7 @@ if (!getServiceHub().getKeyManagementService()
         .filterMyKeys(Collections.singletonList(buyer.getOwningKey())).iterator().hasNext())
     throw new FlowException("This buyer is not hosted here");
 ```
-What `filterMyKeys` does is return only the keys whose private key can be found. If it is empty, it means that no key could be resolved. Next, it is time to receive the transaction proper:
+What `filterMyKeys` does is return only the keys whose private key can be found. If it is empty, it means that no key could be resolved, i.e. that the buyer is not hosted on this node. Next, it is time to receive the transaction proper:
 
 ```java
 final SignedTransaction tx = subFlow(new ReceiveTransactionFlow(sellerSession));
@@ -180,7 +182,7 @@ sellerSession.send("Ok");
 ```
 When satisfied, it is time to record and send an "Ok". The state is forced to be recorded because it is not a participant to the transaction. Otherwise it would have received it in the first place, after all. With this final "Ok" sent, the flow session can finally be closed.
 
-## How to keep track
+## How to monitor
 
 This is where the service comes into play. It has to be declared:
 
@@ -496,7 +498,7 @@ Another chunky one. It starts inconspicuously by gathering the required informat
 * The buyers as per the tracking.
 * The transaction that executed the `EvolvableTokenType` replacement.
 
-Then, it hands over to the `InformTokenBuyerFlows.Send` flow. Note the use of an `executor`. For an in-depth explanation, look [here](https://lankydan.dev/2018/10/05/starting-flows-with-trackby). In short, flows, via checkpoints, block the thread on which they are running which would mean blocking the service right there. Not to mention that the service is meant to not be serialised because of `SingletonSerializeAsToken`...
+Then, it hands over to the `InformTokenBuyerFlows.Send` flow. Note the use of an `executor`. For an in-depth explanation, look [here](https://lankydan.dev/2018/10/05/starting-flows-with-trackby). In short, flows, via checkpoints, block the thread on which they are running which would mean blocking the service right there. Not to mention that the service is meant to not be serialized because of `SingletonSerializeAsToken`...
 
 So the service offloads these actions to an executor with a number of threads and hopes for the best. This was not tested under load.
 
@@ -510,19 +512,19 @@ And, there you have it. The service that keeps buyers informed, informs only tho
 
 ## Tests
 
-1. `InformTokenBuyerFlowsTests` test:
+1. [`InformTokenBuyerFlowsTests`](https://github.com/corda/corda-training-code/blob/master/070-services/workflows/src/test/java/com/template/proposal/flow/InformTokenBuyerFlowsTests.java) test:
 
     * That the flow fails when given the wrong transaction.
     * That it stores the state on success.
-2. `SalesProposalServiceTests` test:
+2. [`SalesProposalServiceTests`](https://github.com/corda/corda-training-code/blob/master/070-services/workflows/src/test/java/com/template/proposal/service/SalesProposalServiceTests.java) test:
 
     * That the service does not track irrelevant data.
     * That it tracks relevant data.
     * That the the buyer is informed.
     * That it no longer tracks when the proposal is reject by the buyer.
-3. `SalesProposalServiceAndSchedulableTests` test:
+3. [`SalesProposalServiceAndSchedulableTests`](https://github.com/corda/corda-training-code/blob/master/070-services/workflows/src/test/java/com/template/proposal/service/SalesProposalServiceAndSchedulableTests.java) test:
 
-    * That the service no longer tracks when the proposal is automatically deleted by the seller's schedulable event.
+    * That the service no longer tracks when the proposal is automatically deleted by the seller's schedulable event. Talk about automation...
     * Here too, it has to use `network.waitQuiescent`.
 
 ## Conclusion

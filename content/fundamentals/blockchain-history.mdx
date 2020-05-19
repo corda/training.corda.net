@@ -24,11 +24,11 @@ The first work on the foundations of what becomes blockchain technology much lat
 
 ## 2000s
 
-The first large scale, successful public blockchain network was Bitcoin. The first Bitcoin whitepaper was released on October 31, 2008. It proposed a data structure for the Bitcoin blockchain and laid out the decentralised consensus mechanism.
+The first large scale, successful public blockchain network was Bitcoin. The first Bitcoin whitepaper was released on October 31, 2008. It proposed a data structure for the Bitcoin blockchain and laid out the decentralized consensus mechanism.
 
 To date, the author(s) of the white paper and the first implementation of the client remain a mystery. The person or group used the pseudonym Satoshi Nakamoto, sparking plenty of conspiracy theories. Several individuals have claimed to be Nakamoto. But to this date none of the claims have been verified.
 
-What is certain is that the community initially working on the network and the client can be characterised as generally pro-capitalism, anti-regulation and monopoly, as well as pro-free-trade. Many of those developing and driving the technology have also heralded its potential to reduce corruption and perceived human failures by pushing processes out of human reach.
+What is certain is that the community initially working on the network and the client can be characterized as generally pro-capitalism, anti-regulation and monopoly, as well as pro-free-trade. Many of those developing and driving the technology have also heralded its potential to reduce corruption and perceived human failures by pushing processes out of human reach.
 
 All this may not seem important, but it is. It means that blockchain as it was built and envisaged initially is not built for banks, governments or incumbent holders of monopolies. This has an influence on the direction of the technology and remains a strong influence on the development of the technology.
 
@@ -38,7 +38,7 @@ Given its censorship-resistance, blockchain technology has been seized upon by o
 
 As soon as it became clear that the technology presents a very attractive base infrastructure for payments, other groups and organisations adapted the technology for their purposes or developed new approaches using the same basic principles but adapting them to more traditional use cases.
 
-In 2014 Vitalik Buterin started what is now known as the second wave of blockchain technology by publishing the paper underlying the Ethereum blockchain protocol, [A Next Generation Smart Contract & Decentralised Application Platform (Vitalik Buterin, Ethereum’s creator)](https://github.com/ethereum/wiki/wiki/White-Paper). Beyond being a distributed ledger, the Ethereum white paper proposed the development of a distributed computation platform.
+In 2014 Vitalik Buterin started what is now known as the second wave of blockchain technology by publishing the paper underlying the Ethereum blockchain protocol, [A Next Generation Smart Contract & Decentralized Application Platform (Vitalik Buterin, Ethereum’s creator)](https://github.com/ethereum/wiki/wiki/White-Paper). Beyond being a distributed ledger, the Ethereum white paper proposed the development of a distributed computation platform.
 
 The Ethereum project raised roughly $20 million in one of the most successful crowdfunds up to that point. The first public network was up and running in 2015. In the same time it spawned the first managed blockchain network approach when the company Eris forked a version of Ethereum and expanded it to implement a layer of permissions, as well as making it easier to deploy custom, access-controlled networks.
 
@@ -58,8 +58,8 @@ A proof-of-work based public blockchain network, such as Bitcoin or Ethereum, ha
 
 - **Accessibility** - All you need to connect to Bitcoin or Ethereum is the client software and an internet connection. No AML, KYC, identity checks or subscription payment.
 - **No hierarchy** - All nodes are equal. No individual node has more authority than another. All miners are equal. Mining is something a node decides to do, not something a node is.
-- **Cryptoeconomic incentives** - Because of the lack of central authority there is no absolute defence against malicious behaviour. Instead, the network is usually constructed in a way that incentivises behaviour beneficial to the network and disincentivises behaviour detrimental to the network. Among these incentives are transaction fees, miner rewards and prohibitively expensive costs associated with attacking the network.
-- **Full decentralisation** - Most public networks are completely decentralised because they are non-hierarchical and fully accessible. That also means the playing field for market participants is fairly level and traditional business models may not work well in such a setting.
+- **Cryptoeconomic incentives** - Because of the lack of central authority there is no absolute defence against malicious behavior. Instead, the network is usually constructed in a way that incentivizes behavior beneficial to the network and disincentivizes behavior detrimental to the network. Among these incentives are transaction fees, miner rewards and prohibitively expensive costs associated with attacking the network.
+- **Full decentralisation** - Most public networks are completely decentralized because they are non-hierarchical and fully accessible. That also means the playing field for market participants is fairly level and traditional business models may not work well in such a setting.
 
 The two most popular examples of functioning public networks are Bitcoin and Ethereum.
 
@@ -75,7 +75,7 @@ Let us look at this in more detail. Nakamoto does not use the term block chain i
 
 To prevent double-spending, Bitcoin uses a timestamp server but this role (miner) is assigned in a pseudo-random fashion. The miner looks for a nonce which results in a block hash beginning with prescribed number of binary `0`s (See **Figure 1**). It is difficult to find a nonce that fulfils this condition but it is trivial to verify that it does. It becomes exponentially more difficult to alter history as more blocks are appended.
 
-In order to promote an alternative version of history, an attacker must find a nonce for the block to change, and for every subsequent block thereafter because the network recognises that the longest valid chain contains proof of the most work. The longest chain is deemed the truth. This is known as the longest chain rule in Proof-of-Work systems.
+In order to promote an alternative version of history, an attacker must find a nonce for the block to change, and for every subsequent block thereafter because the network recognizes that the longest valid chain contains proof of the most work. The longest chain is deemed the truth. This is known as the longest chain rule in Proof-of-Work systems.
 
 There remains a residual probability that a slower attacker can catch up since finding a nonce works by brute force. This possibility decreases exponentially with the number of blocks appended after the block an attacker targets for modification. The later blocks are colloquially called confirmations. As confirmations are appended, confidence in historical transactions increases because the edge cases become exponentially unlikely.
 
@@ -89,7 +89,7 @@ Ethereum has a much faster block time than Bitcoin (currently around 15s), made 
 
 At this stage, it is worth mentioning that "consensus" in this context refers only to the temporary assignment of authority to disambiguate transaction order for a period of time because, given a consensus about the transaction log, nodes are fully equipped to compute everything else.
 
-Let us have a look at the Ethereum protocol to understand how it differs from Bitcoin. Our reference is the yellow paper [Ethereum: A Secure Decentralised Generalised Transaction Ledger (2014)](http://gavwood.com/paper.pdf) by Dr. Gavin Wood.
+Let us have a look at the Ethereum protocol to understand how it differs from Bitcoin. Our reference is the yellow paper [Ethereum: A Secure Decentralized Generalized Transaction Ledger (2014)](http://gavwood.com/paper.pdf) by Dr. Gavin Wood.
 
 The Ethereum network is a virtual state machine, the Ethereum Virtual Machine (EVM). The implementation of such a state machine with blockchain is revolutionary in itself. To achieve Turing-completeness frameworks must overcome the "halting problem" which is difficult, especially in a distributed, hierarchy-free computing platform. In case this is not clear, the halting problem is about what to do in the case that a process runs amok. Well-known solutions such as a hardware reset do not apply to a worldwide state machine that cannot be restarted.
 
