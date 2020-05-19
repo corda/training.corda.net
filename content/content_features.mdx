@@ -6,13 +6,21 @@ slug: content-features
 
 # Components
 
-## Material UI Components
+## Navigation Cards
 
-import { Card } from "@material-ui/core";
+import NavigationCard, {NavigationCardWrapper} from "../src/NavigationCard";
 
-<Card>
-Item 1
-</Card>
+<NavigationCardWrapper>
+	<NavigationCard href="/fundamentals/introduction/" title="Fundamentals">
+	Key blockchain questions answered
+	</NavigationCard>
+	<NavigationCard href="/key-concepts/concepts/" title="Key Concepts">
+	Components and structure of a CorDapp
+	</NavigationCard>
+	<NavigationCard href="/prepare-and-discover/introduction/" title="Prepare and Discover">
+		Get and explore sample code
+	</NavigationCard>
+</NavigationCardWrapper>
 
 ## Highlight Box
 
