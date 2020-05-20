@@ -7,8 +7,8 @@ export default function CustomSEO({image, baseUrl, twitterHandle, ...props}) {
   const imagePath = withPrefix('/' + image);
   return (
     <SEO {...props} twitterCard="summary_large_image">
-      <meta property="og:image" content="https://www.r3.com/wp-content/uploads/2019/08/R3_Master-Logo-White.jpg" />
-      {baseUrl && <meta name="twitter:image" content="https://www.r3.com/wp-content/uploads/2019/08/R3_Master-Logo-White.jpg" />}
+      <meta property="og:image" content="/corda-training.jpg" />
+      {baseUrl && <meta name="twitter:image" content="/corda-training.jpg" />}
       {twitterHandle && (
         <meta name="twitter:site" content={`@${twitterHandle}`} />
       )}
