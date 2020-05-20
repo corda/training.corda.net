@@ -10,7 +10,7 @@ import {
   ExpansionPanelListItem
 } from 'gatsby-theme-apollo-docs';
 
-This module introduces you to the concepts behind the Corda platform in detail. Now that you have studied the history and [fundamentals](/fundamentals/introduction/) of blockchain technologies you will discover how the Corda platform is similar to and differentiated from other blockchain platforms.
+This module introduces you to the concepts behind the Corda platform in detail. If you are new to blockchain and distributed ledger technology, study the history and [fundamentals](/fundamentals/introduction/) first, then return here to discover how the Corda platform is similar to and differentiated from other blockchain platforms.
 
 In this section, you will learn about the most important aspects of the Corda platform:
 
@@ -30,7 +30,7 @@ The word "blockchain" is almost synonymous with cryptographically secured distri
 
 Let's review the important terms and their meaning in this context. Correct understanding is important as you move forward.
 
-## Permissioned
+### Permissioned
 
 There is no place for anonymous actors in enterprise networks entrusted with sensitive information. Anonymous, and likely unaccountable, users pose a security threat to networks, either by compromising confidentiality or by interfering in the correct operation of the system. If such users have no business being there, then they should probably not be there. Further, regulated enterprises are subject to strict security requirements, so anonymous users *must not* be there.
 
@@ -42,13 +42,13 @@ When working with public blockchain networks, network topology is a given. That 
 
 In contrast, when working with private networks like Corda, topology is indeed an axis of freedom and aligning the topology with a set of goals is an important design consideration. Architects will define a topology that is acceptable to all participants. In other words, Corda network topology should not be taken for granted or assumed. Variation is possible and one should plan on carefully designing it.
 
-## Distributed Ledger
+### Distributed Ledger
 
 Corda is often informally referred to as a blockchain technology owing to the many similarities, such as decentralisation, immutability and security. Perhaps the main similarity is the end goal of a network of participants sharing a set of facts. Further similarities include the sharing of history about those facts, programmatic and strict control over allowable state transitions, a.k.a. “transactions.” Transactions update the facts. These properties are logically similar to what blockchains can do.
 
 A blockchain is a particular data structure that together with a powerful consensus system can provide convincing transaction finality, immutability and security. The same can be said of Corda, but Corda's implementation accomplishes it by other means. In Corda, there is no chain and there are no blocks, so there is clearly no chain of blocks. The term "Distributed Ledger" turns attention to the result of the design without implying a misleading description of the underlying implementation details. As you will see, the underlying process is unique to Corda.
 
-## Enterprise Settings
+### Enterprise Settings
 
 Let us consider how enterprise requirements, including those of regulated enterprises, differ from the goals of public blockchains and how those differences influenced the design.
 
@@ -70,7 +70,7 @@ Corda is also distinguished from other so-called "smart contract" platforms by i
 
 Corda is different in that it focuses from the beginning on legal language, business processes, how disputed agreements are resolved and the specific concerns of regulated enterprises. While some blockchain maximalists proclaim that "Code is Law," in Corda, Law is Law, and Corda applications are operational implementations.
 
-## Execution Logic
+### Execution Logic
 
 Corda is not a virtual machine. Corda is purpose-built for recording, managing and synchronising facts shared by participants. CorDapps, which are the applications that can be built on Corda, closely model business processes that begin with the existence of binding agrements. In Corda, contracts implement legal agreements. Corda helps execute contracts by easily implementing business processes such as collecting the necessary approvals and signatures that will create, execute and transact binding agreements.
 
@@ -125,7 +125,7 @@ Behind the scenes, each company was free to implement their internal workflows a
 
 </ExpansionPanel>
 
-## Balancing Concerns
+### Balancing Concerns
 
 Corda attempts to balance several concerns, optimising for enterprise. These concerns include:
 
@@ -135,7 +135,7 @@ Corda attempts to balance several concerns, optimising for enterprise. These con
 - Complexity
 - Other concerns
 
-## Peer-to-Peer
+### Peer-to-Peer
 
 According to R3, "On the grounds of confidentiality, we reject the notion that data should be broadcast to all participants or cumbersome pre-defined groups." Corda communications are peer-to-peer on a "need-to-know" basis without broadcast. Need-to-know is quite different from Ethereum's public broadcast, Quorum's private transactions or Hyperledger Fabric's network "channels" approach. In a Corda network, if Alice transacts with Bob, then only Alice and Bob need to know about it, and possibly a regulator.
 
@@ -145,11 +145,11 @@ Physically, a Corda network is a fully connected graph, and all nodes can potent
 
 Corda networks are designed to scale. As you will see, the transaction finalisation process is designed to run as fast as the network and underlying hardware will permit. The finalisation process isn't logically constrained by a pacing mechanism or the need to gather widespread agreement as is found in blockchain networks reaching for consensus. If Alice and Bob agree that the transaction is finalized and various processes finalize it, then it's final.
 
-## Message Queues
+### Message Queues
 
 The system uses AMQP (Advanced Message Queuing Protocol) over TLS (Transport Layer Security) which provides resilient routing and queuing even in the case that nodes are restarted. AMQP is asynchronous, performs well under load, provides guarantees about message delivery and persistence and operates without assumptions about continuous connectivity. When recipients are offline, messages queue up and retry until delivered.
 
-## UTXO
+### UTXO
 
 Corda uses an Unspent Transaction Output model, a.k.a. UTXO. This is conceptually similar to Bitcoin's approach. Each transaction consumes zero or more states that previously existed and outputs zero or more new states. As a very simple example, consider a simple IOU. Alice will borrow &#36;100 from Bob. The contract is the IOU agreement. Its purpose, in summary, is to describe the state of the loan, meaning who is in debt, to whom is that debt owed, the currency of the debt, the current balance, payment terms, deadlines, etc.
 
@@ -159,7 +159,7 @@ Assuming this transaction is agreeable to both parties and finalized, then these
 
 Mis-ordering of transactions is impossible since each transaction depends on the existence of states that came before and which can only be consumed one time. This structure neatly addresses the double-spending problem while putting minimal demands on the consensus process. All that is required is a reliable history of states that exist and a reliable method of extinguishing them.
 
-## Transactions are Proposed State Changes
+### Transactions are Proposed State Changes
 
 Unlike deterministic platforms that rely on each participant having a copy of the contract software and verifying correct execution of deterministic contract functions, Corda transactions are largely silent on the precise details of *how* the agreed outcome is achieved. Further, it is not important and generally not recommended that each party to a Corda contract should divulge their in-house proprietary logic and process. Transactions are proposed as hypothetical state changes but they are silent on exactly how each party approves or disapproves proposals and how they will comply with the terms of the contracts.
 
@@ -177,7 +177,7 @@ Alice will service the IOU through a series of transactions that will propose fu
 
 Corda’s process maps well to our understanding of established business processes. Alice proposes that she will agree to the terms of an IOU if Bob provides matching funds. As the IOU is repaid, Alice offers funds contingent on Bob agreeing to apply the funds to the IOU. For example, Alice offers cash to Bob on the condition that Bob agrees to a reduction of the IOU balance. In this context, a transaction can be understood as an evolution of one or more states that is agreeable and signed off by all interested parties.
 
-## Re-use / Build
+### Re-use / Build
 
 Corda uses existing banking industry standard bank-friendly libraries and avoids "re-inventing the wheel."
 
@@ -188,7 +188,7 @@ The JVM can be (and has been) modified to be deterministic. After whitelisting a
 
 Persistence is provided by SQL databases which are universally familiar, and this can ease integration with other in-house systems. Indeed, any SQL database can be used if it supports JDBC connectivity.
 
-## Flexibility
+### Flexibility
 
 As well as supporting different databases, Corda has no fixed consensus system. Notaries provide a reliable witness that is instrumental in ensuring that states can only be consumed once, thus preventing race conditions that can lead to double-spending. Notaries themselves can use different algorithms, and Notaries of different types can co-exist on a single Corda network. Therefore, on Corda networks, the transaction validation and finalisation process details may vary somewhat for different types of transactions.
 
