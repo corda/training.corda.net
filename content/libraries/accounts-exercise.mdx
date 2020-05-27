@@ -14,7 +14,7 @@ import {
 
 In the previous chapter, you learned about the Accounts Library, and you followed along with the associated learning unit tests, or created your own. In this chapter, you are going to:
 
-* Discuss integration Tokens and Accounts.
+* Learn how to integrate Tokens and Accounts.
 * Describe how you can modify your project to make use of the accounts feature.
 
 The project is still about a car token being issued and passed around. You also created an `AtomicSale` flow, which, keep in mind, has one serious unresolved issue: how to ensure that the buyer has properly expressed their intent to buy.
@@ -62,7 +62,7 @@ So, if Alice has only one token with quantity of 5 and wants to send Bob a quant
 
 ![Consume State](images/consume_state.png)
 
-You will also recall that both transfer and redeem flows have a `changeHolder` input parameter. If you leave it empty, it will default to the initiating node, which becomes a problem if you’re using accounts. Common sense would dictate that the change is given to the original holder. Because of this default behaviour, you are advised to never use the default, and instead make the `changeHolder` explicit.
+You will also recall that both transfer and redeem flows have a `changeHolder` input parameter. If you leave it empty, it will default to the initiating node, which becomes a problem if you’re using accounts. Common sense would dictate that the change is given to the original holder. Because of this default behavior, you are advised to never use the default, and instead make the `changeHolder` explicit.
 
 If you want, have a look at official [integration tests](https://github.com/corda/accounts/tree/900fe9c2ebf4ad8ecda1f494c03f747ef1579746/examples/tokens-integration-test/src/integrationTest/kotlin/com/r3/corda/lib/accounts/examples/tokensTest) between accounts and tokens.
 

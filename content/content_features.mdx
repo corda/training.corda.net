@@ -6,6 +6,22 @@ slug: content-features
 
 # Components
 
+## Navigation Cards
+
+import NavigationCard, {NavigationCardWrapper} from "../src/NavigationCard";
+
+<NavigationCardWrapper>
+	<NavigationCard href="/fundamentals/introduction/" title="Fundamentals">
+	Key blockchain questions answered
+	</NavigationCard>
+	<NavigationCard href="/key-concepts/concepts/" title="Key Concepts">
+	Components and structure of a CorDapp
+	</NavigationCard>
+	<NavigationCard href="/prepare-and-discover/introduction/" title="Prepare and Discover">
+		Get and explore sample code
+	</NavigationCard>
+</NavigationCardWrapper>
+
 ## Highlight Box
 
 import HighlightBox from "../src/HighlightBox"
@@ -231,6 +247,19 @@ this.linearId = linearId;
 ```
 
 Bottom spacing check
+
+## Latex
+
+The premise is that if you have a public key $$(pubKey,n)$$ and a private key $$priKey$$ then you can:
+
+* encrypt a message with the following:
+
+$$message ^{pubKey} \equiv encMessage \mod n$$
+
+* decrypt the encrypted message with the following:
+
+$$encMessage ^{priKey} \equiv  message \mod n$$
+
 
 # Tests / Features
 

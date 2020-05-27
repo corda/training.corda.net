@@ -1,10 +1,10 @@
 /*  Gatsby config for the Corda Training app
-    
+
     Changing this file in dev mode will require a server restart
-    
+
     - Theme options are retrieved from theme-options.js
     - Sidebar content is loaded from structure.js in the contentFolder
-    
+
     You can enable the disableImageProcessing flag to speed up dev builds.
 
     This configuration modifies the Theme's remark pipeline (mdx renderer), based on gatsby-transformer-remark.
@@ -43,7 +43,7 @@ const getSidebarConfig = () => {
       'index',
     ]
   };
-  
+
   return sidebarCategories = {...sidebarDefaults, ...sidebarContent};
 }
 
@@ -110,7 +110,7 @@ const apolloDocsOptions = {
 /*  WORKAROUND: To configure the remark plugin configuration, we need to touch the gatsby-plugin-mdx config which is inside the theme
     and can not be configured directly. This should be possible in the future with a onPluginOptions hook (https://github.com/gatsbyjs/gatsby/issues/16697).
     Until this is implemented, we can write our own configuration, merging it with the theme's config (credit to https://github.com/gatsbyjs/gatsby/issues/16593#issuecomment-580037645).
-    
+
     Config structure:
     gatsby-theme-apollo-docs/gatsby-config.js
     ├─gatsby-plugin-mdx
@@ -136,7 +136,14 @@ let remarkPluginConfig = [
       related: false, //Optional: Will remove related videos from the end of an embedded YouTube video.
       noIframeBorder: true, //Optional: Disable insertion of <style> border: 0
     }
-  }
+  },
+  {
+    resolve: `gatsby-remark-katex`,
+    options: {
+      // Add any KaTeX options from https://github.com/KaTeX/KaTeX/blob/master/docs/options.md here
+      strict: `ignore`
+    }
+  },
 ]
 
 if (!disableImageProcessing) {
@@ -151,8 +158,9 @@ if (!disableImageProcessing) {
       }
     },
     {
-      resolve: "gatsby-remark-images-zoom",
+      resolve: "gatsby-remark-images-medium-zoom",
       options: {
+        excludedSelector: "no-zoom"
       }
     }
   ]);
@@ -186,6 +194,9 @@ if (!isValidSiderbarConfig) {
 /* Gatsby config export */
 module.exports = {
   pathPrefix: pathPrefix,
+  siteMetadata: {
+    siteUrl: `https://training.corda.net`,
+  },
   plugins: [
     {
       resolve: 'gatsby-theme-apollo-docs',
@@ -194,7 +205,7 @@ module.exports = {
     {
       resolve: 'gatsby-transformer-remark',
       options: {
-        plugins: remarkPluginConfig.concat(apolloGatsbyRemarkPlugins)
+        plugins: remarkPluginConfig.concat(apolloGatsbyRemarkPlugins, ['gatsby-remark-autolink-headers', 'gatsby-remark-check-links'])
       }
     },
     {
@@ -210,7 +221,8 @@ module.exports = {
       resolve: `gatsby-plugin-sharp`,
       options: {
         useMozJpeg: false,
-        stripMetadata: true
+        stripMetadata: true,
+        srcSetBreakpoints: [ 200, 340, 520, 736, 1024, 1280 ]
       }
     },
     `gatsby-plugin-react-helmet`,
@@ -220,6 +232,7 @@ module.exports = {
         siteUrl: themeOptions.siteUrl,
       }
     },
+    "gatsby-plugin-material-ui",
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {
@@ -227,6 +240,9 @@ module.exports = {
         head: false,
         cookieDomain: "corda.net",
       },
+    },
+    {
+      resolve: `gatsby-plugin-sitemap`,
     }
   ]
 };

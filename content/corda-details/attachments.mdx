@@ -1,7 +1,7 @@
 ---
 title: Attachments
-description: Digging a bit about transaction attachments
-slug: details/transaction-attachments
+description: Attaching files to transactions
+slug: details/attachments
 ---
 
 There are cases where network participants need to reuse a certain piece of data. Corda facilitates that task by allowing to add that piece of data as an attachment to the transaction. When a party receives that transaction, they can then request the attachment file from the sender.
@@ -27,7 +27,7 @@ As you know, when a transaction is created, a contract must be specified for eac
 * The contracts' role is to validate the state transitions that the transaction represents.
 * This validation needs to be deterministically reproducible, now and in the future, which requires the exact contracts that were used during the initial finalisation.
 
-It is, therefore, to facilitate reproduceability that contract jars are attached to transactions. So when a responding node calls `ReceiveFinalityFlow` to finalise the received transaction, it in turn executes the **pre-uploaded** contracts found in the relevant jar files.
+It is, therefore, to facilitate reproduceability that contract jars are attached to transactions. So when a responding node calls `ReceiveFinalityFlow` to finalize the received transaction, it in turn executes the **pre-uploaded** contracts found in the relevant jar files.
 
 Indeed, given the risk of mischief, contracts are _pre-uploaded_ and not downloaded automatically to the node. You got a taste of that when you removed a jar file from one of the nodes and then ran the IOU CorDapp.
 
@@ -70,7 +70,7 @@ Here is a list of the most common attachment tasks.
 
 You can upload an attachment manually or programmatically.
 
-* To do it manually, simply run one of the followings commands from within your node's shell.
+* To do it manually, simply run one of the following commands from within your node's shell.
 
     ```yaml
     >>> run uploadAttachment jar: path/to/the/file.jar
@@ -155,7 +155,7 @@ When searching for an attachment, you can do it either by its **hash** or by its
 
 ### In a contract
 
-We already saw these actions in the blacklist sample, so to repeat:
+You already saw these actions in the blacklist sample, so to repeat:
 
 ```java
 final Attachment attachment = tx.getAttachment(SecureHash.parse("id"));
@@ -165,7 +165,7 @@ final InputStream content = attachment.open();
 
 ## Conclusion
 
-We have seen that transactions have attachments, and that nodes store and exchange them on the side. There is no guided exercise.
+You have seen that transactions have attachments, and that nodes store and exchange them on the side. There is no guided exercise.
 
 ## Useful Links
 

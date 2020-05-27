@@ -1,7 +1,7 @@
 ---
 title: Automation
 description: Do things in the background
-slug: details/services
+slug: details/automation
 ---
 
 import HighlightBox from "../../src/HighlightBox"
@@ -50,8 +50,8 @@ Services can be used for multiple purposes, for instance:
 
 What do you need to declare a service? Simple. A Corda service:
 
-1. Should have the `@CordaService` annotation. This signals to the node that it should initialise it on startup.
-2. Should extend the abstract `SingletonSerializeAsToken`. Services, and large objects in general, shouldn't be serialised when a flow is check-pointed. Instead, a token that references the running service is serialised and is used to link back to the object, i.e. service, when the flow resumes. See the detailed explanation [here](https://github.com/corda/samples/blob/62722858a2f50512a9445e1f79b4619d2e8199d0/timesheet-example/workflows-java/src/main/java/com/example/service/SalaryRateOracle.java#L3-L11).
+1. Should have the `@CordaService` annotation. This signals to the node that it should initialize it on startup.
+2. Should extend the abstract `SingletonSerializeAsToken`. Services, and large objects in general, shouldn't be serialized when a flow is check-pointed. Instead, a token that references the running service is serialized and is used to link back to the object, i.e. service, when the flow resumes. See the detailed explanation [here](https://github.com/corda/samples/blob/62722858a2f50512a9445e1f79b4619d2e8199d0/timesheet-example/workflows-java/src/main/java/com/example/service/SalaryRateOracle.java#L3-L11).
 3. Should have a constructor that takes a single parameter of type `AppServiceHub`. Having this service-hub, grants the service access to privileged operations (e.g. start a flow).
 
 Aside from those requirements, what the service does is up to you.
@@ -63,7 +63,7 @@ Recall that a `SalesProposal` `Offer` transaction has 2 reference states:
 * The `StateAndRef<CarTokenType>` instance.
 * The `StateAndRef<NonFungibleToken>` instance.
 
-And, both have to be unconsumed for the `Offer` transaction to be notarised successfully. Similarly, an `Accept` transaction consumes the `NonFungibleToken` but also has 1 reference state:
+And, both have to be unconsumed for the `Offer` transaction to be notarized successfully. Similarly, an `Accept` transaction consumes the `NonFungibleToken` but also has 1 reference state:
 
 * The `StateAndRef<CarTokenType>` instance.
 
@@ -71,7 +71,7 @@ Do you see a problem here? It's a minor issue, admittedly. The seller is in cont
 
 <HighlightBox type="warn">
 
-If the DMV updates the car mileage, a new `StateAndRef<CarTokenType>` instance is created and the previous one is consumed. Therefore, the buyer can no longer notarise an `Accept` transaction.
+If the DMV updates the car mileage, a new `StateAndRef<CarTokenType>` instance is created and the previous one is consumed. Therefore, the buyer can no longer notarize an `Accept` transaction.
 
 </HighlightBox>
 
@@ -87,7 +87,7 @@ You will remedy this situation with the help of a `ProposalService` that, in sho
 * When such an _offered_ `StateAndRef<CarTokenType>` has been consumed, it promptly informs the buyer of this.
 * Stops tracking when proposals are consumed.
 
-With this service, the buyer is assured of always having the latest `CarTokenType` in their vault, the latest updated facts, such that should they `Accept`, their transaction will indeed notarise. After all, when the mileage has increased, perhaps the offer is not as interesting as it was initially and possibly a `Reject` is in order.
+With this service, the buyer is assured of always having the latest `CarTokenType` in their vault, the latest updated facts, such that should they `Accept`, their transaction will indeed notarize. After all, when the mileage has increased, perhaps the offer is not as interesting as it was initially and possibly a `Reject` is in order.
 
 Go!
 

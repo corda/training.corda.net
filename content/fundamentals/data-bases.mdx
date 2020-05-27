@@ -37,10 +37,10 @@ Of course, it's likely that all of this is known to you, but it may help to star
 First, a few definitions:
 
 * Data is a series of one or more symbols given meaning by acts of interpretation.
-* A database is an organised collection of data.
+* A database is an organized collection of data.
 * A database management system (DBMS) is a program (or system), used to manage and interact with a database.
 
-The history of databases is often categorised into 3 different eras: navigational, relational and post-relational databases.
+The history of databases is often categorized into 3 different eras: navigational, relational and post-relational databases.
 
 Let us have a closer look at the different types of databases and their evolution in time.
 
@@ -72,7 +72,7 @@ In the 1960s, IBM created the first hierarchical database, IMS. They were mainly
 Hierarchical data base models have a tree-like structure. Data is stored as a record, which again is connected to other records by links.
 The tree-like structure is a result of record relationships.
 
-Whereby a record is a compilation of fields containing exactly **one** value and its entity type defines the field the record comprises.
+Whereby a record is a compilation of fields containing exactly **one** value and its entity type defines the field the record comprizes.
 A record is comparable to a row/tuple in relational databases and an entity type to a table/relation.
 Each record in a hierarchical database has **one** parent record and can have **one or more** children records.
 
@@ -83,7 +83,7 @@ To retrieve data, one has to run through the whole "tree" starting at the root n
 
 Hierarchical models lost ground after Codd's relational model was introduced.
 With the Extensible Markup Language (XML) coming up in the late 1990s, hierarchical database models re-emerged.
-Nowadays, they are mostly utilised for applications needing high performance and data availability.
+Nowadays, they are mostly utilized for applications needing high performance and data availability.
 Application areas are geographic information data storing, as well as file systems and databases in banking and telecommunications.
 
 Examples of hierarchical models include the IBM Information Management System (IMS), RDM Mobile and the Windows Registry in Microsoft Windows.
@@ -93,7 +93,7 @@ Examples of hierarchical models include the IBM Information Management System (I
 Network models were introduced by Charles Bachman.
 They follow a schema, in which object types are the nodes of a graph and relationship types the arcs.
 Thus, hierarchical structure or lattice, where graphs illustrations would follow a regular tiling, is not a characteristic of this model.
-In addition, network models have a generalised graph schema, in which record types are connected by relationship types, while at the same time, the database is a generalised graph of recorded events connected through their relationships.
+In addition, network models have a generalized graph schema, in which record types are connected by relationship types, while at the same time, the database is a generalized graph of recorded events connected through their relationships.
 
 ![network model database](images/networkmodel.png)
 
@@ -104,21 +104,19 @@ Among them, this type of model did not become dominant because of IBM’s prefer
 
 Examples of a network model are the Integrated Data Store (IDS), Integrated Database Management System (IDMS) and Raima Database Manager.
 
-## A Comparison: Differences between Hierarchical Databases and Network Models
+## Comparing Hierarchical Databases and Network Models
 
-Hierarchical models follow a simple structure, but this makes them also inflexible.
+Hierarchical models follow a simple structure, but this also makes them inflexible.
 They are not suited for large amounts of relationships because of the navigational constraints and tree-like schema.
 In addition, the implementation is quite complex and they are difficult to manage. A lack of structural independence and standards can be observed.
 
-Network models have a more natural manner of modelling relations between entities and thus more flexible, but create a complex system, which is difficult to design and to maintain.
+Network models have a more natural manner of modelling relations between entities and are thus more flexible, but they create complex systems which are difficult to design and to maintain.
 As hierarchical models, they lack structural independence.
 
 ![Model Comparison](images/datatable.png)
 
-This makes them differently fitting for networks.
-
-In the beginning 1980s, low-level navigational interfaces based on hierarchical and network models were used for large-scale applications due to their benefits in performance.
-With hardware evolving, relational models provided more productivity and flexibility.
+In the early 1980s, low-level navigational interfaces based on hierarchical and network models were used for large-scale applications for performance reasons.
+With improved hardware performance, relational models provided more productivity and flexibility.
 In the end, relational models made them more and more obsolete, especially in the context of networks for corporate enterprises.
 
 ## Relational Databases
@@ -128,7 +126,7 @@ It proposed a new model for databases that relied on fixed-size tables sharing i
 Rather than searching by following links, Codd suggested a search for data by content.
 
 Not only was this an important technological development, but it also created a new, abstracted space in which data was conceptually unbound by data banks by virtually merging them together and therefore disconnecting them from physical data storage.
-SEQUEL or SQL, initially developed to manage data in relational databases by IBM to utilise the model Codd proposed in the 1970s, enabled new kinds of applications by making it possible to effectively search databases and create large inter-relational data sets that did not rely on a linked-list approach.
+SEQUEL or SQL, initially developed to manage data in relational databases by IBM to utilize the model code proposed in the 1970s, enabled new kinds of applications by making it possible to effectively search databases and create large inter-relational data sets that did not rely on a linked-list approach.
 
 <HighlightBox type="info">
 
@@ -145,19 +143,19 @@ While network and hierarchical database models became more and more unpopular, c
 Thus, the 1980s brought desktop computers and the possibility to store data, as well as run database software on desktop hardware. Originally data was kept in silos and SQL brought them together into one virtual space.
 With the advent of desktop computing data was now siloed in desktop computers.
 
-In the 1990s, object-oriented programming, in which data is conceptualised as objects, allowed solving the problem of having to translate between database tables and programmed objects and led to object and object-relational databases (ORD) and the use of object-relational mappings.
+In the 1990s, object-oriented programming, in which data is conceptualized as objects, allowed solving the problem of having to translate between database tables and programmed objects and led to object and object-relational databases (ORD) and the use of object-relational mappings.
 
 New post-relational databases as a response to the Internet and need for fast processing of unstructured data appeared in the 2000s.
 NoSQL databases, which are non-relational, introduced key-value stores and document-orientation.
 These new type of databases are resource intensive and confront database admins (DBA) and maintainers with new issues, unknown in the context of relational databases.
 NoSQL databases are often differentiated as:
 
-* document-oriented databases with strong query engines and index controls, such as MongoDB, Amazon Dynamo DB;
-* column stores that store data as portions of columns and not rows, for example Cassandra or Cloudera;
-* key-value stores, like Redis, Berkeley DB or Aerospike;
-* graph data stores based on graph theory, e.g. Neo4j, GraphBase, Titan.
+* Document-oriented databases with strong query engines and index controls, such as MongoDB, Amazon Dynamo DB.
+* Column stores that store data as portions of columns and not rows, for example Cassandra or Cloudera.
+* Key-value stores, like Redis, Berkeley DB or Aerospike.
+* Graph data stores based on graph theory, e.g. Neo4j, GraphBase, Titan.
 
-While all of this development was taking place, networking between computers was developed and improved. We will cover this in the next section.
+While all of this development was taking place, networking between computers was developed and improved. More on this in the next section.
 
 ## Data Transfer
 
@@ -173,7 +171,7 @@ Imagine two machines that are connected to each other and have access to two dif
 5. Computer A receives the document and interprets the data, perhaps storing it in its own database or executing a series of actions.
 
 The role of the document is important to highlight here.
-To synchronise data between machines, an encode-decode sequence happens on the two computers involved by first including a sequence of characters in a specialised format and afterwards reversing the process.
+To synchronize data between machines, an encode-decode sequence happens on the two computers involved by first including a sequence of characters in a specialized format and afterwards reversing the process.
 Common codes include the American Standard Code for Information (ASCII) for text files, Unicode, MIME, BinHex and Uuencode, and in the context of data communications among others Manchester encoding.
 
 A good example for a document transfer is an API request.
@@ -198,16 +196,15 @@ Blockchain is effectively a non-hierarchical approach to mitigate these issues b
 
 ## Protocols & Fault Tolerance
 
-Before we dive into how these issues are approached with blockchain technology, let us re-visit how protocols in networking solve problems inherent to a hierarchy-free, fault-prone environment.
+Before diving into how these issues are approached with blockchain technology, reconsider how protocols in networking solve problems inherent to a hierarchy-free, fault-prone environment.
 
-The term computer networking covers both the hardware side, as well as the software protocols used to transmit data and let computers communicate with one another.
-Because networks have a physical aspect, the interaction between software and hardware is especially interesting in a blockchain context.
+The term computer networking covers both the hardware side, as well as the software protocols used to transmit data and let computers communicate with one another. Because networks have a physical aspect, the interaction between software and hardware is especially interesting in a blockchain context.
 
 Imagine a cable connection between two computers. Traditionally a coaxial cable would have been used to carry a signal.
 Cables can be subject to interference from a broad range of things, so there is no guarantee that the signal originating at point A will be received by point B.
 To mitigate this problem and ensure communication a whole stack of protocols on the hardware and software level has been developed, with many foundations laid in the famous Xerox PARC.
 
-Protocols are behaviour guidelines for machines, so that they can cooperate and understand each other, as well as mitigate translation and synchronisation issues.
+Protocols are behavior guidelines for machines, so that they can cooperate and understand each other, as well as mitigate translation and synchronisation issues.
 
 Whereas the capability of a computer or electronic system, or a network to keep operating while components fail is subsumed under the term fault tolerance.
 In case of a failure, it requires a system to continue operation without interruption while it is repaired (no single point of failure).
@@ -221,7 +218,7 @@ If a packet is missing, the receiving computer can ask for the re-transmission o
 
 ![Document Request](images/document.png)
 
-When approaching blockchain technology it is worth recalling these basics of computing because the technology operates in a similarly uncertain environment and is designed to minimise the potential for disruption and damage in adverse conditions.
+When approaching blockchain technology it is worth recalling these basics of computing because the technology operates in a similarly uncertain environment and is designed to minimize the potential for disruption and damage in adverse conditions.
 
 ## Ledgers
 
@@ -263,13 +260,13 @@ Forks describe cases when a blockchain could continue on two different transacti
 A more recent block points to the block that came right before itself.
 It does so by storing the hash of its immediately preceding block.
 Thus, it is possible for 2 different blocks to claim to be the successor of a given block.
-In this case, we say that there is a fork. The protocol provides a mechanism to eventually focus on a single branch of the fork automatically, if the user does not explicitly instruct its client to follow a specific fork.
+In this case, there is a fork. The protocol provides a mechanism to eventually focus on a single branch of the fork automatically, if the user does not explicitly instruct its client to follow a specific fork.
 
 ![Fork Example](images/blockchain_forking.png)
 
 ### Eventual consensus
 
-The CAP theorem states that in a distributed system, you can at most pick 2 out of the 3:
+The CAP theorem states that in a distributed system, you can, at most, pick 2 out of these 3 properties:
 
 - Consistency
 - Availability
@@ -277,7 +274,7 @@ The CAP theorem states that in a distributed system, you can at most pick 2 out 
 
 Blockchain aims for perfect availability and reaches eventual consistency by making partitions economically uninteresting.
 The consensus is eventual. Indeed, two, or more, nodes may win the mining puzzle at the same time. Other nodes then receive competing claims. However individual nodes are unlikely to receive both claims simultaneously. The protocol provides for that. The block with the most transactions or with the most complex puzzle solved is selected.
-If undecided, then we have a fork, i.e. two competing truths. As further blocks are added to each side of the fork, nodes will reevaluate for length and complexity and eventually decide which side of the fork to keep working with. As time moves on, it becomes less and less likely that both sides of the fork will have identical lengths and complexities.
+If undecided, then it is a fork, i.e. two competing truths. As further blocks are added to each side of the fork, nodes will reevaluate for length and complexity and eventually decide which side of the fork to keep working with. As time moves on, it becomes less and less likely that both sides of the fork will have identical lengths and complexities.
 The probable preference of other nodes becomes increasingly clear to all nodes. The nodes adjust their own preference accordingly.
 Hence, the eventual consensus.
 

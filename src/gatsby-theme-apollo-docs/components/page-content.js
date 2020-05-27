@@ -4,12 +4,9 @@ import SectionNav from './section-nav';
 import styled from '@emotion/styled';
 import useMount from 'react-use/lib/useMount';
 import {HEADER_HEIGHT} from 'gatsby-theme-apollo-docs/src/utils';
-import {IconGithub} from '@apollo/space-kit/icons/IconGithub';
-import {IconSchema} from '@apollo/space-kit/icons/IconSchema';
 import {ReactComponent as SlackLogo} from '../assets/slack.svg';
 import {ReactComponent as IconSupportSVG} from "../../assets/ic-support.svg";
 import {PageNav, breakpoints, colors} from 'gatsby-theme-apollo-core';
-import {ReactComponent as SpectrumLogo} from 'gatsby-theme-apollo-docs/src/assets/spectrum.svg';
 import {withPrefix} from 'gatsby';
 import FeedbackBox from '../../FeedbackBox'
 import { Helmet } from "react-helmet"
@@ -206,22 +203,16 @@ export default function PageContent(props, {data} ) {
     );
   });
 
-  const editLink = props.githubUrl && (
-    <AsideLink href={props.githubUrl}>
-      <IconGithub /> Edit on GitHub
-    </AsideLink>
-  );
-
   const supportLink = (
     <AsideLinkWrapper >
       <AsideLinkInner href={supportLinkTarget} >
-        <IconSupport />Get paid Support
+        <IconSupport />Get paid support
       </AsideLinkInner>
     </AsideLinkWrapper>
   );
 
   const slackLink = (
-    <AsideLink href="https://corda.slack.com/">
+    <AsideLink href="https://slack.corda.net/">
       <SlackLogo /> Discuss on Slack
     </AsideLink>
   );
@@ -239,7 +230,6 @@ export default function PageContent(props, {data} ) {
           {props.children}
 
         </BodyContent>
-        <EditLink>{editLink}</EditLink>
         <EditLink>{slackLink}</EditLink>
         <EditLink>{supportLink}</EditLink>
 
@@ -258,19 +248,8 @@ export default function PageContent(props, {data} ) {
             imagesLoaded={imagesLoaded === imagesToLoad}
           />
         )}
-        {editLink}
         {slackLink}
         {supportLink}
-        {props.spectrumUrl && (
-          <AsideLink href={props.spectrumUrl}>
-            <SpectrumLogo /> Discuss on Spectrum
-          </AsideLink>
-        )}
-        {props.graphManagerUrl && (
-          <AsideLink href={props.graphManagerUrl}>
-            <IconSchema /> Demo Graph Manager
-          </AsideLink>
-        )}
       </Aside>
     </Wrapper>
   );

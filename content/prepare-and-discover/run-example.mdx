@@ -1,6 +1,6 @@
 ---
 title: Run Example
-description: Run the example app and see the db
+description: See it in action
 slug: discover/run-example
 ---
 
@@ -24,11 +24,15 @@ Running the project in a test and development context is a 3 step process. You w
 2. Create the nodes' configuration files.
 3. Launch the executables.
 
+Here is a screencast of what comes ahead. You can always come back to it when you hit difficulties doing it on your own.
+
+`vimeo: 417639538`
+
 ### Declare the configuration
 
-The configuration is already declared with the help of [`deployNodes`](https://github.com/corda/samples-java/blob/a61e2cc9910d7d5de83122bf7d36fd071796a7c3/Basic/cordapp-example/workflows-java/build.gradle#L70-L114). Each `node` task statically declares a new node and its configuration. The lot represents a small, though whole, network, complete with its notary. Indeed, however small, a network needs a network map service to help each node connect to the other nodes it will interact with. The `deployNodes` task, among other things, distributes the network information on all declared nodes.
+The configuration is already declared with the help of [`deployNodes`](https://github.com/corda/samples-java/blob/a61e2cc9910d7d5de83122bf7d36fd071796a7c3/Basic/cordapp-example/workflows-java/build.gradle#L70-L114). Each `node` task statically declares a new node and its configuration. Together, these nodes represent a small, though whole, network, complete with a notary. Indeed, however small, a network needs a network map service to help each node connect to the other nodes it will interact with. The `deployNodes` task, among other things, distributes the network information on all declared nodes.
 
-Since all nodes will run on a single machine, all ports need to be unique and assigned. If we did not assign ports, the nodes would all use the [default of 10002](https://github.com/corda/corda-gradle-plugins/blob/a0329ce4532f4cedfd34f9e6862bc8386ab0b76a/cordformation/src/main/kotlin/net/corda/plugins/Node.kt#L59) and that would create a port conflict on a single machine. The p2p address is not mentioned so it will default to [`localhost`](https://github.com/corda/corda-gradle-plugins/blob/a0329ce4532f4cedfd34f9e6862bc8386ab0b76a/cordformation/src/main/kotlin/net/corda/plugins/Node.kt#L27). Now, if you wanted to run your services on different machines, you would update the configuration with externally resolvable names or IPs under the label [`p2pAddress:`](https://github.com/corda/corda-gradle-plugins/blob/a0329ce4532f4cedfd34f9e6862bc8386ab0b76a/cordformation/src/main/kotlin/net/corda/plugins/Node.kt#L112), like so `p2pAddress "192.168.0.15:10006"`.
+Since all nodes will run on a single machine, all ports need to be unique and assigned. If you did not assign ports, the nodes would all use the [default of 10002](https://github.com/corda/corda-gradle-plugins/blob/a0329ce4532f4cedfd34f9e6862bc8386ab0b76a/cordformation/src/main/kotlin/net/corda/plugins/Node.kt#L59) and that would create a port conflict on a single machine. The p2p address is not mentioned so it will default to [`localhost`](https://github.com/corda/corda-gradle-plugins/blob/a0329ce4532f4cedfd34f9e6862bc8386ab0b76a/cordformation/src/main/kotlin/net/corda/plugins/Node.kt#L27). Now, if you wanted to run your services on different machines, you would update the configuration with externally resolvable names or IPs under the label [`p2pAddress:`](https://github.com/corda/corda-gradle-plugins/blob/a0329ce4532f4cedfd34f9e6862bc8386ab0b76a/cordformation/src/main/kotlin/net/corda/plugins/Node.kt#L112), like so `p2pAddress "192.168.0.15:10006"`.
 
 ### Build the configuration files
 
@@ -57,7 +61,7 @@ as [explained](https://docs.corda.net/tutorial-cordapp.html#building-the-example
     ```
      INFO Cannot initialize scripting support because this JRE does not support it. java.lang.NoClassDefFoundError: javax/script/ScriptEngineManager
     ```
-    If yes, look back at the "Prepare your computer" chapter, and look for the part where we describe how to run Gradle with a `JAVA_HOME` that differs from your default one. That may mean running something like:
+    If yes, look back at the "Prepare your computer" chapter, and look for the part where running Gradle with a `JAVA_HOME` is described. It differs from your default configuration. That may mean running something like:
 
     ```bash
     $ ./gradlew -Dorg.gradle.java.home=/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home deployNodes
@@ -100,7 +104,7 @@ With the nodes built, as seen in `./workflows-java/build/nodes`. Inside this fol
 
 ### Run the nodes
 
-Now that our nodes have been deployed, let us do as per what the [documentation says](https://docs.corda.net/tutorial-cordapp.html#id1) and run this command:
+Now that your nodes have been deployed, do as per what the [documentation says](https://docs.corda.net/tutorial-cordapp.html#id1) and run this command:
 
 <MultiCodeBlock>
 
@@ -153,7 +157,7 @@ java.lang.IllegalArgumentException
         at co.paralleluniverse.asm.ClassReader.<init>(Unknown Source)
         at co.paralleluniverse.asm.ClassReader.<init>(Unknown Source)
 ```
-If yes, look back to the "Prepare your computer" chapter, and look for the part where we describe how to run Gradle with a `JAVA_HOME` that differs from your default. That may mean running something like:
+If yes, look back to the "Prepare your computer" chapter, and look for the part where running Gradle with a `JAVA_HOME` is described. It differs from your default configuration. That may mean running something like:
 
 ```bash
 $ JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home workflows-java/build/nodes/runnodes
@@ -174,18 +178,14 @@ If so, do it, so that one terminal can open other tabs:
 
 Notice:
 
-<!--
-* the `Database connection url` which we will use in H2 console later to explore each node's vault
--->
-
-* the `Node for "Notary"` mention.
-* the [quips data bank](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/node/src/main/kotlin/net/corda/node/internal/NodeStartup.kt#L362).
+* The `Node for "Notary"` mention.
+* The [quips data bank](https://github.com/corda/corda/blob/67e3e09a4edb41d17b8adfa669d671c690c5db33/node/src/main/kotlin/net/corda/node/internal/NodeStartup.kt#L362).
 
 ## Interact with the nodes
 
-We are going to create our first IOU where PartyB owes 50 to PartyA. Because of how the flows are coded:
+You are going to create your first IOU where PartyB owes 50 to PartyA. Because of how the flows are coded:
 
-1. we need to initiate the flow from the lender, i.e. PartyA.
+1. You need to initiate the flow from the lender, i.e. PartyA.
 2. PartyB will receive it.
 3. PartyC will be oblivious.
 
@@ -227,7 +227,7 @@ So, Party A will start (with `Initiator`) the `ExampleFlow` with the other party
 
 </ExpansionPanel>
 
-It takes a few seconds. That is because our processes are started lazily. Notice the last line, that looks like:
+It takes a few seconds because the processes are started lazily. Notice the last line, that looks like:
 
 ```
 Flow completed with result: SignedTransaction(id=EC06EA903314BE02610032933FBA2392151732CFD87408A4681C3AFEA83C53B1)
@@ -259,11 +259,7 @@ references: []
 ```
 Nice, it worked as expected:
 
-* nothing was consumed: `Observation 1: consumed: []`,
-* and a single state was created, or `produced`, with the expected values. This concludes our first interaction with a flow from the command line.
+* Nothing was consumed: `Observation 1: consumed: []`.
+* A single state was created, or `produced`, with the expected values. This concludes your first interaction with a flow from the command line.
 
-Watch a step-by-step screencast of this process:
-
-`video: https://youtu.be/YdvTIQLz7l8`
-
-In the next chapter, we will do the same but look deeper into the database.
+In the next chapter, you will do the same but look deeper into the database.

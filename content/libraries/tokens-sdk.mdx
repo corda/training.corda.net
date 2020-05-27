@@ -1,8 +1,10 @@
 ---
 title: Tokens SDK
-description: Where you learn of a reusable SDK
+description: A reusable SDK for fungible assets
 slug: libraries/tokens-sdk
 ---
+
+import HighlightBox from "../../src/HighlightBox"
 
 Here, you are going to explore the concepts introduced in the Tokens SDK. In the next chapter, you will learn how to use it in practice.
 
@@ -29,11 +31,11 @@ For example, the USD token-type has 2 fraction digits, that’s because the smal
 
 ![TokenType Instantiation](images/token_type.png)
 
-By the way, you can extend `TokenType` and add your own custom attributes. Be careful though, as those attributes may never change their values! For instance a `CryptoKitten` token-type would look like this:
+You can extend `TokenType` and add your own custom attributes. Be cautious with that because such attributes are unchangeable, by design. For example, a `CryptoKitten` token-type would specify a breed and such an attribute is not changeable, by nature, over the life of the cat. An implementation would look like this:
 
 ![Extended TokenType](images/cryptokitten.png)
 
-You would not expect a BengalCatType token-type to suddenly change to a Persian breed.
+Custom token attributes are unchangeable, by design, so use them for properties that should be immutable.
 
 ### `EvolvableTokenType`
 
@@ -41,7 +43,7 @@ Unlike a `TokenType` instance, which never changes, an `EvolvableTokenType` inst
 
 Let us consider using `EvolvableTokenType` to represent a car, for example. A car has immutable properties as well as changeable properties that evolve over its lifecycle. Its make (brand), model and VIN (vehicle identification number) are unchangeable, but its mileage and price change over time.
 
-To create your evolvable unit, you need to extend `EvolvableTokenType` and add your custom attributes. For our example, you can represent a car unit as a `CarTokenType`. Remember, you first need to define a unit. Only then can you issue tokens of that unit. The token type will have updateable attributes, price and mileage, and fixed attributes, make and VIN number.
+To create your evolvable unit, you need to extend `EvolvableTokenType` and add your custom attributes. For the example, you can represent a car unit as a `CarTokenType`. Remember, you first need to define a unit. Only then can you issue tokens of that unit. The token type will have updateable attributes, price and mileage, and fixed attributes, make and VIN number.
 
 ![EvolvableTokenType inheritance and instantiation](images/evolvable_token_type.png)
 
@@ -51,11 +53,11 @@ Inside your evolvable token type contract, you can control which attributes are 
 
 ![EvolvableTokenContract inheritance](images/evolvable_token_contract.png)
 
-In our example, the DMV (Department of Motor Vehicles) is the `maintainer` of this evolvable token type, meaning, when a new car gets registered in the department, it will create an instance of the `CarTokenType`. When the car passes the yearly inspection, a DMV agent will update the mileage of the car.
+In the example, the DMV (Department of Motor Vehicles) is the `maintainer` of this evolvable token type, meaning, when a new car gets registered in the department, it will create an instance of the `CarTokenType`. When the car passes the yearly inspection, a DMV agent will update the mileage of the car.
 
 ![Update EvolvableTokenType](images/update_evolvable_token_type.png)
 
-**Reminder:** A state in Corda is final; it cannot be updated, so how do we achieve the same effect? That's where [`LinearState`](https://docs.corda.net/api-states.html#linearstate)s come to the rescue. In order to update a `LinearState`, you consume the old version and create a new one which has the updated values **but** the same `UniqueIdentifier linearId`. So, in order to view all of the versions of a certain `LinearState`, you can simply query the vault by that state class and its `linearId`.
+**Reminder:** A state in Corda is final; it cannot be updated, only transformed from one version to another via a transaction. How does one achieve an effect that resembles an evolving state? That's where [`LinearState`](https://docs.corda.net/api-states.html#linearstate)s come to the rescue. In order to update a `LinearState`, you consume the old version and create a new one which has the updated values **but** the same `UniqueIdentifier linearId`. So, in order to view all of the versions of a certain `LinearState`, you can simply query the vault by that state class and its `linearId`.
 
 To avert a possible misunderstanding, the `EvolvableTokenType` class **does not** inherit from the `TokenType` class. You will see the mechanism shortly.
 
@@ -81,10 +83,6 @@ Being fungible, fungible tokens can be split and merged, meaning their quantity 
 
 Here, Alice has one token state with a quantity of 5, which she spends to cover the required quantity of 4 (1 for Bob and 3 for Carol), and gets a quantity of 1 as change.
 
-<!-- TODO
-Fix name and quantities on image.
--->
-
 ![Merge FungibleToken](images/merge_fungible_token.png)
 
 Here Alice spends 2 tokens, each with a quantity of 2, to cover the required output quantity of 4, split between as 1 for Bob and 3 for Carol.
@@ -100,13 +98,13 @@ Returning to the evolvable `CarTokenType` example, a car is another example of a
 Here too, the relationship is achieved by nested composition:
 
 * `NonFungibleToken` has a `holder` and an `issuedTokenType` of type `IssuedTokenType`.
-* as we have seen, `IssuedTokenType` has an `issuer` and a `tokenType` of type `TokenType`.
+* as you have seen, `IssuedTokenType` has an `issuer` and a `tokenType` of type `TokenType`.
 
 So graphically, that's:
 
 ![NonFungibleToken composition](images/non_fungible_token.png)
 
-Notice in the above example how the `issuer` and `maintainers` are different entities declared in different classes. Let's suggest a series of steps that could take place in our car example:
+Notice in the above example how the `issuer` and `maintainers` are different entities declared in different classes. Let's suggest a series of steps that could take place in the car example:
 
 * When a car is delivered to the dealership, it is registered with the DMV.
 * The DMV is the `maintainers`, which in turn creates a `CarTokenType` instance for the individual car.
@@ -114,7 +112,13 @@ Notice in the above example how the `issuer` and `maintainers` are different ent
 * When the car goes through the yearly inspection, the DMV evolves the `CarTokenType` instance with the newly relevant information.
 * When the owner of the car sells it, the owner replaces its instance with a new `NonFungibleToken` instance with the new owner as the `holder`.
 
-**Food For Thought:** Just because something is non-fungible in real life doesn't mean we have to treat it as a `NonFungibleToken` on the ledger. It all depends on your business case, and that's where the design decision of having a token-type and a fungible&nbsp;/ non-fungible token of that token-type came from. For instance, a house is something non-fungible, you can't physically split a house. But let's say we have a CorDapp where several people can invest and buy one property. Then they rent it out and get a return on their investment. For this, you can create a token-type `House` and issue several `FungibleToken` instances of the same `House`, where the quantity of each token is different and represents the ownership share of the `holder` in that house. This way anyone can sell their share to multiple buyers or buy from multiple sellers, which, in Corda, would be splitting and merging the `FungibleToken` of the `House` token-type.
+<HighlightBox type="info">
+
+Just because something is non-fungible in real life doesn't mean you have to treat it as a `NonFungibleToken` on the ledger. It all depends on your business case, and that's where the design decision of having a token-type and a fungible&nbsp;/ non-fungible token of that token-type came from.
+
+For instance, a house is something non-fungible, you can't physically split a house. But let's say you have a CorDapp where several people can invest and buy one property. Then they rent it out and split the return on their investment. For this, you can create a token-type `House` and issue several `FungibleToken` instances of the same `House`, where the quantity of each token is different and represents the ownership share of the `holder` in that house. This way anyone can sell their share to multiple buyers or buy from multiple sellers, which, in Corda, would be splitting and merging the `FungibleToken` of the `House` token-type.
+
+</HighlightBox>
 
 ### `EvolvableTokenType` Again
 
@@ -122,26 +126,26 @@ An important concept has been deferred until now. The `EvolvableTokenType` insta
 
 Additionally, the `EvolvableTokenType` is not a child class of `TokenType`. In fact, it [implements `LinearState`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/states/EvolvableTokenType.kt#L20), which you already encountered in `IOUState`. So all the `NonFungibleToken` instance needs to do is remember the [`UniqueIdentifier linearId`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/Structures.kt#L134) of the `EvolvableTokenType` instance. Not to be confused with the `NonFungibleToken`'s [own `linearId`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/states/NonFungibleToken.kt#L43-L45). So how can the `NonFungibleToken` instance track a `LinearState` in its (issued) [`TokenType`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/states/NonFungibleToken.kt#L49)?
 
-Let's first introduce the [`LinearPointer`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/StatePointer.kt#L152-L156) class, which, while not a `LinearState`, still points to one. If used in a standard `ContractState`, a `LinearPointer` can be used to loosely couple the two states. This `LinearPointer` does more than hold a `linearId`. It also assists you in retrieving, or [`resolve`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/StatePointer.kt#L175)ing, the state it is pointing to. And yes, it resolves to the latest version it has in the vault. It is as if the pointer was following the state around as it changes. So, you understand that our `EvolvableTokenType` instance can be pointed to by an instance of a `LinearPointer`.
+Let's first introduce the [`LinearPointer`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/StatePointer.kt#L152-L156) class, which, while not a `LinearState`, still points to one. If used in a standard `ContractState`, a `LinearPointer` can be used to loosely couple the two states. This `LinearPointer` does more than hold a `linearId`. It also assists you in retrieving, or [`resolve`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/StatePointer.kt#L175)ing, the state it is pointing to. And yes, it resolves to the latest version it has in the vault. It is as if the pointer was following the state around as it changes. So, you understand that the `EvolvableTokenType` instance can be pointed to by an instance of a `LinearPointer`.
 
 Ok, now the [`TokenPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/types/TokenPointer.kt#L19-L22) class. This class:
 
-* is a `TokenType`
-* stores a `LinearPointer`
+* Is a `TokenType`.
+* Stores a `LinearPointer`.
 
 So there you have it. To access the underlying `EvolvableTokenType` instance of your `NonFungibleToken` instance, you need to:
 
-1. get the `TokenType` instance of your `NonFungibleToken` instance
-2. confirm [it is a `TokenPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/types/TokenType.kt#L60) itself
-3. if yes, then you cast it as a `TokenPointer`
-4. with the `TokenPointer` instance in hand, you get [its `LinearPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/types/TokenPointer.kt#L20) instance
-5. with the `LinearPointer` instance in hand, you [`resolve`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/StatePointer.kt#L175) it to your `EvolvableTokenType` instance. Yes, that's a round-trip to the vault.
+1. Get the `TokenType` instance of your `NonFungibleToken` instance.
+2. Confirm [it is a `TokenPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/types/TokenType.kt#L60) itself.
+3. If yes, then you cast it as a `TokenPointer`.
+4. With the `TokenPointer` instance in hand, you get [its `LinearPointer`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/types/TokenPointer.kt#L20) instance.
+5. With the `LinearPointer` instance in hand, you [`resolve`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/StatePointer.kt#L175) it to your `EvolvableTokenType` instance. Yes, that's a round-trip to the vault.
 
 You may have to do some aggressive casting do get the desired sub-class. Also note that your _latest_ resolved `EvolvableTokenType` instance is as good as your vault knows. If your vault was not informed of changes, then your vault is still on an older version, without your knowledge.
 
 ![Update NonFungibleToken](images/update_non_fungible_token.png)
 
-Recall from the previous `FungibleToken` and `NonFungibleToken` diagrams. Both classes rely on `IssuedTokenType` to uniquely identify the token. So, it's worth mentioning that when our token type is an `EvolvableTokenType` instance, the `IssuedTokenType` instance is the combination of the `issuer` and the `TokenPointer` instance.
+Recall from the previous `FungibleToken` and `NonFungibleToken` diagrams. Both classes rely on `IssuedTokenType` to uniquely identify the token. So, it's worth mentioning that when your token type is an `EvolvableTokenType` instance, the `IssuedTokenType` instance is the combination of the `issuer` and the `TokenPointer` instance.
 
 ![TokenPointer](images/token_pointer.png)
 

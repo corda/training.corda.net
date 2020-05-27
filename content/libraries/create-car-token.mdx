@@ -1,12 +1,12 @@
 ---
 title: Create a new Token
-description: Where we create something new with the SDK
+description: Create something new with the Tokens SDK
 slug: libraries/create-car-token
 ---
 
 import HighlightBox from "../../src/HighlightBox"
 
-In a previous chapter, you learned about the evolvable token type. You are going to use that knowledge here as part of learning about the Tokens SDK, by preparing a car token. Not only is this a preparation for the next exercise but also for the evolution of your project. The result of this exercise can be found [here](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java), but it is recommended that you do not peek until you have worked on your own.
+In a previous chapter, you learned about the evolvable token type. You are going to use that knowledge here as part of learning about the Tokens SDK, by preparing a car token. Not only is this a preparation for the next exercise but also for the evolution of your project. The result of this exercise can be found [here](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java), but it is recommended that you do not peek until you have worked on your own.
 
 In the next chapter, you will discover how to think about a "sale" in terms of flows, and atomicity.
 
@@ -28,13 +28,13 @@ You are going to advance step by step as per this list:
 
 1. Harder: go ahead now and do it yourself with only the bullet points 1 to 6 above,
 2. Medium: when the going gets tough, follow along below,
-3. Rookie: when you want to see a solution, look over [here](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java).
+3. Rookie: when you want to see a solution, look over [here](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java).
 
 ### Evolvable `CarTokenType`
 
 Ideally, you worked on your own before following along here.
 
-Following the theory from the previous chapter, what parameters would you put in your `CarTokenType`? Feel free to add the ones you want. If you chose to work with Kotlin and made it a `data class`, well played. It will be more concise. Otherwise, here is our choice of fields, in Java:
+Following the theory from the previous chapter, what parameters would you put in your [`CarTokenType`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/contracts/src/main/java/com/template/car/CarTokenType.java)? Feel free to add the ones you want. If you chose to work with Kotlin and made it a `data class`, well played. It will be more concise. Otherwise, here is the chosen fields, in Java:
 
 ```java
 @BelongsToContract(CarTokenContract.class)
@@ -129,7 +129,7 @@ public class CarTokenType extends EvolvableTokenType {
 ```
 Why add `price` to it? After all, the price is not intrinsic to the car, it is instead an agreement between 2 parties making a trade. Later, when you are more at ease with Corda, you will take the price out of the car state. For now, let us imagine that the DMV wants to know the price of a car for tax reasons.
 
-### Evolvable `CarTokenContract`
+### Evolvable [`CarTokenContract`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/contracts/src/main/java/com/template/car/CarTokenContract.java)
 
 Notice `BelongsToContract` above, so you need to create it. Before you look below, create it yourself and think about additional checks. It is good to know that the parent `EvolvableTokenContract` has already checked that there is a [single output](https://github.com/corda/token-sdk/blob/5f189fbf54c400343729155a856b99ed91d40da8/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/EvolvableTokenContract.kt#L47), and, when updating, a [single input](https://github.com/corda/token-sdk/blob/5f189fbf54c400343729155a856b99ed91d40da8/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/EvolvableTokenContract.kt#L72) too.
 
@@ -168,10 +168,11 @@ public class CarTokenContract extends EvolvableTokenContract implements Contract
     }
 }
 ```
+The above should be self-explanatory.
 
 ### Instantiate a BMW
 
-Now that the ledger classes have been defined, proceed to the flows and create the token of a specific brand new car, an instance of `CarTokenType`, on the node of the DMV. Because you are going to have the dealership eventually issue it, the dealership needs to know about the car. However, unless it was asked to instantiate this car by the dealership, the DMV has no knowledge of the dealership. So we have to pass explicitly the dealership as an observer of the transaction.
+Now that the ledger classes have been defined, proceed to the flows and create the token of a specific brand new car, an instance of `CarTokenType`, on the node of the DMV. Because you are going to have the dealership eventually issue it, the dealership needs to know about the car. However, unless it was asked to instantiate this car by the dealership, the DMV has no knowledge of the dealership. So you have to pass explicitly the dealership as an observer of the transaction.
 
 ```java
 // Department of Motor Vehicles is the maintainer.
@@ -190,11 +191,11 @@ final StateAndRef<CarTokenType> bmwStateAndRef = bmwTx
 ```
 The code above is rootless, and in effect split into 3 parts. To see it in context:
 
-1. the wrapping flow defined here: [`IssueCarTokenTypeFlow`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/IssueCarTokenTypeFlow.java),
-2. its usage with specific values and nodes in the unit test class: [`createNewBmw()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L57-67),
-3. its output confirmation in the unit test proper: [`@Test isCreated()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L106-113).
+1. The wrapping flow defined here: [`IssueCarTokenTypeFlow`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/IssueCarTokenTypeFlow.java).
+2. Its usage with specific values and nodes in the unit test class: [`createNewBmw()`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L61-L71).
+3. Its output confirmation in the unit test proper: [`@Test isCreated()`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L110-L117).
 
-You must think that the `IssueCarTokenTypeFlow` flow is not particularly useful, and that would be right as it really just does minimal actions prior to launching [`CreateEvolvableTokens`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/IssueCarTokenTypeFlow.java#L49) proper. It provides a sense of what to expect when working with meaningful flows.
+You must think that the `IssueCarTokenTypeFlow` flow is not particularly useful, and that would be right as it really just does minimal actions prior to launching [`CreateEvolvableTokens`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/IssueCarTokenTypeFlow.java#L49) proper. Although, it provides a sense of what to expect when working with meaningful flows.
 
 ### Issue the BMW to Alice as the holder
 
@@ -213,9 +214,9 @@ subFlow(new IssueTokens(Collections.singletonList(alicesCar)));
 ```
 Again, the code above is rootless, and again split into 3 parts:
 
-1. the wrapping flow: [`IssueCarToHolderFlow`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/IssueCarToHolderFlow.java), which needs to be passed information that came from the DMV,
-2. its usage with specific values: [`issueCarTo()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L70-78),
-3. its output confirmation in the unit test proper: [`@Test isIssuedToAlice()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L116-135).
+1. The wrapping flow: [`IssueCarToHolderFlow`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/IssueCarToHolderFlow.java), which needs to be passed information that came from the DMV.
+2. Its usage with specific values: [`issueCarTo()`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L74-L82).
+3. Its output confirmation in the unit test proper: [`@Test isIssuedToAlice()`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L120-L139).
 
 You will notice that the unit test is getting longer as it indeed has to do some preparation to be able to test the interesting part.
 
@@ -230,15 +231,15 @@ final CarTokenType updatedBmw = new CarTokenType(bmw.getMaintainers(), bmw.getLi
 final SignedTransaction updatedCarTokenTypeStateAndRef = subFlow(new UpdateEvolvableToken(
         bmwStateAndRef, updatedBmw, Collections.singletonList(alice)));
 ```
-Which, in our case, we split into 3 parts:
+Which, in this case, is split into 3 parts:
 
-1. the wrapping flow: [`UpdateCarTokenTypeFlow`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/UpdateCarTokenTypeFlow.java),
-2. its specific usage: [`updateMileageOn()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L81-90),
-3. its output confirmation in the unit test proper: [`@Test isIssuedThenUpdated()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L138-162), which confirms that Alice did not automatically get the update.
+1. The wrapping flow: [`UpdateCarTokenTypeFlow`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/UpdateCarTokenTypeFlow.java).
+2. Its specific usage: [`updateMileageOn()`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L85-L94).
+3. Its output confirmation in the unit test proper: [`@Test isIssuedThenUpdated()`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L142-L166), which confirms that Alice did not automatically get the update.
 
 ### Sell the car to Bob
 
-Now that the car has been issued and the token updated, it is time to sell the car to Bob. This is rather simple, given the previous information we have, which again, in this rootless code, is supposed to be travelling from one node to the other:
+Now that the car has been issued and the token updated, it is time to sell the car to Bob. This is rather simple, given the previous information, which again, in this rootless code, is supposed to be travelling from one node to the other:
 
 ```java
 // Sell the car to Bob.
@@ -248,9 +249,9 @@ subFlow(new MoveNonFungibleTokens(bobAndBmw, Collections.emptyList()));
 ```
 In practice, you split it into 3:
 
-1. the wrapping flow: [`MoveCarToNewHolderFlow`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/MoveCarToNewHolderFlow.java),
-2. its specific usage: [`moveCarTo()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L93-103),
-3. its output confirmation: [`@Test isIssuedUpdatedAndSoldToBob()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L165-193).
+1. The wrapping flow: [`MoveCarToNewHolderFlow`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/main/java/com/template/car/flow/MoveCarToNewHolderFlow.java).
+2. Its specific usage: [`moveCarTo()`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L97-L107).
+3. Its output confirmation: [`@Test isIssuedUpdatedAndSoldToBob()`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L169-L197).
 
 The 4 create, issue, update and move steps demonstrate what can be done in flows with the car token type and non-fungible token. Let's discuss a bit about the reality of working with tokens.
 
@@ -258,8 +259,8 @@ The 4 create, issue, update and move steps demonstrate what can be done in flows
 
 The above example breezily overlooks the fact that variables created on a node, say the DMV node, are readily available on Alice's node. In practice, Alice would have to have been updated by whoever did the change, and then Alice would have to:
 
-1. go and fetch the updated token type from her vault. The identifying key there would be the UUID of the `CarTokenType` instance.
-2. go and fetch the `NonFungibleToken` of her car in the vault. Its identifying key is also a UUID.
+1. Go and fetch the updated token type from her vault. The identifying key there would be the UUID of the `CarTokenType` instance.
+2. Go and fetch the `NonFungibleToken` of her car in the vault. Its identifying key is also a UUID.
 
 Whether this is for an `issue`, `move`, or `redeem` flow, it would likely look like:
 
@@ -274,7 +275,7 @@ Whether this is for an `issue`, `move`, or `redeem` flow, it would likely look l
             .getStates();
     // Alice should get one result in the list, your latest CarTokenType is in it.
     ```
-    See [`@Test canAccessByUUIDAndQuery()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L200-227) for the example.
+    See [`@Test canAccessByUUIDAndQuery()`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L200-L227) for the example.
 2. Or using a `LinearPointer`:
 
     ```java
@@ -285,18 +286,18 @@ Whether this is for an `issue`, `move`, or `redeem` flow, it would likely look l
             false)
             .resolve(alice.getServices());
     ```
-    See [`@Test canAccessByUUIDAndPointer()`](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L230-255) for the example.
+    See [`@Test canAccessByUUIDAndPointer()`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/car/flow/CarTokenCourseExercise.java#L230-L255) for the example.
 
 ### Observer nodes
 
 All the flows that come with the SDK accept a list of observer nodes.
 
-Observer nodes are parties which are not participants in the state but want to be aware of what's happening in your network (e.g. auditors or regulators that require read-only access); so when the transaction gets finalised, it gets recorded in the participants and the observer nodes. The SDK also provides `ObserverAwareFinalityFlow` for the same purpose.
+Observer nodes are parties which are not participants in the state but want to be aware of what's happening in your network (e.g. auditors or regulators that require read-only access); so when the transaction gets finalized, it gets recorded in the participants and the observer nodes. The SDK also provides `ObserverAwareFinalityFlow` for the same purpose.
 
 The examples above use the observer nodes facility where it is deemed necessary, in the case of:
 
-* the DMV informing the dealership that the `CarTokenType` instance has been created, so that the dealership can issue the car.
-* the DMV informing Alice that her `CarTokenType` instance has been updated, so that Alice can sell her updated car.
+* The DMV informing the dealership that the `CarTokenType` instance has been created, so that the dealership can issue the car.
+* The DMV informing Alice that her `CarTokenType` instance has been updated, so that Alice can sell her updated car.
 
 ### The distribution list
 
@@ -309,7 +310,7 @@ This flow is `@InitiatingFlow`, so it is fire-and-forget. In the future, there w
 
 ## Some Tips
 
-1. When you extend `TokenType` or `EvolvableTokenType`, you **must** override the `equals()` method. If you don't, you get a `There is a token group with no assigned command` exception. That's because the SDK flows attempt to group the tokens (i.e. transaction inputs / outputs) by `IssuedTokenType` in order to assign the correct command to each token group, which in turn allows running the correct validation contract. You must also override `hashCode()`, [see here why](https://stackoverflow.com/questions/2265503/why-do-i-need-to-override-the-equals-and-hashcode-methods-in-java). By the way, IntelliJ can generate both methods for you from the menu: <kbd>Code</kbd> -> <kbd>Generate…</kbd> -> <kbd>equals() and hashCode()</kbd>.
+1. When you extend `TokenType` or `EvolvableTokenType`, you **must** override the `equals()` method. If you don't, you get a [`There is a token group with no assigned command`](https://github.com/corda/token-sdk/blob/b9a1ee76434defd0b234df05c972202c7f1a2a5c/contracts/src/main/kotlin/com/r3/corda/lib/tokens/contracts/AbstractTokenContract.kt#L119) exception. That's because the SDK flows attempt to group the tokens (i.e. transaction inputs / outputs) by `IssuedTokenType` in order to assign the correct command to each token group, which in turn allows running the correct validation contract. You must also override `hashCode()`, [see here why](https://stackoverflow.com/questions/2265503/why-do-i-need-to-override-the-equals-and-hashcode-methods-in-java). By the way, IntelliJ can generate both methods for you from the menu: <kbd>Code</kbd> -> <kbd>Generate…</kbd> -> <kbd>equals() and hashCode()</kbd>.
 
 2. Quantities inside tokens are in the smallest denomination. For instance, the USD token type has 2 fraction digits (i.e. 0.01 -which is one cent- is usually the smallest denomination). So, if you create a `FungibleToken` of type USD and quantity 100, that 100 is considered (by the SDK) in the smallest denomination (i.e. the cent). So you’re issuing 100 cents not 100 dollars!
 
@@ -321,7 +322,7 @@ This flow is `@InitiatingFlow`, so it is fire-and-forget. In the future, there w
     // dollarAmount.getQuantity() == 10,000 cents; which represents 100$
     ```
 
-3. While on the subject of quantity, the Tokens SDK uses the `Amount` class to represent a token amount. The `Amount` class has a property called `quantity` of type `long`, and the biggest number that a `long` can hold is 2<sup>63</sup>-1 = 9223372036854775807 which is 19 digits long. This means that if you have an ETH (Ethereum) token type, the largest number that you can represent is ~9.2 Ether. Indeed, the smallest Ether denomination is the Wei where 1 Ether = 1 x 10<sup>18</sup> Wei. So that’s one limitation that you’d have to overcome if you wanted to represent Ether in Corda. See [our test](https://git.b9lab.com/client-projects/r3-corda-education-services/r3-course-project/blob/030-tokens-sdk/030-tokens-sdk/workflows/src/test/java/com/template/usd/CurrencyLearningTest.java#L17-29):
+3. While on the subject of quantity, the Tokens SDK uses the `Amount` class to represent a token amount. The `Amount` class has a property called `quantity` of type `long`, and the biggest number that a `long` can hold is 2<sup>63</sup>-1 = 9223372036854775807 which is 19 digits long. This means that if you have an ETH (Ethereum) token type, the largest number that you can represent is ~9.2 Ether. Indeed, the smallest Ether denomination is the Wei where 1 Ether = 1 x 10<sup>18</sup> Wei. So that’s one limitation that you’d have to overcome if you wanted to represent Ether in Corda. See [the test](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/usd/CurrencyLearningTest.java#L17-L29):
 
     ```java
     @Test(expected = ArithmeticException.class)
@@ -344,7 +345,7 @@ This flow is `@InitiatingFlow`, so it is fire-and-forget. In the future, there w
 
 5. If you are querying the vault to calculate a balance, remember that the returned quantity is in the smallest denomination. So if the returned total is 10,000 (taking using USD token type as an example), then the actual balance is 100&#36;.
 
-6. Remember when you query for a balance to always filter by token type and by issuer, because as we mentioned earlier, tokens with the same token type but different issuers are considered different. [`QueryUtilities`](https://github.com/corda/token-sdk/blob/master/workflows/src/main/kotlin/com/r3/corda/lib/tokens/workflows/utilities/QueryUtilities.kt) has a lot of useful functions that will make your life easier, including a function to calculate the balance for a certain token type and issuer: `VaultService.tokenBalanceForIssuer`:
+6. Remember when you query for a balance to always filter by token type and by issuer, because as mentioned earlier, tokens with the same token type but different issuers (remember airlines?) are considered different. [`QueryUtilities`](https://github.com/corda/token-sdk/blob/master/workflows/src/main/kotlin/com/r3/corda/lib/tokens/workflows/utilities/QueryUtilities.kt) has a lot of useful functions that will make your life easier, including a function to calculate the balance for a certain token type and issuer: `VaultService.tokenBalanceForIssuer`:
 
     ```java
     final QueryCriteria queryCriteria = QueryUtilitiesKt
