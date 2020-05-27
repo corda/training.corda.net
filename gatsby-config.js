@@ -195,7 +195,7 @@ if (!isValidSiderbarConfig) {
 module.exports = {
   pathPrefix: pathPrefix,
   siteMetadata: {
-    siteUrl: `https://training.corda.net`,
+    siteUrl: themeOptions.siteUrl,
   },
   plugins: [
     {
