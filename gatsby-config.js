@@ -195,7 +195,7 @@ if (!isValidSiderbarConfig) {
 module.exports = {
   pathPrefix: pathPrefix,
   siteMetadata: {
-    siteUrl: `https://training.corda.net`,
+    siteUrl: themeOptions.siteUrl,
   },
   plugins: [
     {
@@ -223,6 +223,13 @@ module.exports = {
         useMozJpeg: false,
         stripMetadata: true,
         srcSetBreakpoints: [ 200, 340, 520, 736, 1024, 1280 ]
+      }
+    },
+    `gatsby-plugin-react-helmet`,
+    {
+      resolve: `gatsby-plugin-react-helmet-canonical-urls`,
+      options: {
+        siteUrl: themeOptions.siteUrl,
       }
     },
     "gatsby-plugin-material-ui",
