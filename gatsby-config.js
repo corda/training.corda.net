@@ -213,6 +213,13 @@ module.exports = {
         stripMetadata: true
       }
     },
+    `gatsby-plugin-react-helmet`,
+    {
+      resolve: `gatsby-plugin-react-helmet-canonical-urls`,
+      options: {
+        siteUrl: themeOptions.siteUrl,
+      }
+    },
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {

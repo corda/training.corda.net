@@ -50,6 +50,7 @@ module.exports = {
   algoliaApiKey: '210011072752e4c714ba580c0a4c944f',
   algoliaIndexName: 'corda_training',
   baseUrl: 'https://www.corda.net',
+  siteUrl: 'https://training.corda.net',
   twitterHandle: 'cordablockchain',
   slackUrl: 'https://corda.slack.com/',
   youtubeUrl: 'https://www.youtube.com/channel/UCoOuUZatvIC1U65OisCrIKg',
