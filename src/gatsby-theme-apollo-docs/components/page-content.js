@@ -216,8 +216,6 @@ export default function PageContent(props, {data} ) {
     </AsideLink>
   );
 
-  const metaDescription = props.description;
-
   return (
     <Wrapper>
       <InnerWrapper>
