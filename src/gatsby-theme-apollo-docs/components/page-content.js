@@ -9,7 +9,6 @@ import {ReactComponent as IconSupportSVG} from "../../assets/ic-support.svg";
 import {PageNav, breakpoints, colors} from 'gatsby-theme-apollo-core';
 import {withPrefix} from 'gatsby';
 import FeedbackBox from '../../FeedbackBox'
-import { Helmet } from "react-helmet"
 
 const supportLinkTarget = "/in-closing/get-paid-support";
 
@@ -217,14 +216,8 @@ export default function PageContent(props, {data} ) {
     </AsideLink>
   );
 
-  const metaDescription = props.pages[pageIndex].description;
-
   return (
     <Wrapper>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <meta name="description" content={metaDescription}/>
-      </Helmet>
       <InnerWrapper>
         <BodyContent ref={contentRef} className="content-wrapper">
           {props.children}
