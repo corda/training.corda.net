@@ -4,8 +4,22 @@ description: Visit the rabbit hole of Corda operations
 slug: operations/further-study
 ---
 
-Quick pointers to things like:
+## Changing the Notary on States.
 
-- Changing the notary on states.
-- The node explorer.
-- FlowHospital.
+There are certain cases where a notary change is required. For instance, if you are trying to add a reference state that uses a different notary than your input states; those input states' notary must be changed to match that of the reference state, because in order to use a reference state in your transaction; the notary should be able to attest that it is an unconsumed state.
+Since (usually) you don't have control over the reference state, but you do have control over the input states; then you change the notary of the latter.
+In order to change the notary, you simply call the `NotaryChangeFlow` which will collect the approvals (i.e. signatures) from the participants of the state.
+
+## The Node Explorer.
+
+Node explorer is a very useful tool that allows you to see all sorts of information about your node (e.g. installed CorDapps, finalized transactions) and start RPC enabled flows.
+You can see a video about its capabilities [here](https://www.youtube.com/watch?v=cn2lhS8pjRs).
+
+## FlowHospital.
+
+The flow hospital is a built-in node service that retries your flow from the last checkpoint.  
+Flows are sent to the hospital when various issues occur (usually for ones that can be fixed) allowing the flow to proceed once they are resolved.  
+Before Corda 4.4, the [list of errors](https://docs.corda.net/docs/corda-os/4.4/node-flow-hospital.html#run-time-behaviour) that sent a flow to the hospital was fixed, and the developer had no way of controlling that. For instance, if a responding node was missing a CorDapp; a `ClassNotFoundException` would send the flow to the hospital, so the node operator can install the missing CorDapp, then once the node is restarted (to load the new CorDapp); the hospital will retry the flow and it will proceed successfully this time.
+With the new release, if the developer “catches an exception” that they believe can be fixed; they can raise a `HospitalizeFlowException` to send the flow to the hospital, allowing to replay it from the last checkpoint once the problem is resolved.  
+An example would be your flow calling some API; and that API has timed-out with its response, in this case the API server might have been down; and you want to replay the flow again hoping that the server is back online by then, instead of throwing a `FlowException` and terminating your flow.
+

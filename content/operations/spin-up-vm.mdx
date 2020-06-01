@@ -4,12 +4,19 @@ description: Or get your naked Corda up
 slug: operations/spin-up-vm
 ---
 
-Track 1, Docker: Is there a ready-made docker that can be used to spin up in Azure?
+## Docker
 
-Track 2, provisioned VM: What steps to do to install Corda as a software on a VM via command-line?
+R3 provides an official Docker image for Corda. You can find detailed instructions about running Corda with Docker [here](https://docs.corda.net/docs/corda-os/4.4/docker-image.html).
+You can also watch an [instructional video](https://www.youtube.com/watch?v=ITMOiMzkX4I).
 
-Presumably, the db is H2 at this stage.
+## Installing Corda Node on a VM
 
-Add test net certificates. Is there an already CorDapp that allows to _ping_ remote nodes and confirm things work?
+Once you build your nodes locally (using `./gradlew deployNodes`), you can distribute them to separate machines (i.e. VM's).
+In order to do that, you can use [the network bootstrapper](https://docs.corda.net/docs/corda-os/4.4/network-bootstrapper.html) tool to generate the required network map files.
+Once you have all of the files, you can follow [these instructions](https://docs.corda.net/docs/corda-os/4.4/tutorial-cordapp.html#running-nodes-across-machines) to copy your nodes to separate VM's.
 
-Where is the network map and cache? How is it updated? Concepts and redirect to fuller docs.
+## Network Map
+
+Nodes within a network see each other using the network map. This is a collection of statically signed `node-info` files, one for each node.
+Most production deployments will use a highly available, secure distribution of the network map via HTTP.
+You can read about it in detail [here](https://docs.corda.net/docs/corda-os/4.4/network-map.html).

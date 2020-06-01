@@ -4,4 +4,29 @@ description: Make your CorDapp available on the network
 slug: operations/deploy-remove
 ---
 
-How to do.
+## Deploy a CorDapp
+
+To add a new CorDapp to your node:  
+
+1. Build the CorDapp jar file: `./gradlew :module-name:build`.
+
+2. Stop the node: Type `bye` in the console, or if it's deployed as a service then type `sudo systemctl stop corda` in your VM's terminal.
+
+3. Place the resulting jar file (can be found inside the `build` folder of your module) inside the `cordapps` folder of your node.
+
+4. Start the node: `java -jar corda.jar`, or if it's deployed as a service then type `sudo systemctl start corda` in your VM's terminal.
+
+## Remove a CorDapp
+
+Once you remove a contracts/flows CorDapp from your node; you will no longer be able to use the related states/flows.  
+  
+To remove a CorDapp from your node:  
+
+1. Make sure that there are no running flows that use the to-be-deleted CorDapp: If the flow on your node is a result of responding to a flow from another node, the initator flow must be killed as well; otherwise it will be stuck waiting for your node's response.
+  
+    a. Inside of your node's termainl type `run stateMachinesSnapshot`; it will show all outstanding flows.  
+    b. Use the returned id to kill a certain flow: `flow kill [id]`.  
+    
+2. Stop the node: Type `bye` in the console, or if it's deployed as a service then type `sudo systemctl stop corda` in your VM's terminal.  
+3. Remove the CorDapp's jar file from the `cordapps` folder.  
+4. Start the node: `java -jar corda.jar`, or if it's deployed as a service then type `sudo systemctl start corda` in your VM's terminal.

@@ -4,6 +4,85 @@ description: That's your CorDapp in a file
 slug: operations/package-jar
 ---
 
-How to package the contract jar and the flow jar.
+## How to Build a CorDapp
 
-How to sign it. What are the signature constraints, and whitelisting.
+To build a CorDapp; simply execute this command inside your terminal under your project's path: `./gradlew :module-name:build`
+
+## Signing Contract CorDapps for Production
+
+Signing a contracts CorDapp jar file is a requirement by any Corda node running in production mode (i.e. `devMode = false` inside `node.conf`); in fact, the node will not load any contracts CorDapp that is not signed (or signed by Corda development certificate; which is done by default), and you’ll see something like this inside your log file:
+
+```groovy
+[WARN] 2020-02-26T05:07:45,335Z [main] cordapp.JarScanningCordappLoader. - Not loading CorDapp [Your CorDapp] as it is signed by development key(s) only.
+```
+
+Signature constraints are very important to control upgrades and prevent attacks (more on the topic can be found [here](https://docs.corda.net/docs/corda-os/4.4/api-contract-constraints.html)).
+
+## How to Sign Your Cordapps
+
+1. Create a private key in JKS format (replace the X500 name with yours, and use the same `[password]` value for both `storepass` and `keypass`):
+
+```groovy
+keytool -keystore jarSignKeystore.jks -keyalg RSA -genkey -dname "OU=, O=, L=, C=" -storepass [password] -keypass [password] -alias cordapp-signer
+```
+
+2. Migrate the JKS key to PKCS12 format. You will be prompted for 2 passwords, use the same value that you used to create the JKS key for both values:
+
+```groovy
+keytool -importkeystore -srckeystore jarSignKeystore.jks -destkeystore jarSignKeystore.pkcs12 -deststoretype pkcs12
+```
+
+3. Signatures are required **only for contracts** CorDapps, it is not required for workflows CorDapps; because only contracts CorDapps get attached to your transaction, this way the transaction can be verified at any point in the future with the same contract that it was verified with at the time of creating that transaction. So disable signing for all workflow CorDapps inside their respective `build.gradle` file:
+
+```groovy
+cordapp {
+    targetPlatformVersion corda_platform_version.toInteger()
+    minimumPlatformVersion corda_platform_version.toInteger()
+    workflow {
+        name "My Flows CorDapp"
+        vendor "My Company"
+        // If it's not open source, use "Proprietary"
+        licence "Proprietary"
+        versionId 1
+    }
+    signing {
+        enabled false
+    }
+}
+```
+
+4. In order to enable signing, you must provide inside `build.gradle` of the contracts CorDapp the password that you used when creating the PKCS12 file earlier, but `build.gradle` is going to be committed to your git repository making that password exposed. So instead of writing the plain text value of the password, you will store it inside Gradle’s property file then fetch it from there.
+
+5. Create a property file for Gradle: `cd ~/.gradle` then `sudo touch gradle.properties`; inside the file write the following code:
+
+```groovy
+jar.sign.keystore = path to PKCS12 file
+jar.sign.password = password of PKCS12 file
+```
+
+6. Enable signing by adding the below code inside the `build.gradle` file of each contracts CorDapp in your project. Notice how you will be using `getProperty()` instead of exposing the plain text passwords:
+
+```groovy
+targetPlatformVersion corda_platform_version.toInteger()
+minimumPlatformVersion corda_platform_version.toInteger()
+contract {
+    name "My Contracts CorDapp"
+    vendor "My Company"
+    // If it's not open source, use "Proprietary"
+    licence "Proprietary"
+    versionId 1
+}
+signing {
+    enabled true
+    options {
+        // This value is stored inside ~/.gradle/gradle.properties
+        keystore getProperty('jar.sign.keystore')
+        alias "cordapp-signer"
+        storepass getProperty('jar.sign.password')
+        keypass getProperty('jar.sign.password')
+        storetype "PKCS12"
+    }
+}
+```
+
+7. Extra: If you have multiple developers on your team, distribute the PKCS12 file so you can all sign with the same key. It's not recommend to send the file as it is; instead you can encrypt it with the recipient's public key then send it to them; a detailed article about using gpg to encrypt/decrypt files can be found [here](https://www.gnupg.org/gph/en/manual/x110.html).
