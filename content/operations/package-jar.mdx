@@ -4,45 +4,180 @@ description: That's your CorDapp in a file
 slug: operations/package-jar
 ---
 
+import {MultiCodeBlock} from 'gatsby-theme-apollo-docs';
+
+import {
+  ExpansionPanel,
+  ExpansionPanelList,
+  ExpansionPanelListItem
+} from 'gatsby-theme-apollo-docs';
+
+When your Corda node is ready, you will deploy your CorDapp on it. For deployment, your CorDapp will be packaged as a JAR, really a fancy ZIP file. What your CorDapp needs to include is anything that is necessary for it to work, minus what is already part of the Corda platform, i.e. the _Corda JARs_. That is why you saw [dependencies](https://docs.corda.net/docs/corda-os/4.3/cordapp-build-systems.html#corda-dependencies) like [`cordaCompile` and `cordaRuntime`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/build.gradle#L94-L96) in `build.gradle`.
+
+It also needs to exclude from packaging the other CorDapps it uses and that will be installed separately, which is why you saw the [`cordapp` dependency](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/build.gradle#L103-L107). Notice too how your project modules are declared as [`cordapp`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/build.gradle#L99-L100) so that they can be packaged independently from each other and from future hypothetical modules.
+
 ## How to Build a CorDapp
 
-To build a CorDapp; simply execute this command inside your terminal under your project's path: `./gradlew :module-name:build`
+To build a CorDapp, simply execute this command inside your terminal under your project's path:
 
-## Signing Contract CorDapps for Production
+<MultiCodeBlock>
 
-Signing a contracts CorDapp jar file is a requirement by any Corda node running in production mode (i.e. `devMode = false` inside `node.conf`); in fact, the node will not load any contracts CorDapp that is not signed (or signed by Corda development certificate; which is done by default), and you’ll see something like this inside your log file:
+```shell
+$ ./gradlew :module-name:jar
+```
+
+```powershell
+C:\020-first-token> gradlew :module-name:jar
+```
+
+</MultiCodeBlock>
+
+Where you replace `module-name` with your module's name, for instance:
+
+<MultiCodeBlock>
+
+```shell
+$ ./gradlew :contracts:jar
+```
+
+```powershell
+C:\020-first-token> gradlew :contracts:jar
+```
+
+</MultiCodeBlock>
+
+Of course, you can also use the larger `build` task, but keep in mind that it will also run the tests. So choose the task that serves you.
+
+The built JAR file(s) can be found in their respective `build/libs` folder.
+
+<ExpansionPanel title="Troubleshooting">
+
+If you have issues with Java versions again, remember to look back at the chapter about [Prepare your computer](../prepare-and-discover/prepare-computer).
+
+Keep in mind that an error like this:
+
+```
+> Task :workflows:compileJava FAILED
+030-tokens-sdk/workflows/src/main/java/com/template/flows/IssueFlows.java:11: error: package javafx.util does not exist
+import javafx.util.Pair;
+```
+Can in fact be a Java version error.
+
+</ExpansionPanel>
+
+## Why Sign Contract CorDapps for Production?
+
+When you used the `deployNodes` facility to create a development network, and created a state, your CorDapp's state recorded the hash of the _contracts_ JAR file that created it. This constraint ensures reproducibility now and in the future, at the cost of flexibility. What if you wanted to make changes to what your contract verifies? It is possible to upgrade a given state, as you will learn in a later chapter, but at the cost of a few contorsions.
+
+Now, if you reasonably expect that your contracts CorDapp will need some upgrade in the future, to facilitate the transition, you would be well-advised to choose to sign it and enforce a [signature constraint](https://docs.corda.net/docs/corda-os/4.3/api-contract-constraints.html#reasons-for-contract-constraints). Plus it offers other advantages, such as accepting new contracts CorDapps if they have known signatories.
+
+So in effect, signing a contracts CorDapp jar file is a quasi-requirement by any Corda node running in production mode. If you wanted your dev nodes to run in production mode, you could have used [`devMode false`](https://docs.corda.net/docs/corda-os/4.3/generating-a-node.html#optional-configuration) inside `node.conf`. In fact, the node will not load any contracts CorDapp that is not signed, or that is signed by a Corda development certificate, which is done by default. If you do, you’ll see something like this inside your log file:
 
 ```groovy
 [WARN] 2020-02-26T05:07:45,335Z [main] cordapp.JarScanningCordappLoader. - Not loading CorDapp [Your CorDapp] as it is signed by development key(s) only.
 ```
 
-Signature constraints are very important to control upgrades and prevent attacks (more on the topic can be found [here](https://docs.corda.net/docs/corda-os/4.4/api-contract-constraints.html)).
+If you recall, a signed transaction is constituted of its content, its serialized bytes, which determine its id. When a signature is added to a transaction, it is indeed _added_ to it, the signature does not change the transaction bytes or id. Similarly here, when you sign your CorDapp, you do not modify its content, instead you affix one or more signatures to it.
 
-## How to Sign Your Cordapps
+Note that only _contracts_ CorDapps ought to be signed as they are part of transactions, to be verified in the future, and travel over the wire. There is no point in signing _workflows_ CorDapps as they are installed on nodes by its administrator. Of course, you separated both CorDapp types into separate modules from the start.
 
-1. Create a private key in JKS format (replace the X500 name with yours, and use the same `[password]` value for both `storepass` and `keypass`):
+## How to Sign Your CorDapps
 
-```groovy
-keytool -keystore jarSignKeystore.jks -keyalg RSA -genkey -dname "OU=, O=, L=, C=" -storepass [password] -keypass [password] -alias cordapp-signer
+To create a signed JAR, is a roughly 2 step process:
+
+1. A key has to be created, or reused.
+2. The key has to be used to sign.
+
+### Create a key
+
+The key type that is used to sign a CorDapp JAR has to be stored in a file of type PKCS12, in effect a container type of file. The file itself is encrypted by a password. Inside this container, each individual key is identified by an _alias_, which you are free to choose. In this case, you will use the alias `awesome-cordapp-signer`. Each key is also encrypted by another, or same password. For simplicity, you will use the same password.
+
+The PKCS12 can be created in 2 steps and will be eventually stored in `~/.corda-keys`. So go ahead and create the folder:
+
+<MultiCodeBlock>
+
+```shell
+$ mkdir ~/.corda-keys
 ```
 
-2. Migrate the JKS key to PKCS12 format. You will be prompted for 2 passwords, use the same value that you used to create the JKS key for both values:
-
-```groovy
-keytool -importkeystore -srckeystore jarSignKeystore.jks -destkeystore jarSignKeystore.pkcs12 -deststoretype pkcs12
+```powershell
+C:\020-first-token> mkdir ~\.corda-keys
 ```
 
-3. Signatures are required **only for contracts** CorDapps, it is not required for workflows CorDapps; because only contracts CorDapps get attached to your transaction, this way the transaction can be verified at any point in the future with the same contract that it was verified with at the time of creating that transaction. So disable signing for all workflow CorDapps inside their respective `build.gradle` file:
+</MultiCodeBlock>
+
+Fortunately, as part of the installation of the JDK on your computer, another executable was installed: [`keytool`](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/keytool.html).
+
+1. Create a private key in JKS format, another container type, in the file `jar-sign-keystore.jks`.
+
+    In the line below, complete the X500 name with your parameters, and use the same `password` value for both `storepass` and `keypass`. Don't use `password` itself, obviously. Remember too that to avoid having this sensitive line in the shell's history, prefix it with [a single space](https://stackoverflow.com/questions/6475524/how-do-i-prevent-commands-from-showing-up-in-bash-history).
+
+    <MultiCodeBlock>
+
+    ```shell
+    $ keytool -keystore jar-sign-keystore.jks -keyalg RSA -genkey -dname "OU=, O=, L=, C=" -storepass password -keypass password -alias awesome-cordapp-signer -validity 365
+    ```
+
+    ```powershell
+    C:\020-first-token> keytool -keystore jar-sign-keystore.jks -keyalg RSA -genkey -dname "OU=, O=, L=, C=" -storepass password -keypass password -alias awesome-cordapp-signer -validity 365
+    ```
+
+    </MultiCodeBlock>
+
+    You should see:
+
+    ```
+    Generating 2,048 bit RSA key pair and self-signed certificate (SHA256withRSA) with a validity of 365 days
+            for: OU=DevOps, O=Corda, L=London, C=UK
+    ```
+
+2. Migrate the JKS key to PKCS12 format.
+
+    You will be prompted for 2 passwords, use the same value that you used to create the JKS key for both values:
+
+    <MultiCodeBlock>
+
+    ```shell
+    $ keytool -importkeystore -srckeystore jar-sign-keystore.jks -destkeystore ~/.corda-keys/jar-sign-keystore.pkcs12 -deststoretype pkcs12
+    ```
+
+    ```powershell
+    C:\020-first-token> keytool -importkeystore -srckeystore jar-sign-keystore.jks -destkeystore ~\.corda-keys\jar-sign-keystore.pkcs12 -deststoretype pkcs12
+    ```
+
+    </MultiCodeBlock>
+
+Now erase the first file:
+
+<MultiCodeBlock>
+
+```shell
+$ rm jar-sign-keystore.jks
+```
+
+```powershell
+C:\020-first-token> del jar-sign-keystore.jks
+```
+
+</MultiCodeBlock>
+
+Take care of your `~/.corda-keys/jar-sign-keystore.pkcs12` file as you would another key file. If you chose a folder other than `~/.corda-keys/`, make sure that you do not commit it into a Git repository.
+
+With the key created, it is time to instruct Gradle.
+
+### Discard signing for flows
+
+Since one only signs contracts CorDapps, let's explicitly disable signing on the workflows CorDapp. In the workflows module's `build.gradle`:
 
 ```groovy
 cordapp {
-    targetPlatformVersion corda_platform_version.toInteger()
-    minimumPlatformVersion corda_platform_version.toInteger()
+    targetPlatformVersion corda_platform_version
+    minimumPlatformVersion corda_platform_version
     workflow {
-        name "My Flows CorDapp"
+        name "Template Flows"
         vendor "My Company"
         // If it's not open source, use "Proprietary"
-        licence "Proprietary"
+        licence "Apache License, Version 2.0"
         versionId 1
     }
     signing {
@@ -51,38 +186,144 @@ cordapp {
 }
 ```
 
-4. In order to enable signing, you must provide inside `build.gradle` of the contracts CorDapp the password that you used when creating the PKCS12 file earlier, but `build.gradle` is going to be committed to your git repository making that password exposed. So instead of writing the plain text value of the password, you will store it inside Gradle’s property file then fetch it from there.
+### A local config file
 
-5. Create a property file for Gradle: `cd ~/.gradle` then `sudo touch gradle.properties`; inside the file write the following code:
+Now, to the contracts CorDapp. Gradle will need to know:
 
-```groovy
-jar.sign.keystore = path to PKCS12 file
-jar.sign.password = password of PKCS12 file
+* Where the PKCS12 file is.
+* What password to use to decrypt it.
+
+And because neither the file, nor the password shall be committed into the Git repository, you need to create a local-only configuration file. So create a `signing.properties` file in your project folder and add it to `.gitignore`. In your project's folder:
+
+<MultiCodeBlock>
+
+```shell
+$ touch signing.properties
 ```
 
-6. Enable signing by adding the below code inside the `build.gradle` file of each contracts CorDapp in your project. Notice how you will be using `getProperty()` instead of exposing the plain text passwords:
+```powershell
+C:\020-first-token> echo $null >> signing.properties
+```
+
+</MultiCodeBlock>
+
+Then, inside it, add:
+
+```properties
+jar.sign.keystore=/absolute/path/to/.corda-keys/jar-sign-keystore.pkcs12
+jar.sign.password=password of PKCS12 file
+jar.sign.alias=awesome-cordapp-signer
+```
+Where you have replaced `/absolute/path/to/` with the correct absolute path to the key, don't use `~`, and put the correct password. Now, it is time to direct Gradle how to sign.
+
+### Use the key to sign
+
+Add the below code inside the `build.gradle` file of each contracts CorDapp in your project. Notice how it makes use of `getProperty()` instead of exposing the plain text passwords:
 
 ```groovy
-targetPlatformVersion corda_platform_version.toInteger()
-minimumPlatformVersion corda_platform_version.toInteger()
-contract {
-    name "My Contracts CorDapp"
-    vendor "My Company"
-    // If it's not open source, use "Proprietary"
-    licence "Proprietary"
-    versionId 1
-}
-signing {
-    enabled true
-    options {
-        // This value is stored inside ~/.gradle/gradle.properties
-        keystore getProperty('jar.sign.keystore')
-        alias "cordapp-signer"
-        storepass getProperty('jar.sign.password')
-        keypass getProperty('jar.sign.password')
-        storetype "PKCS12"
+cordapp {
+    targetPlatformVersion corda_platform_version
+    minimumPlatformVersion corda_platform_version
+    contract {
+        name "Template CorDapp"
+        vendor "Corda Open Source"
+        // If it's not open source, use "Proprietary"
+        licence "Apache License, Version 2.0"
+        versionId 1
+    }
+    signing {
+        enabled true
+        options {
+            Properties signing = new Properties()
+            file("$projectDir/../signing.properties").withInputStream { signing.load(it) }
+
+            keystore signing.getProperty("jar.sign.keystore")
+            alias signing.getProperty("jar.sign.alias")
+            storepass signing.getProperty("jar.sign.password")
+            keypass signing.getProperty("jar.sign.password")
+            storetype "PKCS12"
+        }
     }
 }
 ```
+Now that Gradle is correctly informed, it is time to package it again:
 
-7. Extra: If you have multiple developers on your team, distribute the PKCS12 file so you can all sign with the same key. It's not recommend to send the file as it is; instead you can encrypt it with the recipient's public key then send it to them; a detailed article about using gpg to encrypt/decrypt files can be found [here](https://www.gnupg.org/gph/en/manual/x110.html).
+<MultiCodeBlock>
+
+```shell
+$ ./gradlew :contracts:jar
+```
+
+```powershell
+C:\020-first-token> gradlew :contracts:jar
+```
+
+</MultiCodeBlock>
+
+That's it?
+
+### Verify
+
+How can you verify that it is signed indeed? Simple, use `jarsigner`, another tool that came with the JDK:
+
+<MultiCodeBlock>
+
+```shell
+$ jarsigner -verify -verbose -keystore ~/.corda-keys/jar-sign-keystore.pkcs12 contracts/build/libs/contracts-0.1.jar
+```
+
+```shell
+C:\020-first-token> jarsigner -verify -verbose -keystore ~\.corda-keys\jar-sign-keystore.pkcs12 contracts\build\libs\contracts-0.1.jar
+```
+
+</MultiCodeBlock>
+
+You should obtain something like:
+
+```
+s      1110 Wed Jun 03 19:55:36 GET 2020 META-INF/MANIFEST.MF
+       1080 Wed Jun 03 19:55:38 GET 2020 META-INF/AWESOME-.SF
+       1186 Wed Jun 03 19:55:38 GET 2020 META-INF/AWESOME-.RSA
+          0 Fri Feb 01 00:00:00 GET 1980 META-INF/
+          0 Fri Feb 01 00:00:00 GET 1980 com/
+          0 Fri Feb 01 00:00:00 GET 1980 com/template/
+          0 Fri Feb 01 00:00:00 GET 1980 com/template/contracts/
+          0 Fri Feb 01 00:00:00 GET 1980 com/template/states/
+sm      493 Fri Feb 01 00:00:00 GET 1980 com/template/contracts/TokenContract$Commands$Issue.class
+sm      490 Fri Feb 01 00:00:00 GET 1980 com/template/contracts/TokenContract$Commands$Move.class
+sm      496 Fri Feb 01 00:00:00 GET 1980 com/template/contracts/TokenContract$Commands$Redeem.class
+sm      486 Fri Feb 01 00:00:00 GET 1980 com/template/contracts/TokenContract$Commands.class
+sm     8262 Fri Feb 01 00:00:00 GET 1980 com/template/contracts/TokenContract.class
+sm     2746 Fri Feb 01 00:00:00 GET 1980 com/template/states/TokenState.class
+sm     2281 Fri Feb 01 00:00:00 GET 1980 com/template/states/TokenStateUtilities.class
+
+  s = signature was verified
+  m = entry is listed in manifest
+  k = at least one certificate was found in keystore
+
+- Signed by "OU=, O=, L=, C="
+    Digest algorithm: SHA-256
+    Signature algorithm: SHA256withRSA, 2048-bit key
+
+jar verified.
+
+Warning:
+This jar contains entries whose certificate chain is invalid. Reason: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+This jar contains signed entries that are not signed by alias in this keystore.
+This jar contains entries whose signer certificate is self-signed.
+This jar contains signatures that do not include a timestamp. Without a timestamp, users may not be able to validate this jar after any of the signer certificates expire (as early as 2021-06-03).
+
+Re-run with the -verbose and -certs options for more details.
+
+The signer certificate will expire on 2021-06-03.
+```
+
+### Cleanup
+
+What to do with the PKCS12 file? You ought to keep it on a build machine only, and not necessarily distribute it across all developer computers. On each developer computer, in order for the `jar` task to succeed, each developer can create new self-signed keys by following the above steps.
+
+If you do want to distribute the PKCS12 file so you can all sign with the same key, it's not recommended to send the file as it is across the internet. Instead, you can encrypt it with the recipient's public key then send it to them. A detailed article about using gpg to encrypt/decrypt files can be found [here](https://www.gnupg.org/gph/en/manual/x110.html).
+
+### Conclusion
+
+With a neatly signed CorDapp JAR on hand, which network should you join? That's the topic of the next chapter.
