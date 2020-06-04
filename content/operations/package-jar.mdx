@@ -188,12 +188,17 @@ cordapp {
 
 ### A local config file
 
-Now, to the contracts CorDapp. Gradle will need to know:
+Now, to the contracts CorDapp. Gradle will need to:
 
-* Where the PKCS12 file is.
-* What password to use to decrypt it.
+* Have access to the PKCS12 file.
+* Know what password to use to decrypt it.
 
-And because neither the file, nor the password shall be committed into the Git repository, you need to create a local-only configuration file. So create a `signing.properties` file in your project folder and add it to `.gitignore`. In your project's folder:
+And because neither the PKCS12 file, nor the password shall be committed into the Git repository:
+
+* You need to create an intermediate configuration file that points to the PKCS12.
+* You will pass the password on the command line.
+
+So create a `signing.properties` file in your project's folder:
 
 <MultiCodeBlock>
 
@@ -211,14 +216,13 @@ Then, inside it, add:
 
 ```properties
 jar.sign.keystore=/absolute/path/to/.corda-keys/jar-sign-keystore.pkcs12
-jar.sign.password=password of PKCS12 file
 jar.sign.alias=awesome-cordapp-signer
 ```
-Where you have replaced `/absolute/path/to/` with the correct absolute path to the key, don't use `~`, and put the correct password. Now, it is time to direct Gradle how to sign.
+Where you have replaced `/absolute/path/to/` with the correct absolute path to the key, don't use `~`. It is safe to commit this file to Git as it does not contain any private key or password. Now, it is time to direct Gradle how to sign.
 
 ### Use the key to sign
 
-Add the below code inside the `build.gradle` file of each contracts CorDapp in your project. Notice how it makes use of `getProperty()` instead of exposing the plain text passwords:
+Add the below code inside the `build.gradle` file of each contracts CorDapp in your project. Note how it makes use of `getProperty()` instead of exposing the plain text password:
 
 ```groovy
 cordapp {
@@ -239,28 +243,28 @@ cordapp {
 
             keystore signing.getProperty("jar.sign.keystore")
             alias signing.getProperty("jar.sign.alias")
-            storepass signing.getProperty("jar.sign.password")
-            keypass signing.getProperty("jar.sign.password")
+            storepass getProperty("SIGN_PASS")
+            keypass getProperty("SIGN_PASS")
             storetype "PKCS12"
         }
     }
 }
 ```
-Now that Gradle is correctly informed, it is time to package it again:
+Now that Gradle is correctly informed, it is time to package the CorDapp again. But what is this `SIGN_PASS` property? It is an argument that you pass to the command line:
 
 <MultiCodeBlock>
 
 ```shell
-$ ./gradlew :contracts:jar
+$ ./gradlew -PSIGN_PASS=password :contracts:jar
 ```
 
 ```powershell
-C:\020-first-token> gradlew :contracts:jar
+C:\020-first-token> gradlew -PSIGN_PASS=password :contracts:jar
 ```
 
 </MultiCodeBlock>
 
-That's it?
+Where you have replaced `password` by the actual password you used. That's it?
 
 ### Verify
 
@@ -272,7 +276,7 @@ How can you verify that it is signed indeed? Simple, use `jarsigner`, another to
 $ jarsigner -verify -verbose -keystore ~/.corda-keys/jar-sign-keystore.pkcs12 contracts/build/libs/contracts-0.1.jar
 ```
 
-```shell
+```powershell
 C:\020-first-token> jarsigner -verify -verbose -keystore ~\.corda-keys\jar-sign-keystore.pkcs12 contracts\build\libs\contracts-0.1.jar
 ```
 
@@ -318,12 +322,12 @@ Re-run with the -verbose and -certs options for more details.
 The signer certificate will expire on 2021-06-03.
 ```
 
-### Cleanup
+## Cleanup
 
 What to do with the PKCS12 file? You ought to keep it on a build machine only, and not necessarily distribute it across all developer computers. On each developer computer, in order for the `jar` task to succeed, each developer can create new self-signed keys by following the above steps.
 
 If you do want to distribute the PKCS12 file so you can all sign with the same key, it's not recommended to send the file as it is across the internet. Instead, you can encrypt it with the recipient's public key then send it to them. A detailed article about using gpg to encrypt/decrypt files can be found [here](https://www.gnupg.org/gph/en/manual/x110.html).
 
-### Conclusion
+## Conclusion
 
 With a neatly signed CorDapp JAR on hand, which network should you join? That's the topic of the next chapter.
