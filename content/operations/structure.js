@@ -5,7 +5,6 @@ module.exports = [
     `${here}package-jar`,
     `${here}test-net`,
     `${here}spin-up-vm`,
-    `${here}proper-db`,
     `${here}deploy-remove`,
     `${here}upgrades`,
     `${here}further-study`

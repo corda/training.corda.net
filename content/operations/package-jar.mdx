@@ -77,7 +77,7 @@ So in effect, signing a contracts CorDapp jar file is a quasi-requirement by any
 [WARN] 2020-02-26T05:07:45,335Z [main] cordapp.JarScanningCordappLoader. - Not loading CorDapp [Your CorDapp] as it is signed by development key(s) only.
 ```
 
-If you recall, a signed transaction is constituted of its content, its serialized bytes, which determine its id. When a signature is added to a transaction, it is indeed _added_ to it, the signature does not change the transaction bytes or id. Similarly here, when you sign your CorDapp, you do not modify its content, instead you affix one or more signatures to it.
+If you recall, a signed transaction is constituted of its content, its serialized bytes, which determine its id, and a signature. When a signature is added to a transaction, it is indeed _added_ to it, the signature does not change the transaction bytes or id. Similarly here, when you sign your CorDapp, you do not modify its content, instead you affix one or more signatures to it.
 
 Note that only _contracts_ CorDapps ought to be signed as they are part of transactions, to be verified in the future, and travel over the wire. There is no point in signing _workflows_ CorDapps as they are installed on nodes by its administrator. Of course, you separated both CorDapp types into separate modules from the start.
 

@@ -4,22 +4,39 @@ description: Visit the rabbit hole of Corda operations
 slug: operations/further-study
 ---
 
-## Changing the Notary on States.
+## Changing the Notary on States
 
 There are certain cases where a notary change is required. For instance, if you are trying to add a reference state that uses a different notary than your input states; those input states' notary must be changed to match that of the reference state, because in order to use a reference state in your transaction; the notary should be able to attest that it is an unconsumed state.
 Since (usually) you don't have control over the reference state, but you do have control over the input states; then you change the notary of the latter.
 In order to change the notary, you simply call the `NotaryChangeFlow` which will collect the approvals (i.e. signatures) from the participants of the state.
 
-## The Node Explorer.
+## PostgreSQL
 
-Node explorer is a very useful tool that allows you to see all sorts of information about your node (e.g. installed CorDapps, finalized transactions) and start RPC enabled flows.
-You can see a video about its capabilities [here](https://www.youtube.com/watch?v=cn2lhS8pjRs).
+Now that you have a running Corda server, you should know that it uses a local H2 persistent database. H2 is an open-source lightweight Java database mostly used for development and testing. Perhaps you want a more durable database. In this case, you can use PostgreSQL, as explained [here](https://docs.corda.net/docs/corda-os/4.3/node-database.html).
 
-## FlowHospital.
+Cloud computing providers offer this database as a managed service. _Managed service_ means that, for a small mark-up, they take care of the nitty-gritty of keeping your database server up and patched, at your preferred version. From there, what you need to connect your Corda to it is:
 
-The flow hospital is a built-in node service that retries your flow from the last checkpoint.  
-Flows are sent to the hospital when various issues occur (usually for ones that can be fixed) allowing the flow to proceed once they are resolved.  
-Before Corda 4.4, the [list of errors](https://docs.corda.net/docs/corda-os/4.4/node-flow-hospital.html#run-time-behaviour) that sent a flow to the hospital was fixed, and the developer had no way of controlling that. For instance, if a responding node was missing a CorDapp; a `ClassNotFoundException` would send the flow to the hospital, so the node operator can install the missing CorDapp, then once the node is restarted (to load the new CorDapp); the hospital will retry the flow and it will proceed successfully this time.
-With the new release, if the developer “catches an exception” that they believe can be fixed; they can raise a `HospitalizeFlowException` to send the flow to the hospital, allowing to replay it from the last checkpoint once the problem is resolved.  
-An example would be your flow calling some API; and that API has timed-out with its response, in this case the API server might have been down; and you want to replay the flow again hoping that the server is back online by then, instead of throwing a `FlowException` and terminating your flow.
+1. The JDBC driver.
+2. The access parameters.
+3. Grant your Corda server access to the database.
 
+For point 3, on top of user/password, you should leverage the cloud provider's policy tools that grant access to the database only to your Corda server, for instance.
+
+To  learn more, see these blog posts about the db perspective for [development](https://medium.com/corda/cordapp-database-setup-development-perspective-1c572adf5957) and [production](https://medium.com/corda/cordapp-database-setup-production-perspective-2c400e60fae5).
+
+## Flow Hospital
+
+You know that not all plans unroll as expected, especially with networked applications. This is true of flows. For instance, a JAR may be missing, the database may be unavailable, the counterparty may have been evicted from the network map, etc. What should your flow do in this case? The R3 team has divided such errors into 2 buckets:
+
+1. Those errors that may be recoverable or fixed at some point in the future.
+2. Those that are not.
+
+When your flow encounters an error of the first type, it is sent to the flow hospital. The [flow hospital](https://docs.corda.net/docs/corda-os/4.4/node-flow-hospital.html) is a built-in node service that retries your flow from the last checkpoint.
+
+Before Corda 4.4, the [list of errors](https://docs.corda.net/docs/corda-os/4.4/node-flow-hospital.html#run-time-behaviour) that sent a flow to the hospital was fixed, and the developer had no way of controlling that. With the new release, if the developer “catches an exception” that they believe can be fixed, they can raise a `HospitalizeFlowException` to send the flow to the hospital. That will allow it to be replayed from the last checkpoint once the problem is resolved.
+
+A practical example would be your flow calls an API, and that call times out before it gets a response. In this case the API server might simply have been down. So instead of throwing a `FlowException` and terminating your flow, you may want to replay the flow again hoping that the server is back online by then. If you judiciously combine this with a forced checkpoint like `sleep(sometime)` right before the API call, you can have your flow restart exactly where it left off. For instance, in [this example](https://github.com/corda/corda-settler/blob/b1a667fbad17666ef56862b00d5b16a460ad2b5c/modules/ripple/src/main/kotlin/com/r3/corda/finance/ripple/flows/MakeXrpPayment.kt#L86-L90), doing so avoids recreating a sequence number.
+
+## Conclusion
+
+Operations on Corda is a rapidly evolving subject so be sure to regularly [peruse the docs](https://docs.corda.net/docs/corda-os/4.4/corda-nodes-index.html).
