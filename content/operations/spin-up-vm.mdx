@@ -1,8 +1,10 @@
 ---
-title: Spin up a VM  
-description: Or get your naked Corda up  
+title: Spin up a VM
+description: Or get your naked Corda up
 slug: operations/spin-up-vm
 ---
+
+import HighlightBox from "../../src/HighlightBox"
 
 import {
   ExpansionPanel,
@@ -32,9 +34,17 @@ What the [`install.sh`](https://onboarder.prod.ws.r3.com/api/user/node/TESTNET/i
 * Install Java if necessary.
 * Create a `corda` user.
 * Download Corda and install it in `/opt/corda`.
+* As part of the download, private keys and signed certificates are downloaded.
+* Start Corda.
+
+<HighlightBox type="info">
+
+It downloads your private key. That's right, but that's only for the test net. In a production network, it would be:
+
 * Create a private key and certificate.
 * Ask the doorman to sign the certificate.
-* Start Corda.
+
+</HighlightBox>
 
 That's a lot and you can customize the actions. Indeed, beside the `ONE_TIME_DOWNLOAD_KEY` parameter, you can do:
 
