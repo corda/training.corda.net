@@ -52,7 +52,7 @@ The built JAR file(s) can be found in their respective `build/libs` folder.
 
 <ExpansionPanel title="Troubleshooting">
 
-If you have issues with Java versions again, remember to look back at the chapter about [Prepare your computer](../prepare-and-discover/prepare-computer).
+If you have issues with Java versions again, remember to look back to the chapter about [Prepare your computer](../prepare-and-discover/prepare-computer).
 
 Keep in mind that an error like this:
 
@@ -69,17 +69,17 @@ Can in fact be a Java version error.
 
 When you used the `deployNodes` facility to create a development network, and created a state, your CorDapp's state recorded the hash of the _contracts_ JAR file that created it. This constraint ensures reproducibility now and in the future, at the cost of flexibility. What if you wanted to make changes to what your contract verifies? It is possible to upgrade a given state, as you will learn in a later chapter, but at the cost of a few contorsions.
 
-Now, if you reasonably expect that your contracts CorDapp will need some upgrade in the future, to facilitate the transition, you would be well-advised to choose to sign it and enforce a [signature constraint](https://docs.corda.net/docs/corda-os/4.3/api-contract-constraints.html#reasons-for-contract-constraints). Plus it offers other advantages, such as accepting new contracts CorDapps if they have known signatories.
+Now, if you reasonably expect that your contracts CorDapp will need some upgrade in the future, to facilitate the transition, you would be well-advised to choose to sign it and enforce a [signature constraint](https://docs.corda.net/docs/corda-os/4.3/api-contract-constraints.html#reasons-for-contract-constraints). This offers other advantages including accepting new contracts CorDapps if they have known signatories.
 
-So in effect, signing a contracts CorDapp jar file is a quasi-requirement by any Corda node running in production mode. If you wanted your dev nodes to run in production mode, you could have used [`devMode false`](https://docs.corda.net/docs/corda-os/4.3/generating-a-node.html#optional-configuration) inside `node.conf`. In fact, the node will not load any contracts CorDapp that is not signed, or that is signed by a Corda development certificate, which is done by default. If you do, you’ll see something like this inside your log file:
+So, in effect, signing a contracts CorDapp jar file is a quasi-requirement of any Corda node running in production mode. If you wanted your dev nodes to run in production mode, you could have used [`devMode false`](https://docs.corda.net/docs/corda-os/4.3/generating-a-node.html#optional-configuration) inside `node.conf`. The node will not load any contracts CorDapp that is not signed, or that is signed by a Corda development certificate which is done by default. If you do, you’ll see something like this inside your log file:
 
 ```groovy
 [WARN] 2020-02-26T05:07:45,335Z [main] cordapp.JarScanningCordappLoader. - Not loading CorDapp [Your CorDapp] as it is signed by development key(s) only.
 ```
 
-If you recall, a signed transaction is constituted of its content, its serialized bytes, which determine its id, and a signature. When a signature is added to a transaction, it is indeed _added_ to it, the signature does not change the transaction bytes or id. Similarly here, when you sign your CorDapp, you do not modify its content, instead you affix one or more signatures to it.
+If you recall, a signed transaction is constituted of its content, its serialized bytes, which determine its id, and a signature. When a signature is added to a transaction, it is indeed _added_ to it and the signature does not change the transaction bytes or id. Similarly here, when you sign your CorDapp, you do not modify its content, instead you affix one or more signatures to it.
 
-Note that only _contracts_ CorDapps ought to be signed as they are part of transactions, to be verified in the future, and travel over the wire. There is no point in signing _workflows_ CorDapps as they are installed on nodes by its administrator. Of course, you separated both CorDapp types into separate modules from the start.
+Note that only _contracts_ CorDapps ought to be signed as they are part of transactions, to be verified in the future, and they travel over the wire. There is no point in signing _workflows_ CorDapps as they are installed on nodes by its administrator. Of course, you separated both CorDapp types into separate modules from the start.
 
 ## How to Sign Your CorDapps
 
@@ -268,7 +268,7 @@ Where you have replaced `password` by the actual password you used. That's it?
 
 ### Verify
 
-How can you verify that it is signed indeed? Simple, use `jarsigner`, another tool that came with the JDK:
+How can you verify that it is signed indeed? Simple. Use `jarsigner`, another tool that came with the JDK:
 
 <MultiCodeBlock>
 
