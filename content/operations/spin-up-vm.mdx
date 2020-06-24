@@ -39,7 +39,7 @@ What the [`install.sh`](https://onboarder.prod.ws.r3.com/api/user/node/TESTNET/i
 
 <HighlightBox type="info">
 
-It downloads your private key. That's right, but that's only for the test net. In a production network, it would be:
+It downloads your private key. That's right, but that's only for the Testnet. In a production network, it would be:
 
 * Create a private key and certificate.
 * Ask the doorman to sign the certificate.
@@ -98,7 +98,7 @@ By start again, it means that:
 
 With your Corda node running, how about you connect to it? Do you remember how you used the node shell when in development mode? Let's do the same but to connect to your remote VM with the [standalone node shell](https://docs.corda.net/docs/corda-os/4.3/shell.html#starting-the-standalone-shell).
 
- Let's install it. [Here](https://ci-artifactory.corda.r3cev.com/artifactory/webapp/#/artifacts/browse/tree/General/corda-releases/net/corda/corda-tools-shell-cli/4.3/corda-tools-shell-cli-4.3-all.jar), click the Download link to get it. Then as per [the guide](https://docs.corda.net/docs/corda-os/4.3/cli-application-shell-extensions.html#installing-shell-extensions), run on your local computer:
+ Let's install it. [Here](https://ci-artifactory.corda.r3cev.com/artifactory/webapp/#/artifacts/browse/tree/General/corda-releases/net/corda/corda-tools-shell-cli/4.3/corda-tools-shell-cli-4.3-all.jar), click the Download link (top right) to get it. Then as per [the guide](https://docs.corda.net/docs/corda-os/4.3/cli-application-shell-extensions.html#installing-shell-extensions), run on your local computer:
 
 ```shell
 $ java -jar /where/is/corda-tools-shell-cli-4.3-all.jar install-shell-extensions
@@ -199,13 +199,13 @@ When you have confirmed that things are working, try securing [more with SSL](ht
 
 ## The bootstrapper
 
-For the audacious, you may consider creating a test network from scratch. This is in effect what you did _in one click_ when running `deployNodes` on your local machine. Now, with the bootstrapper you can accomplish the same and then distribute the created files to separate machines, i.e. VM's.
+For the audacious, you may consider creating a Testnet from scratch. This is in effect what you did _in one click_ when running `deployNodes` on your local machine. Now, with the bootstrapper you can accomplish the same and then distribute the created files to separate machines, i.e. VM's.
 
 Have a look at [the documentation](https://docs.corda.net/docs/corda-os/4.4/network-bootstrapper.html) about how to generate the required network map files. Once you have all of the files, you can follow [these instructions](https://docs.corda.net/docs/corda-os/4.4/tutorial-cordapp.html#running-nodes-across-machines) to copy your nodes to separate VM's.
 
 Whichever data center you choose to install your node, as always, you will need the following:
 
-* A computer running Linux and capacious enough.
+* A computer running Linux and with sufficient disk space.
 * A static IP address.
 
 <!--
@@ -215,7 +215,7 @@ TODO `deleteLockfileIfCertsExist` seems wrongly named
 TODO line 156, it is already done below
 TODO What: If you restart your VM you will need to restart Corda
 
-Note that it will download your node certificate from one of Corda's server. Even though you can download it only once, and presumably the server deletes it once it has been downloaded, you should consider this certificate unsafely _disclosed_ and not use it for anything other than the test net
+Note that it will download your node certificate from one of Corda's server. Even though you can download it only once, and presumably the server deletes it once it has been downloaded, you should consider this certificate unsafely _disclosed_ and not use it for anything other than the Testnet
 
 -->
 

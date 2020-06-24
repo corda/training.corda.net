@@ -12,7 +12,9 @@ import {
   ExpansionPanelListItem
 } from 'gatsby-theme-apollo-docs';
 
-When your Corda node is ready, you will deploy your CorDapp on it. For deployment, your CorDapp will be packaged as a JAR, really a fancy ZIP file. What your CorDapp needs to include is anything that is necessary for it to work, minus what is already part of the Corda platform, i.e. the _Corda JARs_. That is why you saw [dependencies](https://docs.corda.net/docs/corda-os/4.3/cordapp-build-systems.html#corda-dependencies) like [`cordaCompile` and `cordaRuntime`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/build.gradle#L94-L96) in `build.gradle`.
+In this section, you will deploy your CorDapp on the node you create. 
+
+For deployment, your CorDapp will be packaged as a JAR, really a fancy ZIP file. What your CorDapp needs to include is anything that is necessary for it to work, minus what is already part of the Corda platform, i.e. the _Corda JARs_. That is why you saw [dependencies](https://docs.corda.net/docs/corda-os/4.3/cordapp-build-systems.html#corda-dependencies) like [`cordaCompile` and `cordaRuntime`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/build.gradle#L94-L96) in `build.gradle`.
 
 It also needs to exclude from packaging the other CorDapps it uses and that will be installed separately, which is why you saw the [`cordapp` dependency](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/build.gradle#L103-L107). Notice too how your project modules are declared as [`cordapp`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/build.gradle#L99-L100) so that they can be packaged independently from each other and from future hypothetical modules.
 
@@ -90,7 +92,7 @@ To create a signed JAR, is a roughly 2 step process:
 
 ### Create a key
 
-The key type that is used to sign a CorDapp JAR has to be stored in a file of type PKCS12, in effect a container type of file. The file itself is encrypted by a password. Inside this container, each individual key is identified by an _alias_, which you are free to choose. In this case, you will use the alias `awesome-cordapp-signer`. Each key is also encrypted by another, or same password. For simplicity, you will use the same password.
+The key type that is used to sign a CorDapp JAR has to be stored in a file of type [PKCS12](https://en.wikipedia.org/wiki/PKCS_12), in effect a container type of file. The file itself is encrypted by a password. Inside this container, each individual key is identified by an _alias_, which you are free to choose. In this case, you will use the alias `awesome-cordapp-signer`. Each key is also encrypted by another, or same password. For simplicity, you will use the same password.
 
 The PKCS12 can be created in 2 steps and will be eventually stored in `~/.corda-keys`. So go ahead and create the folder:
 
@@ -331,3 +333,4 @@ If you do want to distribute the PKCS12 file so you can all sign with the same k
 ## Conclusion
 
 With a neatly signed CorDapp JAR on hand, which network should you join? That's the topic of the next chapter.
+
