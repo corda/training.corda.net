@@ -16,4 +16,4 @@ What could need changing or upgrading?
 6. **States schemas**. If you implemented [a schema](https://docs.corda.net/docs/corda-os/4.5/api-persistence.html) to your state, you may have to [make an effort](https://docs.corda.net/docs/corda-os/4.5/upgrading-cordapps.html#state-schemas).
 7. **Your db**. See these guides on db migration from a [development](https://medium.com/corda/cordapp-database-upgrade-migration-development-perspective-c2931e28b9b4) and [production](https://medium.com/corda/cordapp-database-upgrade-migration-production-perspective-5f655838492d) perspectives. With the associated videos [1](https://www.youtube.com/watch?v=0BKUUY4Tg20) and [2](https://www.youtube.com/watch?v=69un7I-Amwc).
 
-Unfortunately, to test your upgrade procedures, you will have to [deploy a Testnet](https://docs.corda.net/docs/corda-os/4.5/upgrading-cordapps.html#testing-cordapp-upgrades) and perform the upgrade there.
+Unfortunately, to test your upgrade procedures, you will have to [deploy a local test network](https://docs.corda.net/docs/corda-os/4.5/upgrading-cordapps.html#testing-cordapp-upgrades), perhaps via `deployNodes`, and perform the upgrade there.
