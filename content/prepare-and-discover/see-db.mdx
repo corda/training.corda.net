@@ -91,7 +91,7 @@ As mentioned earlier, each node terminal displays the `Database connection url `
 
 On rare occasions, you may get an error that looks approximately like this:
 
-```bash
+```shell
 Syntax error in SQL statement "SET FORBID_CREATION[*] TRUE"; expected "@,
 AUTOCOMMIT, MVCC, EXCLUSIVE, IGNORECASE, PASSWORD, SALT, MODE, COMPRESS_LOB,
 DATABASE, COLLATION, BINARY_COLLATION, UUID_COLLATION, CLUSTER,
@@ -124,7 +124,7 @@ On another tab, connect to PartyA. Click on `VAULT_STATES` and <kbd>Run</kbd>. A
 
 Well, it will be the first as far as these newly reconfigured nodes are concerned. Just like before, run this in the shell on the PartyA node:
 
-```bash
+```shell
 >>> flow start ExampleFlow$Initiator iouValue: 50, otherParty: "O=PartyB,L=New York,C=US"
 [...]
 Flow completed with result: SignedTransaction(id=EC06EA903314BE02610032933FBA2392151732CFD87408A4681C3AFEA83C53B1)
@@ -224,7 +224,7 @@ Again, you will use PartyA as the lender, but PartyC will now be the borrower. T
 
 However, for PartyA's checkpointed state to last long enough for you to see it, you will first stop PartyC. Type `bye` into PartyC's shell. While you are at it, also stop the Notary.
 
-```bash
+```shell
 # On PartyC:
 >>> bye
 # On Notary:
@@ -279,7 +279,7 @@ java.lang.IllegalArgumentException
 ```
 If yes, look back at the "Prepare your computer" chapter, and look for the part about running a JAR with a different version than your default. That may mean running something like:
 
-```bash
+```shell
 $ /Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home/bin/java -jar corda.jar
 ```
 
@@ -329,7 +329,7 @@ Now open a H2 console to PartyB, run the queries `SELECT * FROM NODE_ATTACHMENTS
 
 Now in PartyA, run `>>> flow start ExampleFlow$Initiator iouValue: 50, otherParty: "O=PartyB,L=New York,C=US"`. You get:
 
-```bash
+```shell
    Gathering the counterparty's signature.
        Collecting signatures from counterparties.
        Verifying collected signatures.

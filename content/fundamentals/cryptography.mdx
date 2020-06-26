@@ -29,15 +29,15 @@ Take a look at some examples, which you may know under the names:
 
 Example (Linux):
 
-```
-// Create SECP256K1 private key with explicit parameters for backward compatibility
+```shell
+# Create SECP256K1 private key with explicit parameters for backward compatibility
 $ openssl ecparam -name secp256k1 -genkey -noout -out secp256k1-key.pem -param_enc explicit
-// Create public key
+# Create public key
 $ openssl ec -in secp256k1-key.pem -pubout -out secp256k1-key-pub.pem
-// Show public key
+# Show public key
 $ openssl ec -in secp256k1-key-pub.pem -pubin -text -noout
 
-// Create RSA private key
+# Create RSA private key
 $ openssl genrsa -des3 -out rsa-key.pem 2048
 Generating RSA private key, 2048 bit long modulus
 .....................................................+++
@@ -45,7 +45,7 @@ Generating RSA private key, 2048 bit long modulus
 e is 65537 (0x10001)
 Enter pass phrase for rsa-key.pem:
 Verifying - Enter pass phrase for rsa-key.pem:
-// Create public key
+# Create public key
 $ openssl rsa -in rsa-key.pem -outform PEM -pubout -out rsa-key-pub.pem
 Enter pass phrase for rsa-key.pem:
 writing RSA key
@@ -68,10 +68,10 @@ Alice wants to send a message to Bob, and for Bob's eyes only:
 
 Example:
 
-```bash
-// Encrypt file
+```shell
+# Encrypt file
 $ openssl pkeyutl -encrypt -pubin -inkey rsa-key-pub.pem -in helloworld.txt -out helloworld.enc
-// Decrypt file
+# Decrypt file
 $ openssl pkeyutl -decrypt -inkey rsa-key.pem -in helloworld.enc -out helloworld2.txt
 ```
 
@@ -90,15 +90,15 @@ Alice wants to make sure that Bob's public announcement is indeed from Bob:
 
 Example:
 
-```bash
-// Sign file hash
+```shell
+# Sign file hash
 $ openssl dgst -sha256 -sign secp256k1-key.pem -out helloworld-bin.sha256 helloworld.txt
-// Encode signature in Base64
+# Encode signature in Base64
 $ openssl base64 -in helloworld-bin.sha256 -out helloworld.sha256
 
-// Decode signature form Base64
+# Decode signature form Base64
 $ openssl base64 -d -in helloworld.sha256 -out helloworld-bin-decoded.sha256
-// Verify signature
+# Verify signature
 $ openssl dgst -sha256 -verify secp256k1-key-pub.pem -signature helloworld-bin-decoded.sha256 helloworld.txt
 Verified OK
 ```
@@ -143,7 +143,7 @@ How to calculate a $(pubKey, n)$ and a $priKey$ ?
 
 $$\phi(n(p, q)) = (p-1) \cdot (q-1)$$ only if $p$ and $q$ are prime numbers. Otherwise, it is a NP problem.
 
-* Now, youcan use a random $pubKey$, which is not a divisor of $\phi(n)$ and is smaller than $\phi(n)$.
+* Now, you can use a random $pubKey$, which is not a divisor of $\phi(n)$ and is smaller than $\phi(n)$.
 
 Calculating $priKey$ means calculating $b$ in following equation:
 
@@ -153,12 +153,12 @@ Where we can use the extended euclidean algorithm. Now we can delete $p, q$ and 
 
 ### Example
 
-Let's have a look on an example.
+Let's have a look at an example.
 
 * We use $p = 2399$ and $q = 26371$, which are prime numbers.
 Then we have $n = 63264029$ and $\phi(n) = 63235260$.
 * Now, we have to set a $pubKey < \phi(n)$. So we use $pubKey = 54833$.
-* That gives us with extended euclid a $priKey = 6589577$
+* That gives us with extended euclid a $priKey = 6589577$.
 
 Now we delete $p, q$ and $\phi(n)$. If we want to encrypt the $message = 9874587$ we get:
 
@@ -176,9 +176,9 @@ $a \cdot \phi(n)+ priKey \cdot pubKey = 1$ means:
 
 $$priKey \cdot pubKey\equiv 1 \mod \phi(n)$$
 
-And because $\phi(n) = (p-1)(q-1)$
+And because $\phi(n) = (p-1)(q-1)$.
 
-It follows $$priKey \cdot pubKey-1 = h(p-1) = k(q-1)$$
+It follows $$priKey \cdot pubKey-1 = h(p-1) = k(q-1)$$.
 
 And then:
 
@@ -200,12 +200,12 @@ $message \cdot (message^{p-1})^{h} \equiv message \cdot 1^{h} \equiv message \mo
 
 If you do the same steps for $q$, you show, $$(message ^ {pubKey}) ^ {priKey} \equiv message \mod {p \cdot q}$$ This is, why RSA works.
 
-### Trivial zero knowledge Proof
+### Trivial zero-knowledge Proof
 
-RSA fits  $E(x) \cdot E(y) = x^e \cdot y^e = e^{xy} = E(xy)$
+RSA fits $E(x) \cdot E(y) = x^e \cdot y^e = e^{xy} = E(xy)$.
 That means we can prove, if $x \cdot y$ calculated well, without knowing $x$ or $y$.
 
-In the example, if you use $x = 12$ and $y = 24$, then you get $12 \cdot 24 = 288$ for the output and you get $$E(12) \cdot E(24) \equiv E(288) \equiv 60822364  \mod 63264029 $$ with same $(pubKey, n)$ and $priKey$ like in the above section. So if you give someone $E(12)$, $E(24)$ and the output $288$, they can verify, if the calculation is done well, without knowing $x$ and $y$.
+In the example, if you use $x = 12$ and $y = 24$, then you get $12 \cdot 24 = 288$ for the output and you get $$E(12) \cdot E(24) \equiv E(288) \equiv 60822364  \mod 63264029$$ with same $(pubKey, n)$ and $priKey$ like in the above section. So if you give someone $E(12)$, $E(24)$ and the output $288$, they can verify, if the calculation is done well, without knowing $x$ and $y$.
 
 Digital Signatures with RSA are another trivial example. They are zero-knowledge proofs because you are proving that you have a private key, which is the pair to the public key without giving any information about your private key.
 
@@ -229,14 +229,14 @@ With such a function, you can:
 
 MD5 is such a function:
 
-```bash
+```shell
 $ echo "The quick brown fox jumps over the lazy dog" | md5
 37c4b87edffc5d198ff5a185cee7ee09
 ```
 
 On Linux, it is `md5sum`. Now let's introduce a typo:
 
-```bash
+```shell
 $ echo "The quick brown fox jump over the lazy dog" | md5
 4ba496f4eec6ca17253cf8b7129e43be
 ```
