@@ -12,9 +12,9 @@ import {
   ExpansionPanelListItem
 } from 'gatsby-theme-apollo-docs';
 
-In this section, you will deploy your CorDapp on the node you create. 
+In this section, you will deploy your CorDapp on the node you create.
 
-For deployment, your CorDapp will be packaged as a JAR, really a fancy ZIP file. What your CorDapp needs to include is anything that is necessary for it to work, minus what is already part of the Corda platform, i.e. the _Corda JARs_. That is why you saw [dependencies](https://docs.corda.net/docs/corda-os/4.3/cordapp-build-systems.html#corda-dependencies) like [`cordaCompile` and `cordaRuntime`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/build.gradle#L94-L96) in `build.gradle`.
+For deployment, your CorDapp will be packaged as a JAR, really a fancy ZIP file. What your CorDapp needs to include is anything that is necessary for it to work, minus what is already part of the Corda platform, i.e. the _Corda JARs_. That is why you saw [dependencies](https://docs.corda.net/docs/corda-os/4.5/cordapp-build-systems.html#corda-dependenciess) like [`cordaCompile` and `cordaRuntime`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/build.gradle#L94-L96) in `build.gradle`.
 
 It also needs to exclude from packaging the other CorDapps it uses and that will be installed separately, which is why you saw the [`cordapp` dependency](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/build.gradle#L103-L107). Notice too how your project modules are declared as [`cordapp`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/build.gradle#L99-L100) so that they can be packaged independently from each other and from future hypothetical modules.
 
@@ -71,9 +71,9 @@ Can in fact be a Java version error.
 
 When you used the `deployNodes` facility to create a development network, and created a state, your CorDapp's state recorded the hash of the _contracts_ JAR file that created it. This constraint ensures reproducibility now and in the future, at the cost of flexibility. What if you wanted to make changes to what your contract verifies? It is possible to upgrade a given state, as you will learn in a later chapter, but at the cost of a few contorsions.
 
-Now, if you reasonably expect that your contracts CorDapp will need some upgrade in the future, to facilitate the transition, you would be well-advised to choose to sign it and enforce a [signature constraint](https://docs.corda.net/docs/corda-os/4.3/api-contract-constraints.html#reasons-for-contract-constraints). This offers other advantages including accepting new contracts CorDapps if they have known signatories.
+Now, if you reasonably expect that your contracts CorDapp will need some upgrade in the future, to facilitate the transition, you would be well-advised to choose to sign it and enforce a [signature constraint](https://docs.corda.net/docs/corda-os/4.5/api-contract-constraints.html#reasons-for-contract-constraints). This offers other advantages including accepting new contracts CorDapps if they have known signatories.
 
-So, in effect, signing a contracts CorDapp jar file is a quasi-requirement of any Corda node running in production mode. If you wanted your dev nodes to run in production mode, you could have used [`devMode false`](https://docs.corda.net/docs/corda-os/4.3/generating-a-node.html#optional-configuration) inside `node.conf`. The node will not load any contracts CorDapp that is not signed, or that is signed by a Corda development certificate which is done by default. If you do, you’ll see something like this inside your log file:
+So, in effect, signing a contracts CorDapp jar file is a quasi-requirement of any Corda node running in production mode. If you wanted your dev nodes to run in production mode, you could have used [`devMode false`](https://docs.corda.net/docs/corda-os/4.5/generating-a-node.html#optional-configuration) inside `node.conf`. The node will not load any contracts CorDapp that is not signed, or that is signed by a Corda development certificate which is done by default. If you do, you’ll see something like this inside your log file:
 
 ```groovy
 [WARN] 2020-02-26T05:07:45,335Z [main] cordapp.JarScanningCordappLoader. - Not loading CorDapp [Your CorDapp] as it is signed by development key(s) only.
@@ -333,4 +333,3 @@ If you do want to distribute the PKCS12 file so you can all sign with the same k
 ## Conclusion
 
 With a neatly signed CorDapp JAR on hand, which network should you join? That's the topic of the next chapter.
-

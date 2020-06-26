@@ -16,11 +16,11 @@ You have the `install.sh` one-liner script to run on your Corda node. Now what?
 
 ## Setting up your Corda node on the cloud
 
-Depending on your preferred cloud provider, you can follow the steps declared [here](https://docs.corda.net/docs/corda-os/4.3/deploy-to-testnet-index.html) to create a node on which to run the script:
+Depending on your preferred cloud provider, you can follow the steps declared [here](https://docs.corda.net/docs/corda-os/4.5/deploy-to-testnet-index.html) to create a node on which to run the script:
 
-* [Azure steps](https://docs.corda.net/docs/corda-os/4.3/azure-vm-explore.html)
-* [AWS steps](https://docs.corda.net/docs/corda-os/4.3/aws-vm-explore.html)
-* [GCP steps](https://docs.corda.net/docs/corda-os/4.3/gcp-vm.html)
+* [Azure steps](https://docs.corda.net/docs/corda-os/4.5/azure-vm-explore.html)
+* [AWS steps](https://docs.corda.net/docs/corda-os/4.5/aws-vm-explore.html)
+* [GCP steps](https://docs.corda.net/docs/corda-os/4.5/gcp-vm.html)
 
 Of note during the setup is that you are asked to set a fixed IP address and to open specific TCP ports in the firewall:
 
@@ -96,9 +96,9 @@ By start again, it means that:
 
 ## Standalone shell
 
-With your Corda node running, how about you connect to it? Do you remember how you used the node shell when in development mode? Let's do the same but to connect to your remote VM with the [standalone node shell](https://docs.corda.net/docs/corda-os/4.3/shell.html#starting-the-standalone-shell).
+With your Corda node running, how about you connect to it? Do you remember how you used the node shell when in development mode? Let's do the same but to connect to your remote VM with the [standalone node shell](https://docs.corda.net/docs/corda-os/4.5/shell.html#starting-the-standalone-shell).
 
- Let's install it. [Here](https://ci-artifactory.corda.r3cev.com/artifactory/webapp/#/artifacts/browse/tree/General/corda-releases/net/corda/corda-tools-shell-cli/4.3/corda-tools-shell-cli-4.3-all.jar), click the Download link (top right) to get it. Then as per [the guide](https://docs.corda.net/docs/corda-os/4.3/cli-application-shell-extensions.html#installing-shell-extensions), run on your local computer:
+ Let's install it. [Here](https://ci-artifactory.corda.r3cev.com/artifactory/webapp/#/artifacts/browse/tree/General/corda-releases/net/corda/corda-tools-shell-cli/4.5/corda-tools-shell-cli-4.5-all.jar), click the Download link (top right) to get it. Then as per [the guide](https://docs.corda.net/docs/corda-os/4.5/cli-application-shell-extensions.html#installing-shell-extensions), run on your local computer:
 
 ```shell
 $ java -jar /where/is/corda-tools-shell-cli-4.3-all.jar install-shell-extensions
@@ -173,7 +173,7 @@ It is because of this [unresolved issue](https://github.com/corda/corda/issues/5
 
 With your Corda node running, how about you connect to it? The Node Explorer is a very useful tool that allows you to see all sorts of information about your node, for instance installed CorDapps and finalized transactions, and to start `@StartableByRPC` flows whose constructor parameter types are compatible. You can see a video about its capabilities [here](https://www.youtube.com/watch?v=cn2lhS8pjRs).
 
-[Download it]((https://docs.corda.net/docs/corda-os/4.4/node-explorer.html#access-your-node-with-node-explorer)) now.
+[Download it](https://docs.corda.net/docs/corda-os/4.5/node-explorer.html#access-your-node-with-node-explorer) now.
 
 Since you closed the `10003` RPC port on your remote VM, first SSH-tunnel to it:
 
@@ -201,7 +201,7 @@ When you have confirmed that things are working, try securing [more with SSL](ht
 
 For the audacious, you may consider creating a Testnet from scratch. This is in effect what you did _in one click_ when running `deployNodes` on your local machine. Now, with the bootstrapper you can accomplish the same and then distribute the created files to separate machines, i.e. VM's.
 
-Have a look at [the documentation](https://docs.corda.net/docs/corda-os/4.4/network-bootstrapper.html) about how to generate the required network map files. Once you have all of the files, you can follow [these instructions](https://docs.corda.net/docs/corda-os/4.4/tutorial-cordapp.html#running-nodes-across-machines) to copy your nodes to separate VM's.
+Have a look at [the documentation](https://docs.corda.net/docs/corda-os/4.5/network-bootstrapper.html) about how to generate the required network map files. Once you have all of the files, you can follow [these instructions](https://docs.corda.net/docs/corda-os/4.5/tutorial-cordapp.html#running-nodes-across-machines) to copy your nodes to separate VM's.
 
 Whichever data center you choose to install your node, as always, you will need the following:
 

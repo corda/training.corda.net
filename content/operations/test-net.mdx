@@ -1,6 +1,6 @@
 ---
-title: Get on the Testnet  
-description: Become a well-known party  
+title: Get on the Testnet
+description: Become a well-known party
 slug: operations/test-net
 ---
 
@@ -12,13 +12,13 @@ In Corda parlance, a _network_ is the logical concept of Corda nodes that, over 
 * Recognize each other, because the keys and certificates were obtained before a call was made.
 * Run with a common set of network parameters and versions.
 
-To disambiguate the term _network_, Corda also uses the term [_compatibility zone_](https://docs.corda.net/docs/corda-os/4.3/compatibility-zones.html). When part of a compatibility zone, these nodes recognize each other's certificates as being part of the zone. How do nodes obtain each other's certificates?
+To disambiguate the term _network_, Corda also uses the term [_compatibility zone_](https://docs.corda.net/docs/corda-os/4.5/compatibility-zones.html). When part of a compatibility zone, these nodes recognize each other's certificates as being part of the zone. How do nodes obtain each other's certificates?
 
 ## Network map
 
-The remote nodes' info and certificates are obtained via what is called the [network map](https://docs.corda.net/docs/corda-os/4.3/network-map.html). Where map is to be understood in the same way as a Java `Map` with:
+The remote nodes' info and certificates are obtained via what is called the [network map](https://docs.corda.net/docs/corda-os/4.5/network-map.html). Where map is to be understood in the same way as a Java `Map` with:
 
-* The value being a signed `NodeInfo`. 
+* The value being a signed `NodeInfo`.
 * The key being a hash of the corresponding `NodeInfo`.
 
 See [here](https://api.corda.net/api/corda-os/4.4/html/api/kotlin/corda/net.corda.core.node/-node-info/index.html) for properties of `NodeInfo`.
@@ -29,12 +29,12 @@ How do you get your own info into the network map in the first place?
 
 ## Doorman
 
-A zone has a [hierarchy of certificates](https://docs.corda.net/docs/corda-os/4.3/cipher-suites.html). The doorman is the service that adds your node's certificate to the network map. For the doorman to accept your node, your node needs to:
+A zone has a [hierarchy of certificates](https://docs.corda.net/docs/corda-os/4.5/cipher-suites.html). The doorman is the service that adds your node's certificate to the network map. For the doorman to accept your node, your node needs to:
 
 * Create its own keys and certificate.
 * Have it signed by the doorman.
 
-Preventing man-in-the-middle attacks and enabling meaningful onboarding processes can be a complex undetaking. The Corda Testnet is an alternative to addressing such concerns yourself in a pre-production setting.
+Preventing man-in-the-middle attacks and enabling meaningful onboarding processes can be a complex undertaking. The Corda Testnet is an alternative to addressing such concerns yourself in a pre-production setting.
 
 ## Testnet
 
@@ -45,7 +45,7 @@ Corda Testnet is a compatibility zone and an open public network of Corda nodes 
 3. You get a one-time-download-key that will let your node be accepted by the doorman automatically.
 4. You run the given script, which will do the necessary, including using the key to add your node.
 
-You read in more detail [here](https://docs.corda.net/docs/corda-os/4.3/corda-testnet-intro.html). So go ahead and do steps 1, 2 and 3. When at step 3, in effect, you save, for future use, a command of the type:
+You read in more detail [here](https://docs.corda.net/docs/corda-os/4.5/corda-testnet-intro.html). So go ahead and do steps 1, 2 and 3. When at step 3, in effect, you save, for future use, a command of the type:
 
 ```shell
 sudo ONE_TIME_DOWNLOAD_KEY=a1b2c3d4-a1b2-a1b2-a1b2-a1b2c3d4e5f6 bash -c "$(curl -L https://onboarder.prod.ws.r3.com/api/user/node/TESTNET/install.sh)"
