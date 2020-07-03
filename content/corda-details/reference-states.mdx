@@ -6,6 +6,18 @@ slug: details/reference-states
 
 import HighlightBox from "../../src/HighlightBox"
 
+import {
+  ExpansionPanel,
+  ExpansionPanelList,
+  ExpansionPanelListItem
+} from 'gatsby-theme-apollo-docs';
+
+<ExpansionPanel title="Code">
+
+You may want to do the practical parts of this chapter on top of: https://github.com/corda/corda-training-code/tree/master/040-accounts-lib
+
+</ExpansionPanel>
+
 So far in this training, when the subject of states has been mentioned, you have read and read again that they can be consumed as transaction inputs and can only be consumed once. That is still true and your world is not going to collapse. When a state is data that evolves, like tokens changing hands or an obligation that gets refunded, then it makes perfect sense to consume and move on. Plus, you avoid double-spending.
 
 ## Improving the IOU CorDapp
