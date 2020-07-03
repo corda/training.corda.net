@@ -21,3 +21,18 @@ h1, h2, h3, h4, h5, h6, h7, h8 {
 .gatsby-highlight-code-line {
 	margin-right: 0;
 }
+
+.content-wrapper h2 a code::after {
+	position: absolute;
+  width: 12px;
+  height: 12px;
+  margin-left: 15px;
+  top: 50%;
+  margin-top: -6px;
+  content: "";
+	-webkit-mask: url('../assets/fa-external-link-alt-regular.svg') no-repeat 50% 50%;
+  mask: url('../assets/fa-external-link-alt-regular.svg') no-repeat 50% 50%;
+  -webkit-mask-size: cover;
+  mask-size: cover;
+  background-color: #d0191f;
+}
