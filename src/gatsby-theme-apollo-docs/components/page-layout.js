@@ -118,6 +118,18 @@ export default function PageLayout(props) {
             siteName
           }
         }
+        allFile {
+          nodes {
+            id
+            childMdx {
+              fields {
+                readingTime {
+                  minutes
+                }
+              }
+            }
+          }
+        }
       }
     `
   );
@@ -144,6 +156,8 @@ export default function PageLayout(props) {
 
   const {pathname} = props.location;
   const {siteName, title} = data.site.siteMetadata;
+  const pageExtraData = data.allFile.nodes;
+  console.log(pageExtraData);
   const {
     subtitle,
     sidebarContents,
@@ -277,11 +291,16 @@ export default function PageLayout(props) {
             )}
             <HeaderButton />
           </Header>
+
           <SelectedLanguageContext.Provider value={selectedLanguageState}>
             <NavItemsContext.Provider value={navItems}>
+              Site Title: {props.pageContext.id}
+              Site time: {pageExtraData.filter(node => node.id == props.pageContext.id)[0].childMdx.fields.readingTime.minutes}
               {props.children}
             </NavItemsContext.Provider>
           </SelectedLanguageContext.Provider>
+
+
         </Main>
       </FlexWrapper>
       {hasNavItems && (
