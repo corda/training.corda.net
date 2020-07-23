@@ -200,8 +200,10 @@ export default function PageContent(props, {data} ) {
     try {
       return extraData.allFile.nodes.filter(node => "https://github.com/corda/training.corda.net/tree/master/docs/content/" + node.relativePath == props.githubUrl)[0].childMdx.fields.readingTime.minutes;
     } catch (error) {
-      console.log("warn: error mapping extraData:");
-      console.log(error);
+      if (props.pathname != "/readme/") {    
+        console.log("warn: error mapping extraData for " + props.pathname +":");
+        console.log(error);
+      }
       return 0;
     }
   }
