@@ -143,7 +143,7 @@ let remarkPluginConfig = [
       // Add any KaTeX options from https://github.com/KaTeX/KaTeX/blob/master/docs/options.md here
       strict: `ignore`
     }
-  },
+  }
 ]
 
 if (!disableImageProcessing) {
@@ -243,6 +243,9 @@ module.exports = {
     },
     {
       resolve: `gatsby-plugin-sitemap`,
+    },
+    {
+      resolve: "gatsby-remark-reading-time"
     }
   ]
 };
