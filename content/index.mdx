@@ -22,14 +22,28 @@ Distributed Ledger applications on a high performance, enterprise grade platform
 import NavigationCard, {NavigationCardWrapper} from "../src/NavigationCard";
 
 <NavigationCardWrapper>
-    <NavigationCard href="/fundamentals/introduction/" title="Blockchain Basics">
-        If you're new to blockchain, the with the Fundamentals section has you covered
+    <NavigationCard href="/fundamentals/introduction/" title="Blockchain Fundamentals" readingtime="71">
+        Learn what blockchain is, what problems it solves and what underlying technologies it uses to accomplish this
     </NavigationCard>
-    <NavigationCard href="/key-concepts/introduction/" title="What is Corda">
-        Everything about what Corda is, and the key concepts that are used in the training
+    <NavigationCard href="/key-concepts/introduction/" title="What is Corda" readingtime="38">
+        An introduction to Corda, how it differentiates from blockchain, and how it solves for business needs 
     </NavigationCard>
-    <NavigationCard href="/prepare-and-discover/introduction/" title="Getting Started">
-        Ready to get started? Dive straight into the setup &amp; code
+    <NavigationCard href="/prepare-and-discover/introduction/" title="Getting Setup"  readingtime="85">
+        How to configure your system for writing Cordapps, and use git to check out &amp; run a Cordapp
+    </NavigationCard>
+</NavigationCardWrapper>
+
+<br/>
+
+<NavigationCardWrapper>
+    <NavigationCard href="/first-code/introduction/" title="Getting Started" readingtime="78">
+        We'll take you through how to build your first Cordapp, and how to use Contracts, States and Flows to build distributed applications
+    </NavigationCard>
+    <NavigationCard href="/libraries/introduction/" title="Libraries" readingtime="105">
+        Corda comes with pre-made libraries for developing Tokens based apps, and/or Account aware applications to represent multiple identities on a single node
+    </NavigationCard>
+    <NavigationCard href="/corda-details/introduction/" title="Advanced Features" readingtime="104">
+      How to use Attachments, Oracles, Automation, Time-Windows, and Reference states provided by Corda to solve common patterns
     </NavigationCard>
 </NavigationCardWrapper>
 

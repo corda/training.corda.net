@@ -20,7 +20,7 @@ const remarkTypescript = require('remark-typescript');
 
 const defaultExportPath = "/";        // Export path option passed to gatsby (deployment path prefix)
 const contentFolder = "./content/";   // Mdx source folder
-const disableImageProcessing = false; // Disable image processing for dev build
+const disableImageProcessing = true; // Disable image processing for dev build
 
 
 /*  Helper functions */
@@ -143,7 +143,7 @@ let remarkPluginConfig = [
       // Add any KaTeX options from https://github.com/KaTeX/KaTeX/blob/master/docs/options.md here
       strict: `ignore`
     }
-  },
+  }
 ]
 
 if (!disableImageProcessing) {
@@ -243,6 +243,24 @@ module.exports = {
     },
     {
       resolve: `gatsby-plugin-sitemap`,
+    },
+    {
+      resolve: "gatsby-remark-reading-time"
+    },
+    {
+      resolve: `gatsby-plugin-readingtime`,
+      options: {
+        config: { 
+          // configuration for reading-time package https://github.com/ngryman/reading-time
+        },
+        types: {
+          // Key: GraphQL Type to add reading times to, Value: Resolver function takes source node of Defined GraphQL type and returns content to be processed.
+          mdx: source => {
+            const { blocks } = source;
+            return blocks.map(block => block.saveContent).join('');
+          }, 
+        },
+      },
     }
   ]
 };
