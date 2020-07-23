@@ -45,3 +45,9 @@ The full plugin configuration can be found in the `gatsby-config.js` file.
 This project uses both a compile time and a runtime prism library. See `src/ExternalContent.js` for a sample use of the client side library.
 
 For all available languages and their tags, see the [Prism list of supported languages](https://prismjs.com/#supported-languages)
+
+# Licenses, legal and more
+
+## Fontawesome
+
+This page uses Font Awesome assets by Dave Gandy - http://fontawesome.io - pro version licensed by B9lab

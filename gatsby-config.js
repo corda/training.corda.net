@@ -245,9 +245,6 @@ module.exports = {
       resolve: `gatsby-plugin-sitemap`,
     },
     {
-      resolve: "gatsby-remark-reading-time"
-    },
-    {
       resolve: `gatsby-plugin-readingtime`,
       options: {
         config: { 
