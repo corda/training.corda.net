@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React, {useRef, useState} from 'react';
 import SectionNav from './section-nav';
 import styled from '@emotion/styled';
-import { makeStyles } from '@material-ui/core/styles';
 import useMount from 'react-use/lib/useMount';
 import {HEADER_HEIGHT} from 'gatsby-theme-apollo-docs/src/utils';
 import {ReactComponent as SlackLogo} from '../assets/slack.svg';
@@ -11,6 +10,7 @@ import {PageNav, breakpoints, colors} from 'gatsby-theme-apollo-core';
 import {withPrefix, useStaticQuery} from 'gatsby';
 import FeedbackBox from '../../FeedbackBox'
 import {ReactComponent as IconClockSVG} from "../../assets/fa-clock-light.svg";
+import { graphql } from 'gatsby';
 
 const supportLinkTarget = "/in-closing/get-paid-support";
 
@@ -173,7 +173,9 @@ export default function PageContent(props, {data} ) {
   const [imagesToLoad, setImagesToLoad] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState(0);
 
-  // fetch extra data (readingtime)
+  // fetch extra data (readingtime). This is a bit hacky:
+  // We are using a static query to get a list of all reading times (build time!), to then filter down to the reading time we are actually looking for. This will run once for each page (potential build slowdown)! The field is being added by the "gatsby-remark-reading-time" plugin.
+  // Since the only field passed by the template to identify the page by it's path is the githubURL, we use this as identifier.
   const extraData = useStaticQuery(
     graphql`
       {
@@ -193,8 +195,17 @@ export default function PageContent(props, {data} ) {
     `
   );
 
-  // We are using a static query to get a list of all reading times (build time!), to then filter down to the reading time we are actually looking for. This will run once for each page (potential build slowdown)! The field is being added by a transformer plugin, see gatsby-config module "gatsby-plugin-readingtime".
-  const readingTime = extraData.allFile.nodes.filter(node => "https://github.com/corda/training.corda.net/tree/master/docs/content/" + node.relativePath == props.githubUrl)[0].childMdx.fields.readingTime.minutes
+  // We might see an error on readme.md and other .md files, hence we try
+  const readingTime = () => {
+    try {
+      return extraData.allFile.nodes.filter(node => "https://github.com/corda/training.corda.net/tree/master/docs/content/" + node.relativePath == props.githubUrl)[0].childMdx.fields.readingTime.minutes;
+    } catch (error) {
+      console.log("warn: error mapping extraData:");
+      console.log(error);
+      return 0;
+    }
+  }
+  
 
 
   useMount(() => {
@@ -258,7 +269,7 @@ export default function PageContent(props, {data} ) {
             <SVGIconWrapper2>
               <IconClockSVG/>
             </SVGIconWrapper2>
-            Reading Time: {Math.ceil(readingTime)} min
+            Reading Time: {Math.ceil(readingTime())} min
           </TopInfoBar>
           {props.children}
         </BodyContent>
