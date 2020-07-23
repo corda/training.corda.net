@@ -245,19 +245,7 @@ module.exports = {
       resolve: `gatsby-plugin-sitemap`,
     },
     {
-      resolve: `gatsby-plugin-readingtime`,
-      options: {
-        config: { 
-          // configuration for reading-time package https://github.com/ngryman/reading-time
-        },
-        types: {
-          // Key: GraphQL Type to add reading times to, Value: Resolver function takes source node of Defined GraphQL type and returns content to be processed.
-          mdx: source => {
-            const { blocks } = source;
-            return blocks.map(block => block.saveContent).join('');
-          }, 
-        },
-      },
+      resolve: "gatsby-remark-reading-time"
     }
   ]
 };
