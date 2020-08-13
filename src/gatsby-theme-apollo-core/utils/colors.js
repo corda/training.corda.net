@@ -2,7 +2,7 @@ const {colors} = require('@apollo/space-kit/colors');
 
 colors.red.base = "#ec1d24";
 colors.red.dark = "#d0191f";
-colors.pink.base = "#2f3b59";
+colors.pink.base = "#ec1d24";
 
 
 exports.colors = {

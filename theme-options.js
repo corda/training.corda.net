@@ -23,7 +23,7 @@ const navConfig = {
 
 const footerNavConfig = {
   Blog: {
-    href: 'https://www.r3.com/blog/',
+    href: 'https://www.corda.net/blog/',
     target: '_blank',
     rel: 'noreferrer'
   },

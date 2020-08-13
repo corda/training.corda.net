@@ -175,7 +175,7 @@ export default function PageLayout(props) {
 
   const hasNavItems = navItems.length > 0;
   const sidebarTitle = (
-    <span className="title-sidebar">{subtitle || siteName}</span>
+    <span className="title-sidebar" >{subtitle || siteName}</span>
   );
 
   return (
@@ -209,7 +209,7 @@ export default function PageLayout(props) {
                   color={colors.primary}
                   size="small"
                   onClick={openMenu}
-                  style={{display: 'block'}}
+                  style={{display: 'block', backgroundColor: '#ec1d24', color: '#fff'}}
                 >
                   {sidebarTitle}
                   <StyledIcon />
