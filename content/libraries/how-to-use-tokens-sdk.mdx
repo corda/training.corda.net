@@ -47,10 +47,20 @@ Let's start:
     cordapp "$tokens_release_group:tokens-money:$tokens_release_version" // Optional
 
     // For workflows
+    cordapp "$confidential_id_release_group:ci-workflows:$confidential_id_release_version"
     cordapp "$tokens_release_group:tokens-workflows:$tokens_release_version"
     cordapp "$tokens_release_group:tokens-selection:$tokens_release_version"
-    cordapp "$confidential_id_release_group:ci-workflows:$confidential_id_release_version"
     ```
+
+While you are at it, you might as well also update the `deployNodes { nodeDefaults {` block and add the five CorDapps:
+
+```groovy
+cordapp "$confidential_id_release_group:ci-workflows:$confidential_id_release_version"
+cordapp "$tokens_release_group:tokens-contracts:$tokens_release_version"
+cordapp "$tokens_release_group:tokens-workflows:$tokens_release_version"
+cordapp "$tokens_release_group:tokens-money:$tokens_release_version"
+cordapp "$tokens_release_group:tokens-selection:$tokens_release_version"
+```
 
 For the next steps, the code examples shown below are actually _rootless_. When you go to the repo itself, you will see that they are split into 3 parts:
 
