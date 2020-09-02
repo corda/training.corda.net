@@ -139,7 +139,7 @@ public class QuickAirMileToken implements FungibleAsset<QuickAirMileToken.AirMil
     }
 }
 ```
-This implementation is not added to the course project folder because this writer, for some reason, could not make it to compile in Java and in Gradle. The curious reader will try in Kotlin.
+This implementation is not added to the course project folder because of a bug that is on track to be fixed in Java. The curious reader can try in Kotlin.
 
 What about [`LinearState`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/contracts/Structures.kt#L128), that you saw in `IOUState`? No, it's not conducive to a fungible air-mile token because the idea of a `LinearState` is that there should be only one unconsumed state by a given id. There can be no plan of tracking individual tokens because that would be, by definition, non-fungible.
 
