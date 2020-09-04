@@ -41,11 +41,11 @@ export default function HeaderButton() {
   return (
     <Container>
       <StyledLink
-        href="https://ide.corda.net"
+        href="https://training.corda.net"
         target="_blank"
         rel="noopener noreferrer"
       >
-        Launch Online IDE
+        Online IDE currently under maintenance
         <StyledIcon weight="thin" />
       </StyledLink>
     </Container>
