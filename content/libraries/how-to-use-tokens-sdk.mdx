@@ -21,13 +21,25 @@ Let's start:
 
 ## Include the SDK in your project
 
-1. Add the release group and version inside the root `build.gradle` under `ext`, with or without the `constants.properties` file:
+1. Add the release group and version inside the **project** root `build.gradle`, in the `ext` configuration block:
 
     ```groovy
     tokens_release_version = '1.1'
     tokens_release_group = 'com.r3.corda.lib.tokens'
     confidential_id_release_version = '1.0'
     confidential_id_release_group = 'com.r3.corda.lib.ci'
+    ```
+    **If** you are working with the course's repository, you may want to update the `constants.properties` file instead:
+    
+    ```properties
+    tokensReleaseVersion=1.1
+    ...
+    ```
+    And update your `build.gradle` in `010-empty-project` in the same fashion as the other parameters are collected:
+     
+    ```groovy
+    tokens_release_version = constants.getProperty("tokensReleaseVersion")
+    ...
     ```
 
 2. Add the repositories inside the root `build.gradle`:
@@ -138,6 +150,8 @@ With its [`@Test bobGot50Dollars`](https://github.com/corda/corda-training-code/
 * When you are introduced to the _Accounts Library_, this default will get messy.
 
 So better keep this as a habit.
+
+For the avoidance of doubt, the _change holder_ is Alice. In this case, _change_ is meant as in "Do you have _change_ on a &#36;20 bill?" It is not meant as the verb to change hands. What Bob receives is expressed in the `Collections.singletonList(fiftyUSDForBob), // Output instances` part.
 
 ## Let Bob redeem some
 

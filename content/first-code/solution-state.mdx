@@ -58,7 +58,7 @@ private final long quantity;
 These 3 **keywords** will be found throughout the code so, let's talk about them a bit:
 
 * `final`: because once a state has been created or loaded in memory, it is good to have assurance that it cannot be changed, even internally. Variables that change after they have potentially been checked is unwelcome. Also, the `equals` and `hashCode` functions would be defeated. Additionally remember that when a state has been created by way of a transaction it is, in effect, immutable. So it is best to express this inevitability.
-* `private`: because you are best served protect your attributes. If a value needs to be accessible, then you create a getter like this:
+* `private`: because you are best served protecting your attributes. If a value needs to be accessible, then you create a getter like this:
 
     ```java
     @NotNull
@@ -76,6 +76,10 @@ What if:
 * You had omitted the `issuer` field? It would mean that all airline miles are equal&nbsp;- that air-miles issued by one company are the same as (fungible with) air-miles issued by another company. It would mean that one rogue airline could issue air-miles and burden competitors with the liabilities and redemption.
 * You had omitted the `holder` field? Did you plan on having this information stored elsewhere? What would a state without holder mean in this case?
 * You had omitted the `quantity` field? Did you plan on issuing 1 state instance for each air-mile? It would not be very database-friendly to issue 5,000 times 1 air-mile for a single long trip.
+* You named the numerical field `balance`? Did you mean that this would be the holder's full balance of tokens with the given issuer? That would be bad:
+    * That would mean that each transaction discloses the holder's entire balance.
+    * That would mean that while a transaction is being build in a flow with this one token, you, as the developer have to remember that it is in effect _soft-locked_. This means that if the holder starts another transaction with this same token, then 1 of these 2 transactions will fail, as double-spending is not allowed. It is likely to happen as flows may take time to complete if remote nodes are down, for instance.
+    * That would mean that the holder cannot run multiple transactions in parallel.
 * You had a 4th field? We are curious, let us know.
 
 Why choose these **types**:
