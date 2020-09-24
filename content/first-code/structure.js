@@ -8,6 +8,5 @@ module.exports = [
     `${here}your-flow`,
     `${here}solution-flows-issue`,
     `${here}solution-flows-move`,
-    `${here}solution-flows-redeem`,
-    `${here}cdl`
+    `${here}solution-flows-redeem`
 ];
