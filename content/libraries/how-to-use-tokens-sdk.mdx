@@ -30,13 +30,13 @@ Let's start:
     confidential_id_release_group = 'com.r3.corda.lib.ci'
     ```
     **If** you are working with the course's repository, you may want to update the `constants.properties` file instead:
-    
+
     ```properties
     tokensReleaseVersion=1.1
     ...
     ```
     And update your `build.gradle` in `010-empty-project` in the same fashion as the other parameters are collected:
-     
+
     ```groovy
     tokens_release_version = constants.getProperty("tokensReleaseVersion")
     ...
@@ -95,7 +95,7 @@ final SignedTransaction issueTx = subFlow(new IssueTokens(
         Collections.singletonList(usdToken), // Output instances
         Collections.emptyList())); // Observers
 ```
-With its [`@Test mintIssues100ToAlice`]https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/usd/UsdTokenCourseExercise.java#L46-L51). By the way, the `tokens-money` module (which comes with the SDK), has 2 predefined token types: `FiatCurrency` and `DigitalCurrency`, so you can do something like this:
+With its [`@Test mintIssues100ToAlice`](https://github.com/corda/corda-training-code/blob/master/030-tokens-sdk/workflows/src/test/java/com/template/usd/UsdTokenCourseExercise.java#L46-L51). By the way, the `tokens-money` module (which comes with the SDK), has 2 predefined token types: `FiatCurrency` and `DigitalCurrency`, so you can do something like this:
 
 ```java
 // US Dollar token type.
