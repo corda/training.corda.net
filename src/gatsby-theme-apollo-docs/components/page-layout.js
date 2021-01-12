@@ -2,7 +2,6 @@ import '../prism.less';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
 import DocsetSwitcher from './docset-switcher';
 import Header from './header';
-import HeaderButton from './header-button';
 import PropTypes from 'prop-types';
 import React, {createContext, useMemo, useRef, useState} from 'react';
 import Search from './search';
