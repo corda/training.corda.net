@@ -274,7 +274,7 @@ export default function PageLayout(props) {
                 indexName={algoliaIndexName}
               />
             )}
-            <HeaderButton />
+            
           </Header>
           <SelectedLanguageContext.Provider value={selectedLanguageState}>
             <NavItemsContext.Provider value={navItems}>
