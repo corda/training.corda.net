@@ -13,14 +13,13 @@ import {
 
 <ExpansionPanel title="Code">
 
-The training repo provides solutions and starting points for each exercise that follows. The main Corda repo also contains an empty project template to help you get started. You also have the IOU example from the previous module. And, Corda has an online IDE. You can work with the empty project template created for you there.
+The training repo provides solutions and starting points for each exercise that follows. The main Corda repo also contains an empty project template to help you get started. You also have the IOU example from the previous module.
 
-So, there are four ways to start:
+So, there are three ways to start:
 
 1. Start from the empty project that has been prepared for you (training repo, recommended): https://github.com/corda/corda-training-code/tree/master/010-empty-project
-2. Start from Corda's Java template (Corda repo) https://ide.corda.net/?folder=%2Fhome%2Fcoder%2Fcordapp-template-java
-3. Start from the `cordapp-example` (Prepare and Discover module): https://ide.corda.net/?folder=%2Fhome%2Fcoder%2Fsamples-java%2FBasic%2Fcordapp-example
-4. Use the online IDE to fiddle with the empty project: https://ide.corda.net/?folder=/home/coder/corda-training-code/010-empty-project
+2. Start from Corda's Java template (Corda repo).
+3. Start from the `cordapp-example` (Prepare and Discover module).
 
 </ExpansionPanel>
 
@@ -61,16 +60,6 @@ Why not code the flows as well, and attempt it in one sweep?
 ## Write code
 
 Your best starting point at this stage is to either use the [Java template](https://github.com/corda/cordapp-template-java) or the [Kotlin template](https://github.com/corda/cordapp-template-kotlin) and create your classes as necessary. Don't hesitate to peek back at the previous chapter where you walked you though the CordDapp example. If you still feel uncomfortable with an empty template, you can use the [CorDapp example](https://github.com/corda/samples-java/tree/master/Basic/cordapp-example) as a starting point and modify it as necessary.
-
-<ExpansionPanel title="If you prefer to work from the Web IDE">
-
-* If you want to start off from the empty project that has been prepared for you, head to http://ide.corda.net/?folder=%2Fhome%2Fcoder%2Fcorda-training-code%2F010-empty-project
-* Or from Corda's Java template, head to https://ide.corda.net/?folder=%2Fhome%2Fcoder%2Fcordapp-template-java
-* Or start off by modifying the `cordapp-example`, head to https://ide.corda.net/?folder=%2Fhome%2Fcoder%2Fsamples-java%2FBasic%2Fcordapp-example
-
-This Web IDE is good if you want to see around and dabble. On the other hand, if your plan is to code for Corda seriously, you owe it to yourself to follow the IntelliJ route.
-
-</ExpansionPanel>
 
 Add unit tests that cover all actions and situations. Yes, tests! You are not going to release untested state and contracts in the wild. Try to think creatively and adversarially, whereby an airline or a passenger would try to game the system to gain an unfair advantage. Your code should prevent such possibilities and your tests should prove that your defenses are effective.
 
