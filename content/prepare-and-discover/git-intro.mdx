@@ -52,7 +52,7 @@ It is entirely possible that Git already comes installed with your computer. If 
 
 A bit of configuration. Let's do it now. In your command-line type:
 
-```bash
+```shell
 $ git config --global user.name "John Doe"
 $ git config --global user.email johndoe@example.com
 ```
@@ -62,27 +62,27 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
 1. Go into your workspace, or whichever folder to which you want to download this repo:
 
-    ```bash
+    ```shell
     $ cd ~/Workspace
     ```
 2. **Clone** the repository and give it a name that won't make you scratch your head in 3 months:
 
-    ```bash
+    ```shell
     $ git clone git@github.com:corda/samples-java.git corda-samples-java
     ```
     Or, if you did not add an SSH key to your account:
 
-    ```bash
+    ```shell
     $ git clone https://github.com/corda/samples-java.git corda-samples-java
     ```
 3. Go into it:
 
-    ```bash
+    ```shell
     $ cd corda-samples-java
     ```
 4. Check the **status**
 
-    ```bash
+    ```shell
     $ git status
     On branch master
     Your branch is up to date with 'origin/master'.
@@ -93,7 +93,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
 5. So what is this `origin` remote?
 
-    ```bash
+    ```shell
     $ git remote show origin
     * remote origin
       Fetch URL: https://github.com/corda/samples-java.git
@@ -112,7 +112,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
 6. Check the version this branch is at
 
-    ```bash
+    ```shell
     $ git log | head -n 20
     commit 03fe800534ca2a684b0cb892a379a8c7eebbe259
     Merge: 4a6314f 89988e9
@@ -139,7 +139,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
 7. If you want to **checkout** the previous version, so back by `1` commit, in your working tree:
 
-    ```bash
+    ```shell
     $ git checkout HEAD~1
     Note: checking out 'HEAD~1'.
 
@@ -158,7 +158,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
 8. Find your place in the DAG of commits
 
-    ```bash
+    ```shell
     $ git log | head -n 20
     commit 4a6314fd4e65087b556aa94d8696e9b391803a81
     Merge: a61e2cc cf21fb3
@@ -185,7 +185,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
 9. Proof:
 
-    ```bash
+    ```shell
     $ git checkout 03fe800
     Previous HEAD position was 4a6314f Merge pull request #3 from corda/training_material_readme
     HEAD is now at 03fe800 Merge pull request #2 from corda/oracle-primenumber_CCV
@@ -193,7 +193,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
     This commit id was there, hidden inside the `.git` folder, and you can call it back at any moment.
 10. Status?
 
-    ```bash
+    ```shell
     $ git status
     HEAD detached at 03fe800
     nothing to commit, working tree clean
@@ -201,7 +201,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
     Admittedly, commit ids are not a friendly way to go about. And although you are at exactly the same commit as the current **head** of `master` branch, you are still detached. Do you want to "reattach"?
 11. What are your branches again?
 
-    ```bash
+    ```shell
     $ git branch --list
     * (HEAD detached at 03fe800)
       master
@@ -211,7 +211,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
 12. Where did all those branches you saw at the beginning go?
 
-    ```bash
+    ```shell
     $ git branch --all
     * (HEAD detached at 03fe800)
       master
@@ -225,7 +225,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
 13. You can now get back on track:
 
-    ```bash
+    ```shell
     $ git checkout master
     Switched to branch 'master'
     Your branch is up to date with 'origin/master'.
@@ -234,12 +234,12 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
 14. Let's pretend that appending a `;` at the end of the file is a worthy contribution to an open-source project:
 
-    ```bash
+    ```shell
     $ echo ";" >> Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
     ```
 15. And see where you are at:
 
-    ```bash
+    ```shell
     $ git status
     On branch master
     Your branch is up to date with 'origin/master'.
@@ -255,7 +255,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
     Some help is always visible, and the messages are often clear.
 16. What is your **diff**?
 
-    ```bash
+    ```shell
     $ git diff
     diff --git a/Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java b/Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
     index 6b5af69..6acc240 100644
@@ -272,13 +272,13 @@ With that work done, let's have fun with the command-line and the [Corda samples
     Not always very clear, but at the end the last line `}` is removed, that's `-`, and as a replacement, that's `+`, you have `};`. Exit with <kbd>q</kbd>.
 17. Let's **stage** it:
 
-    ```bash
+    ```shell
     $ git add Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
     ```
     That's it?
 18. And your status?
 
-    ```bash
+    ```shell
     $ git status
     On branch master
     Your branch is up to date with 'origin/master'.
@@ -291,7 +291,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
     Clear enough.
 19. Time to **commit**:
 
-    ```bash
+    ```shell
     $ git commit -m "Added a semicolon at the end, you're welcome."
     [master bcd90e3] Added a semicolon at the end, you're welcome.
      1 file changed, 1 insertion(+), 1 deletion(-)
@@ -299,7 +299,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
     Ok. An insertion is an added line, a deletion is a deleted line.
 20. Status please:
 
-    ```bash
+    ```shell
     $ git status
     On branch master
     Your branch is ahead of 'origin/master' by 1 commit.
@@ -310,7 +310,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
     Do you want to **push**?
 21. Let's try:
 
-    ```bash
+    ```shell
     $ git push
     ERROR: Permission to corda/samples-java.git denied to YOUR_NAME.
     fatal: Could not read from remote repository.
@@ -321,7 +321,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
     Of course, there are access rights to it. This is not your repository.
 22. But you know what? This commit was not very helpful, and since it never left your computer, let's revert it:
 
-    ```bash
+    ```shell
     $ git reset HEAD~1
     Unstaged changes after reset:
     M    Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
@@ -329,13 +329,13 @@ With that work done, let's have fun with the command-line and the [Corda samples
     And you are back to before staging, with your extra semicolon.
 23. Let's revert this minor change.
 
-    ```bash
+    ```shell
     $ git checkout -- Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
     ```
     That's it?
 24. And my status?
 
-    ```bash
+    ```shell
     $ git status
     On branch master
     Your branch is up to date with 'origin/master'.
@@ -345,24 +345,24 @@ With that work done, let's have fun with the command-line and the [Corda samples
 25. Do you want to start contributing to the `corda/samples` repository for real? Ok, let's do that. Click on the top right "**Fork**" button [here](https://github.com/corda/samples-java), and pick which Github account to copy it to. It takes a second. Make a note of the repo it was copied to, when you click on the "Clone or download" button. It should be of the form `git@github.com:YOUR_NAME/samples-java.git`.
 26. Ok now, you have 2 remotes, the official one and yours. How do you differentiate them? The convention is to name _your_ repo `origin`, and the _official_ one `upstream`, so first, you add `upstream`:
 
-    ```bash
+    ```shell
     $ git remote add upstream git@github.com:corda/samples-java.git
     ```
     Or, if you did not add an SSH key:
 
-    ```bash
+    ```shell
     $ git remote add upstream https://github.com/corda/samples-java.git
     ```
 27. What remotes do you have?
 
-    ```bash
+    ```shell
     $ git remote show
     origin
     upstream
     ```
     Ok, no surprise there. Where do they point to?
 
-    ```bash
+    ```shell
     $ git remote show origin
     * remote origin
       Fetch URL: git@github.com:corda/samples-java.git
@@ -378,13 +378,13 @@ With that work done, let's have fun with the command-line and the [Corda samples
     Mmh, the same. Not very helpful.
 28. Let's update the URL for `origin` to point to your remote:
 
-    ```bash
+    ```shell
     $ git remote set-url origin git@github.com:YOUR_NAME/samples-java.git
     ```
     You can do another `git remote show origin` to make sure.
 29. With this set, let's make and push a change, the same silly one you did earlier:
 
-    ```bash
+    ```shell
     $ echo ";" >> Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
     $ git add Basic/cordapp-example/contracts-java/src/main/java/com/example/state/IOUState.java
     $ git commit -m "Added a semicolon at the end, you're welcome."

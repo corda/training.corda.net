@@ -63,7 +63,7 @@ as [explained](https://docs.corda.net/tutorial-cordapp.html#building-the-example
     ```
     If yes, look back at the "Prepare your computer" chapter, and look for the part where running Gradle with a `JAVA_HOME` is described. It differs from your default configuration. That may mean running something like:
 
-    ```bash
+    ```shell
     $ ./gradlew -Dorg.gradle.java.home=/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home deployNodes
     ```
 
@@ -94,7 +94,7 @@ This task takes a long time, so this is a good time to refill your cup. Not only
 
 In the future, to save time, run only the task for `workflows-java`, like so:
 
-```bash
+```shell
 $ ./gradlew --build-file workflows-java/build.gradle deployNodes
 ```
 
@@ -120,7 +120,7 @@ C:\cordapp-example> workflows-java\build\nodes\runnodes
 
 You should get 4 pop-up windows; do not move focus away from them until all 4 show the welcome message:
 
-```bash
+```shell
    ______               __
   / ____/     _________/ /___ _
  / /     __  / ___/ __  / __ `/         I had an account with a bank in the
@@ -159,7 +159,7 @@ java.lang.IllegalArgumentException
 ```
 If yes, look back to the "Prepare your computer" chapter, and look for the part where running Gradle with a `JAVA_HOME` is described. It differs from your default configuration. That may mean running something like:
 
-```bash
+```shell
 $ JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home workflows-java/build/nodes/runnodes
 ```
 
@@ -191,7 +191,7 @@ You are going to create your first IOU where PartyB owes 50 to PartyA. Because o
 
 To show points 2 and 3, let's prepare PartyB and PartyC with an `IOUState` tracker. On the interactive shells of both nodes of `PartyB` and `PartyC`, run:
 
-```bash
+```shell
 >>> run vaultTrack contractStateType: com.example.state.IOUState
 Snapshot:
 states: []
@@ -216,7 +216,7 @@ package com.example.state;
 
 Then head to the interactive shell of PartyA and launch the `flow` as per [the docs](https://docs.corda.net/docs/corda-os/4.4/tutorial-cordapp.html#creating-an-iou-via-the-interactive-shell):
 
-```bash
+```shell
 # In PartyA
 >>> flow start ExampleFlow$Initiator iouValue: 50, otherParty: "O=PartyB,L=New York,C=US"
 ```

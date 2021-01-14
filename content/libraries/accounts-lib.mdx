@@ -87,6 +87,14 @@ To able to work, you need both libraries: confidential identities and accounts.
     * Inside `contracts`: `accounts-contracts`.
     * Inside `workflows`: `accounts-workflows` and `ci-workflows`.
 
+While you are at it, you might as well also update the `deployNodes { nodeDefaults {` block and add the three CorDapps:
+
+```groovy
+cordapp "$confidential_id_release_group:ci-workflows:$confidential_id_release_version"
+cordapp "$accounts_release_group:accounts-contracts:$accounts_release_version"
+cordapp "$accounts_release_group:accounts-workflows:$accounts_release_version"
+```
+
 <!--
 For your information only, at the moment, see that [`KeyManagementBackedAccountService`](https://github.com/corda/accounts/blob/900fe9c2ebf4ad8ecda1f494c03f747ef1579746/workflows/src/main/kotlin/com/r3/corda/lib/accounts/workflows/services/KeyManagementBackedAccountService.kt) comes with a set of useful functions, so keep that Swiss Army knife in your pocket.
 -->

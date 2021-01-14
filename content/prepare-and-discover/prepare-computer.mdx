@@ -45,19 +45,19 @@ In case this is relevant, now or in the future, let's collect the different ways
 
 1. If you want to run a Java JAR with a different Java version, you can do:
 
-    ```bash
+    ```shell
     $ /Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home/bin/java -jar corda.jar
     ```
     Where you put the `jdk1.8.0_xxx.jdk` path that works for you.
 2. If you want to run a script once with a different `JAVA_HOME`, you can do:
 
-    ```bash
+    ```shell
     $ JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home YOUR_SCRIPT
     ```
     Where you put the `jdk1.8.0_xxx.jdk` path that works for you.
 3. If you want to run a Gradle command once with a different `java.home`:
 
-    ```bash
+    ```shell
     $ ./gradlew -Dorg.gradle.java.home=/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home build
     ```
     Where you replace the path and the command as desired.
