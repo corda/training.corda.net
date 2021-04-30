@@ -32,19 +32,19 @@ For these reasons, and more, it has gained considerable popularity in the softwa
 
 A **repository** is a self-contained entity that contains all information, including the history. Where you work, typically with folders and files, is the **working tree**. All information necessary for Git to function properly is hidden away inside the **`.git`** sub-folder, which you should not touch unless you absolutely know what you are doing. Git is distributed, so one speaks of **local** and **remote** versions of a repository. [Here](https://github.com/corda/corda) is a remote repository of Corda. When you work on a project, you work on your local version. When data goes from local to remote, you say that you **push**, and from remote to local, you **pull**. If the data goes from remote to local, and remains hidden inside the `.git` folder, you call this a **fetch**. Sometimes, when people create a new copy of a repository, they say they **forked** it, which [happens a lot](https://github.com/corda/corda/network/members) for Corda; although forking is not a Git concept per se, rather a convention in the Git ecosystem. When you get an existing remote repository for the first time, you say you **clone** it.
 
-The files that you see in your local repository are at a given **version**. Here is an [example](https://github.com/corda/corda/tree/452e78f531a3f16e63ed9aa62d6b165cdd4da2bf) of a version of Corda. The version id is `452e78f531a3f16e63ed9aa62d6b165cdd4da2bf` or `452e78f` for short. This version id was calculated by SHA1-hashing the content of the whole working tree at this version, plus some metadata, and there is a pretty good chance that it is absolutely unique across all repositories of the world. See the reading list at the end for in-depth articles. A version has [one](https://github.com/corda/corda/commit/452e78f531a3f16e63ed9aa62d6b165cdd4da2bf) or [two](https://github.com/corda/corda/commit/80cf34b81a0da51541262bf7bad8ed7b540d29e0) parents, which is mentioned in the header `2 parents ea22a10 + 723399d`. When a version has two parents, you call it a **merge**. In effect, the series of versions in a Git repository form a directed acyclic graph, a D.A.G.. Almost like the states and transactions in Bitcoin and Corda. You can see for instance [here](https://github.com/corda/corda/network) how all arrows are pointing to the right, with each dot symbolising a version. When you want to have a version in your working tree, you **checkout** (or **switch** to, if your Git is new) this version.
+The files that you see in your local repository are at a given **version**. Here is an [example](https://github.com/corda/corda/tree/452e78f531a3f16e63ed9aa62d6b165cdd4da2bf) of a version of Corda. The version ID is `452e78f531a3f16e63ed9aa62d6b165cdd4da2bf` or `452e78f` for short. This version ID was calculated by SHA-1-hashing the content of the whole working tree at this version, plus some metadata, and there is a pretty good chance that it is absolutely unique across all repositories of the world. See the reading list at the end for in-depth articles. A version has [one](https://github.com/corda/corda/commit/452e78f531a3f16e63ed9aa62d6b165cdd4da2bf) or [two](https://github.com/corda/corda/commit/80cf34b81a0da51541262bf7bad8ed7b540d29e0) parents, which is mentioned in the header `2 parents ea22a10 + 723399d`. When a version has two parents, you call it a **merge**. In effect, the series of versions in a Git repository form a directed acyclic graph, a D.A.G., almost like the states and transactions in Bitcoin and Corda. You can see for instance [here](https://github.com/corda/corda/network) how all arrows are pointing to the right, with each dot symbolising a version. When you want to have a version in your working tree, you **checkout** (or **switch** to, if your Git is new) this version.
 
-When you want to create a new version you first have to decide which of your changed files are going into this new version, you say you **stage** your changes, and then you **commit** them along with a text message. It is common to swap the word commit with version. Before staging, you can see what differences you made to your files compared with the last version. Git calls that a **diff**. When staging, if you use a convenient [GUI tool](https://desktop.github.com/), it can even help you select which lines to stage per file. And do not forget that all this staging and committing happens in your local repository. No remote is involved in these operations until you push. As an aside, this means that it is easy to uncommit and unstage, a.k.a. **reset** or **restore**, if you never pushed your new version.
+When you want to create a new version you first have to decide which of your changed files are going into this new version, you say you **stage** your changes, and then you **commit** them along with a text message. It is common to swap the word commit, a version of the file being committed, with version. Before staging, you can see what differences you made to your files compared with the last version. Git calls that a **diff**. When staging, if you use a convenient [GUI tool](https://desktop.github.com/), it can even help you select which lines to stage per file. And do not forget that all this staging and committing happens in your local repository. No remote is involved in these operations until you push. As an aside, this means that it is easy to uncommit and unstage, a.k.a. **reset** or **restore**, if you never pushed your new version.
 
-By convention you make commits of files that make sense together, and&nbsp;/ or commits that address a specific bug or feature. It is also a convention to describe in human language the purpose of the commit. Nothing good comes from making commits of 500 files with the message "Today's work". Another convention is to not commit files that can be fetched from elsewhere, like a library, or recreated, like a build folder. It is bad practice to commit private keys and other sensitive information. In order to achieve that with less effort, you are encouraged to populate the **`.gitignore`** file that lists the files to... ignore.
+By convention, you would usually commit all files that relate to a particular change at the same time., and&nbsp;/ or commits that address a specific bug or feature. It is also a convention to describe in human language the purpose of the commit. Nothing good comes from making commits of 500 files with the message "Today's work". Another convention is to not commit files that can be fetched from elsewhere, like a library, or recreated, like a build folder. It is bad practice to commit private keys and other sensitive information. In order to achieve that with less effort, you are encouraged to populate the **`.gitignore`** file that lists the files to... ignore.
 
 These versions / commits are all nice and dandy but their ids are not very friendly. So it is possible to **tag** selected ones in order to give them a human-friendly name like [`release-os-4.3`](https://github.com/corda/corda/releases/tag/release-os-4.3) of Corda, which is the pretty name of [id `d679784`](https://github.com/corda/corda/commit/d679784a179e95c57696d13c95beeccfe350d7d5).
 
 Now, the reality of development is that it will take a number of versions with your teammates, or even yourself alone, before a bug is considered fixed, or a new feature implemented. Git provides such a logical pathway, named **branch**. For instance, [here](https://github.com/corda/corda/tree/release-os-4.3) is the branch that hosts the evolution of Corda to version 4.3. The **head** commit of a branch advances commit after commit. The repository always has a default branch, most likely named **`master`**, although, for instance, at the time of writing, it is [`release/os/4.5`](https://github.com/corda/corda/tree/release/os/4.5) for Corda. A typical workflow is to have a bug fixed in a separate branch. Then, when it is ready to be merged into `master`, the developer opens a [merge request](https://github.com/corda/corda/pull/6047), also called a pull request; here again, this is a convention in the Git ecosystem. On the other hand, if a branch cannot wait for what can be a lengthy process, and some changes are required from one branch to another, it is possible to **cherry-pick** them by specifying which commits are of interest; with the caveat that it replays the commit's diff on your branch, in effect creating a new commit.
 
-Since using branches is very convenient, it may happen that you go back and forth between branches, even before you have changes that are sufficiently complete to stage and commit them. In these situations, you can **stash** away your unstaged changes, give these changes names, and **pop** them at a later date.
+Since using branches is very convenient, it may happen that you go back and forth between branches, even before you have changes that are sufficiently complete to stage and commit them. In these situations, you can **stash** away your uncommitted changes, give these changes names, and **commit** them at a later date.
 
-Just in case, this depiction of Git appears too rosy, rest assured that you will hit snags, the most typical ones being conflicts between your changes and someone else's. During these worrying times, or at any other times, you can always ask Git what is the **status** of your project. It [happens](https://twitter.com/zurihunter/status/1067838684505038848) to the best of us.
+Just in case, this depiction of Git appears too rosy, rest assured that you will hit snags, the most typical ones being conflicts between your changes and someone else's. During these worrying times, or at any other times, you can always ask Git what is the **status** of your project. 
 
 ## Use it
 
@@ -80,7 +80,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
     ```bash
     $ cd corda-samples-java
     ```
-4. Check the **status**
+4. Check the **status**. 
 
     ```bash
     $ git status
@@ -89,7 +89,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
 
     nothing to commit, working tree clean
     ```
-    Right there you know that `master` is a **branch** and is currently the default one. Your **working tree** has nothing new. Also, `origin` is a **remote**, the one on Github. `origin` is the conventional name for a default remote.
+    Right there you know that `master` is a **branch** and is currently the default one. Your **working tree** has nothing new. Also, the`origin` is a **remote**, the one on Github. `origin` is the conventional name for a default remote.
 
 5. So what is this `origin` remote?
 
@@ -110,7 +110,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
     ```
     All good, lots of information. Including, at the bottom that your **local** `master` branch is configured to push and pull from the remote branch of the same name. It is welcome, as it avoids confusion, but not necessary. You could well name your local branch something, and have it push to a different name on the remote.
 
-6. Check the version this branch is at
+6. Check the version this branch is at. 
 
     ```bash
     $ git log | head -n 20
@@ -137,7 +137,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
     ```
     You can see **commit** ids and messages, developer names and dates.
 
-7. If you want to **checkout** the previous version, so back by `1` commit, in your working tree:
+7. If you want to **checkout** the previous version, that is, go back by `1` commit, in your working tree:
 
     ```bash
     $ git checkout HEAD~1
@@ -156,7 +156,7 @@ With that work done, let's have fun with the command-line and the [Corda samples
     ```
     Yep, `4a6314f` is the second commit id you saw previously. You are detached, meaning that you are no longer tracking your `master` branch, and you are not going to update the branch either. That can be a problem if you start creating something.
 
-8. Find your place in the DAG of commits
+8. Find your place in the DAG of commits. 
 
     ```bash
     $ git log | head -n 20

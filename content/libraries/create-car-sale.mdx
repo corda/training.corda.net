@@ -152,17 +152,3 @@ In the next chapter, you will discover an example solution of an atomic sale.
 This is a fancy word for the act of exchanging data between peers. Why not just say `.send` and `.receive`? Sure, for regular types, send and receive is enough. So we use data vending to describe a complex send where more data has to be fetched.
 
 You have seen an example in the non-atomic sale above. You used [`SendTransactionFlow`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/flows/SendTransactionFlow.kt#L70), which sends the whole chain of transactions that led to the one you want to send. Or rather it sends those that the recipient [does not have yet](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/flows/SendTransactionFlow.kt#L127). Same with [`SendStateAndRef`](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/core/src/main/kotlin/net/corda/core/flows/SendTransactionFlow.kt#L81), for a list of `StateAndRef`s. Don't hesitate to use them.
-
-<HighlightBox type="support">
-
-Get 3 months access to the authors and experts who created this training.
-
-* Expert instructors will review your code and help you to refine it.
-* One-on-one support and mentoring from expert instructors.
-* Collaboration with fellow students in a dedicated Training Slack channel.
-
-<div class="cta-wrapper">
-<a href="/in-closing/get-paid-support/" class="cta-button">Learn More</a>
-</div>
-
-</HighlightBox>
