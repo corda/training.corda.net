@@ -12,8 +12,6 @@ import FeedbackBox from '../../FeedbackBox'
 import {ReactComponent as IconClockSVG} from "../../assets/fa-clock-light.svg";
 import { graphql } from 'gatsby';
 
-const supportLinkTarget = "/in-closing/get-paid-support";
-
 const Wrapper = styled.div({
   display: 'flex',
   alignItems: 'flex-start'
@@ -249,14 +247,6 @@ export default function PageContent(props, {data} ) {
     );
   });
 
-  const supportLink = (
-    <AsideLinkWrapper >
-      <AsideLinkInner href={supportLinkTarget} >
-        <IconSupport />Get paid support
-      </AsideLinkInner>
-    </AsideLinkWrapper>
-  );
-
   const slackLink = (
     <AsideLink href="https://slack.corda.net/">
       <SlackLogo /> Discuss on Slack
@@ -276,7 +266,6 @@ export default function PageContent(props, {data} ) {
           {props.children}
         </BodyContent>
         <EditLink>{slackLink}</EditLink>
-        <EditLink>{supportLink}</EditLink>
 
         <PageNav
           prevPage={props.pages[pageIndex - 1]}
@@ -294,7 +283,6 @@ export default function PageContent(props, {data} ) {
           />
         )}
         {slackLink}
-        {supportLink}
       </Aside>
     </Wrapper>
   );
