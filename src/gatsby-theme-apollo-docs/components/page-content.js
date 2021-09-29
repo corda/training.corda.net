@@ -1,27 +1,27 @@
 import PropTypes from 'prop-types';
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import SectionNav from './section-nav';
 import styled from '@emotion/styled';
 import useMount from 'react-use/lib/useMount';
-import {HEADER_HEIGHT} from 'gatsby-theme-apollo-docs/src/utils';
-import {ReactComponent as SlackLogo} from '../assets/slack.svg';
-import {ReactComponent as IconSupportSVG} from "../../assets/ic-support.svg";
-import {PageNav, breakpoints, colors} from 'gatsby-theme-apollo-core';
-import {withPrefix, useStaticQuery} from 'gatsby';
-import FeedbackBox from '../../FeedbackBox'
-import {ReactComponent as IconClockSVG} from "../../assets/fa-clock-light.svg";
+import { HEADER_HEIGHT } from 'gatsby-theme-apollo-docs/src/utils';
+import { ReactComponent as SlackLogo } from '../assets/slack.svg';
+import { ReactComponent as IconSupportSVG } from '../../assets/ic-support.svg';
+import { PageNav, breakpoints, colors } from 'gatsby-theme-apollo-core';
+import { withPrefix, useStaticQuery } from 'gatsby';
+import FeedbackBox from '../../FeedbackBox';
+import { ReactComponent as IconClockSVG } from '../../assets/fa-clock-light.svg';
 import { graphql } from 'gatsby';
 
-const supportLinkTarget = "/in-closing/get-paid-support";
+const supportLinkTarget = '/in-closing/get-paid-support';
 
 const Wrapper = styled.div({
   display: 'flex',
-  alignItems: 'flex-start'
+  alignItems: 'flex-start',
 });
 
 const InnerWrapper = styled.div({
   flexGrow: 1,
-  width: 0
+  width: 0,
 });
 
 const BodyContent = styled.div({
@@ -31,44 +31,44 @@ const BodyContent = styled.div({
     color: colors.primary,
     textDecoration: 'none',
     ':hover': {
-      textDecoration: 'underline'
+      textDecoration: 'underline',
     },
     code: {
-      color: 'inherit'
-    }
+      color: 'inherit',
+    },
   },
   [['h1', 'h2', 'h3', 'h4', 'h5', 'h6']]: {
     ':not(:hover) a svg': {
-      visibility: 'hidden'
+      visibility: 'hidden',
     },
     code: {
-      whiteSpace: 'normal'
+      whiteSpace: 'normal',
     },
     'a.anchor': {
       ':hover': {
-        opacity: colors.hoverOpacity
+        opacity: colors.hoverOpacity,
       },
       svg: {
-        fill: colors.primary
+        fill: colors.primary,
       },
       '&.before': {
-        top: 'auto'
-      }
-    }
+        top: 'auto',
+      },
+    },
   },
   '*:not(style) +': {
     [['h2', 'h3', 'h4']]: {
-      marginTop: 56
-    }
+      marginTop: 56,
+    },
   },
   img: {
     display: 'block',
     maxWidth: '100%',
-    margin: '0 auto'
+    margin: '0 auto',
   },
   '.mermaid svg': {
-    maxWidth: '100%'
-  }
+    maxWidth: '100%',
+  },
 });
 
 const Aside = styled.aside({
@@ -83,26 +83,26 @@ const Aside = styled.aside({
   position: 'sticky',
   top: HEADER_HEIGHT,
   [breakpoints.lg]: {
-    display: 'none'
+    display: 'none',
   },
   [breakpoints.md]: {
-    display: 'block'
+    display: 'block',
   },
   [breakpoints.sm]: {
-    display: 'none'
-  }
+    display: 'none',
+  },
 });
 
 const AsideHeading = styled.h4({
-  fontWeight: 600
+  fontWeight: 600,
 });
 
 const AsideLinkWrapper = styled.h5({
   display: 'flex',
   marginBottom: 0,
   ':not(:last-child)': {
-    marginBottom: 16
-  }
+    marginBottom: 16,
+  },
 });
 
 const AsideLinkInner = styled.a({
@@ -111,14 +111,14 @@ const AsideLinkInner = styled.a({
   color: colors.text2,
   textDecoration: 'none',
   ':hover': {
-    color: colors.text3
+    color: colors.text3,
   },
   svg: {
     width: 20,
     height: 20,
     marginRight: 6,
-    fill: 'currentColor'
-  }
+    fill: 'currentColor',
+  },
 });
 
 function AsideLink(props) {
@@ -134,41 +134,41 @@ const EditLink = styled.div({
   marginTop: 48,
   justifyContent: 'flex-end',
   [breakpoints.lg]: {
-    display: 'flex'
+    display: 'flex',
   },
   [breakpoints.md]: {
-    display: 'none'
+    display: 'none',
   },
   [breakpoints.sm]: {
     display: 'flex',
-    marginTop: 24
-  }
+    marginTop: 24,
+  },
 });
 
 const SVGIconWrapper = styled.div`
   width: 20px;
   margin-right: 6px;
-`
+`;
 
 const SVGIconWrapper2 = styled.div`
   width: 20px;
   margin-right: 12px;
-`
+`;
 
 const IconSupport = () => {
   return (
     <SVGIconWrapper>
-      <IconSupportSVG/>
+      <IconSupportSVG />
     </SVGIconWrapper>
-  )
-}
+  );
+};
 
 const TopInfoBar = styled.div`
   display: inline-flex;
   margin-bottom: 20px;
-`
+`;
 
-export default function PageContent(props, {data} ) {
+export default function PageContent(props, { data }) {
   const contentRef = useRef(null);
   const [imagesToLoad, setImagesToLoad] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState(0);
@@ -198,17 +198,22 @@ export default function PageContent(props, {data} ) {
   // We might see an error on readme.md and other .md files, hence we try
   const readingTime = () => {
     try {
-      return extraData.allFile.nodes.filter(node => "https://github.com/corda/training.corda.net/tree/master/docs/content/" + node.relativePath == props.githubUrl)[0].childMdx.fields.readingTime.minutes;
+      return extraData.allFile.nodes.filter(
+        node =>
+          'https://github.com/corda/training.corda.net/tree/master/docs/content/' +
+            node.relativePath ==
+          props.githubUrl
+      )[0].childMdx.fields.readingTime.minutes;
     } catch (error) {
-      if (props.pathname != "/readme/") {    
-        console.log("warn: error mapping extraData for " + props.pathname +":");
+      if (props.pathname != '/readme/') {
+        console.log(
+          'warn: error mapping extraData for ' + props.pathname + ':'
+        );
         console.log(error);
       }
       return 0;
     }
-  }
-  
-
+  };
 
   useMount(() => {
     if (props.hash) {
@@ -249,13 +254,13 @@ export default function PageContent(props, {data} ) {
     );
   });
 
-  const supportLink = (
-    <AsideLinkWrapper >
-      <AsideLinkInner href={supportLinkTarget} >
-        <IconSupport />Get paid support
-      </AsideLinkInner>
-    </AsideLinkWrapper>
-  );
+  // const supportLink = (
+  // <AsideLinkWrapper >
+  // <AsideLinkInner href={supportLinkTarget} >
+  // <IconSupport />Get paid support
+  // </AsideLinkInner>
+  // </AsideLinkWrapper>
+  // );
 
   const slackLink = (
     <AsideLink href="https://slack.corda.net/">
@@ -269,20 +274,19 @@ export default function PageContent(props, {data} ) {
         <BodyContent ref={contentRef} className="content-wrapper">
           <TopInfoBar>
             <SVGIconWrapper2>
-              <IconClockSVG/>
+              <IconClockSVG />
             </SVGIconWrapper2>
             Reading Time: {Math.ceil(readingTime())} min
           </TopInfoBar>
           {props.children}
         </BodyContent>
         <EditLink>{slackLink}</EditLink>
-        <EditLink>{supportLink}</EditLink>
 
         <PageNav
           prevPage={props.pages[pageIndex - 1]}
           nextPage={props.pages[pageIndex + 1]}
         />
-        <FeedbackBox/>
+        <FeedbackBox />
       </InnerWrapper>
       <Aside>
         <AsideHeading>{props.title}</AsideHeading>
@@ -294,7 +298,6 @@ export default function PageContent(props, {data} ) {
           />
         )}
         {slackLink}
-        {supportLink}
       </Aside>
     </Wrapper>
   );
@@ -309,5 +312,5 @@ PageContent.propTypes = {
   title: PropTypes.string.isRequired,
   graphManagerUrl: PropTypes.string.isRequired,
   headings: PropTypes.array.isRequired,
-  spectrumUrl: PropTypes.string
+  spectrumUrl: PropTypes.string,
 };
