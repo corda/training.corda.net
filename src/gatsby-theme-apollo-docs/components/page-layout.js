@@ -26,6 +26,7 @@ import {Select} from './select';
 import {SelectedLanguageContext} from './multi-code-block';
 import {getSpectrumUrl, getVersionBasePath} from './utils';
 import {size} from 'polished';
+import Announce from "./announce";
 
 const Main = styled.main({
   flexGrow: 1
@@ -191,6 +192,7 @@ export default function PageLayout(props) {
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
       </Helmet>
+      <Announce />
       <FlexWrapper onClick={handleWrapperClick}>
         <Sidebar
           responsive

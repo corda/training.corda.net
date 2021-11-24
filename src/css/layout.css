@@ -25,3 +25,37 @@
   border: 2px solid #ec1d24;
   color: #ec1d24;
 }
+
+#announce {
+  max-width: 1440px;
+  margin: 0 auto;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  padding: 16px 24px;
+}
+
+#announce.hide {
+  display: none;
+}
+#announce img {
+  flex: 0 0;
+  margin-right: 1.5rem;
+}
+
+#announce p {
+  flex: 1 1;
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+#announce button{
+  flex: 0 0;
+  border: none;
+  background: none;
+}
+
+#announce button:hover svg path{
+  stroke: #ffffff;
+}
