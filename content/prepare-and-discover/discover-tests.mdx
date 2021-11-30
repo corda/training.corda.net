@@ -114,7 +114,7 @@ If you configured IntelliJ to use Gradle for build and test, as advised in a pre
 
 If you insist on using IntelliJ, and not Gradle, to run tests because it is faster, which it is, then you need to tell IntelliJ to use Quasar. And you do it by adding:
 
-```bash
+```shell
 -javaagent:../lib/quasar.jar
 ```
 To the JVM options, or whichever path applies to you. So open the Run configurations:
@@ -127,7 +127,7 @@ And add the Java agent parameter:
 
 If you omit it, you will see the [following error](https://github.com/corda/corda/blob/68bb7a0e7bb900117c2ed0d9174fea36d3d4aedc/node/src/main/kotlin/net/corda/node/services/statemachine/SingleThreadedStateMachineManager.kt#L323) when running your tests:
 
-```bash
+```shell
 java.lang.IllegalStateException: Missing the '-javaagent' JVM argument. Make sure you run the tests with the Quasar java agent attached to your JVM.
 See https://docs.corda.net/troubleshooting.html - 'Fiber classes not instrumented' for more details.
 ```
