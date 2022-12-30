@@ -8,7 +8,7 @@
   "dependencies": {
     "@material-ui/core": "^4.9.14",
     "@material-ui/styles": "^4.9.14",
-    "gatsby": "2.20.24",
+    "gatsby": "2.32.13",
     "gatsby-plugin-google-analytics": "^2.3.1",
     "gatsby-plugin-material-ui": "^2.1.8",
     "gatsby-plugin-react-helmet": "^3.3.2",
