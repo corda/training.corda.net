@@ -23,7 +23,7 @@
     "gatsby-remark-reading-time": "^1.1.0",
     "gatsby-source-graphql": "^2.5.1",
     "gatsby-theme-apollo-docs": "4.1.5",
-    "gatsby-transformer-remark": "^2.7.4",
+    "gatsby-transformer-remark": "^5.25.1",
     "katex": "^0.11.1",
     "prism-react-renderer": "^1.1.0",
     "react": "16.13.0",
